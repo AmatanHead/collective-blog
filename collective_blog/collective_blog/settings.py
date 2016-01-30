@@ -137,6 +137,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
 
 # Files upload settings
 # https://docs.djangoproject.com/en/1.9/topics/files/
@@ -152,6 +156,8 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
+
+CKEDITOR_UPLOAD_PATH = 'upload/'
 
 
 # Email settings
