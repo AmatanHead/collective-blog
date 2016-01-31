@@ -27,7 +27,7 @@ msgstr "English"
 
 #: collective_blog/templates/base.html:23
 msgid "Log out"
-msgstr "Выход"
+msgstr "Выйти"
 
 #: collective_blog/templates/base.html:30
 msgid "Register"

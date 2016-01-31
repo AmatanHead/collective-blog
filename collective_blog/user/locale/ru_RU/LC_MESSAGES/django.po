@@ -27,15 +27,15 @@ msgstr "Профили"
 
 #: user/templates/registration/activate.html:5
 msgid "Account activation failed."
-msgstr "Активация аккаунта не удалась."
+msgstr "Активация учетной записи не удалась."
 
 #: user/templates/registration/activation_complete.html:4
 msgid "Account Activated"
-msgstr "Аккаунт активирован"
+msgstr "Учетная запись активирована"
 
 #: user/templates/registration/activation_complete.html:8
 msgid "Your account is now activated."
-msgstr "Ваш аккаунт активирован."
+msgstr "Ваша учетная запись активирована."
 
 #: user/templates/registration/activation_complete.html:10
 #: user/templates/registration/password_reset_complete.html:9
@@ -74,7 +74,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    Чтобы активировать аккаунт, перейдите по этой ссылке в течение "
+"    Чтобы активировать учетную запись, перейдите по этой ссылке в течение "
 "следующих\n"
 "    %(expiration_days)s дней:\n"
 "    "
@@ -106,13 +106,13 @@ msgid ""
 "%(expiration_days)s days:\n"
 msgstr ""
 "\n"
-"Чтобы активировать аккаунт, перейдите по этой ссылке в течение следующих\n"
+"Чтобы активировать учетную запись, перейдите по этой ссылке в течение следующих\n"
 "%(expiration_days)s дней:\n"
 
 # It's always 30 =)
 #: user/templates/registration/activation_email_subject.txt:1
 msgid "Account activation on"
-msgstr "Активация аккаунта на"
+msgstr "Активация учетной записи на"
 
 #: user/templates/registration/logged_out.html:4
 msgid "Logged out"

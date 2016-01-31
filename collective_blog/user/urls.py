@@ -17,4 +17,6 @@ urlpatterns = [
         {'post_reset_redirect': 'password_reset_complete'}, name='password_reset_confirm'),
     url(r'a/password_reset/complete/$', v.password_reset_complete, name='password_reset_complete'),
     url(r'a/', include('registration.backends.default.urls')),
+
+    url(r'$', v.login, name='self'),
 ]

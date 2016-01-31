@@ -20,7 +20,7 @@
                 </div>
                 {% if not user.is_anonymous %}
                     <div class="navbar-item">
-                        <b>{{ user }}</b>
+                        <b><a href="{% url 'self' %}">{{ user }}</a></b>
                         [<a href="{% url "logout" %}">{% trans "Log out" %}</a>]
                     </div>
                 {% else %}

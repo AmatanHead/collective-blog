@@ -20,20 +20,23 @@
                         {% form_field form.password "one-half column" %}
                     </div>
                 </div>
+
+                <div class="control-buttons">
+                    <div class="container">
+                        <button type="submit" class="primary">{% trans "Log in" %}</button>
+                        <button class="button-link button-link-first"><a href="{% url 'registration_register' %}">{% trans "Register" %}</a></button>
+                        <button class="button-link"><a href="{% url 'password_reset' %}">{% trans "Reset password" %}</a></button>
+                    </div>
+                </div>
+
             </fieldset>
 
-            <div class="container">
-                <div class="row">
-                    <input type="submit" value="{% trans "Let's go!" %}" />
-                </div>
-            </div>
-
-            <div class="meta">
-                {% trans "Forgot your password?" %} <a href="{% url 'password_reset' %}">{% trans "Reset it" %}</a>.
-            </div>
-            <div class="meta">
-                {% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.
-            </div>
+{#            <div class="meta">#}
+{#                {% trans "Forgot your password?" %} <a href="{% url 'password_reset' %}">{% trans "Reset it" %}</a>.#}
+{#            </div>#}
+{#            <div class="meta">#}
+{#                {% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.#}
+{#            </div>#}
 
             <input type="hidden" name="next" value="{{ next }}" />
         </form>
