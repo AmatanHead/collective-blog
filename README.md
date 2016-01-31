@@ -41,5 +41,5 @@ Each user has its rating (karma). Users can vote up and down for any other users
 ## Project structure
 
 * `collective_blog` — django project
-** `collective_blog` — root app; Holds config, root url dispatcher, common css, scripts, and templates.
-** `user` — auth and user profile stuff, everything behind `/u/`; Holds auth logic and user profiles.
+  * `collective_blog` — root app; Holds config, root url dispatcher, common css, scripts, and templates.
+  * `user` — auth and user profile stuff, everything behind `/u/`; Holds auth logic and user profiles.
