@@ -1,5 +1,5 @@
-from registration.forms import RegistrationForm
+from registration.forms import RegistrationFormUniqueEmail
 from captcha.fields import ReCaptchaField
 
-class RegistrationFormCaptcha(RegistrationForm):
+class RegistrationFormCaptcha(RegistrationFormUniqueEmail):
     captcha = ReCaptchaField()

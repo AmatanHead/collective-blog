@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load forms %}
+
+{% block title %}{% trans "Log in" %}{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <form method="post" action="" class="forms">
+            {% csrf_token %}
+            <fieldset>
+                <legend>{% trans 'Log in' %}</legend>
+
+                <div class="container">
+
+                    {% form_errlist form %}
+
+                    <div class="row">
+                        {% form_field form.username "one-half column" %}
+                        {% form_field form.password "one-half column" %}
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="container">
+                <div class="row">
+                    <input type="submit" value="{% trans "Let's go!" %}" />
+                </div>
+            </div>
+
+            <div class="meta">
+                {% trans "Forgot your password?" %} <a href="{% url 'password_reset' %}">{% trans "Reset it" %}</a>.
+            </div>
+            <div class="meta">
+                {% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+    </div>
+{% endblock %}

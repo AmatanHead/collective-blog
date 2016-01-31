@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load forms %}
+
+{% block title %}{% trans "Register for an account" %}{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <form method="post" action="" class="forms">
+            {% csrf_token %}
+            <fieldset>
+                <legend>{% trans 'Register for an account' %}</legend>
+
+                <div class="container">
+
+                    {% form_errlist form %}
+
+                    <div class="row">
+                        {% form_field form.username "twelwe columns" %}
+                    </div>
+                    <div class="row">
+                        {% form_field form.email "twelwe columns" %}
+                    </div>
+                    <div class="row">
+                        {% form_field form.password1 "twelwe columns" %}
+                    </div>
+                    <div class="row">
+                        {% form_field form.password2 "twelwe columns" %}
+                    </div>
+                    <div class="row">
+                        {% form_field form.captcha "twelwe columns" %}
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="container">
+                <div class="row">
+                    <input type="submit" value="{% trans "Let's go!" %}" />
+                </div>
+            </div>
+            <input type="hidden" name="next" value="{{ next }}" />
+
+            <div class="meta">
+                {% trans "Already registered?" %} <a href="{% url 'login' %}">{% trans "Than log in" %}</a>!
+            </div>
+            <div class="meta">
+                {% trans "Forgot your password?" %} <a href="{% url 'password_reset' %}">{% trans "Reset it" %}</a>.
+            </div>
+        </form>
+    </div>
+{% endblock %}

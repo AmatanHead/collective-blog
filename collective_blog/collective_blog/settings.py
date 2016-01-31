@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 from django.utils.translation import ugettext_lazy as _
 
+
+SITE_NAME = 'a.k.a. Блог'
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -49,6 +53,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'captcha',
 
+    'collective_blog',
     'user',
 ]
 
@@ -61,6 +66,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'collective_blog.urls'
@@ -70,18 +76,20 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'collective_blog/templates'),
+            os.path.join(BASE_DIR, 'user/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                "django.contrib.auth.context_processors.auth",
-                "django.template.context_processors.debug",
-                "django.template.context_processors.i18n",
-                "django.template.context_processors.media",
-                "django.template.context_processors.static",
-                "django.template.context_processors.tz",
-                "django.contrib.messages.context_processors.messages",
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
+                'collective_blog.context_processors.sitename.sitename',
             ],
         },
     },
@@ -111,6 +119,8 @@ REGISTRATION_FORM = 'user.forms.RegistrationFormCaptcha'
 NOCAPTCHA = True
 
 RECAPTCHA_USE_SSL = True
+
+INCLUDE_AUTH_URLS = False
 
 
 # Localization
@@ -186,6 +196,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 CKEDITOR_UPLOAD_PATH = 'upload/'
+
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'collective_blog/static'),
+    os.path.join(BASE_DIR, 'user/static'),
+)
 
 
 # Email settings

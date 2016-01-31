@@ -1,11 +1,41 @@
+{% load staticfiles %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    {% block style %}
+        <link rel="stylesheet" href="{% static "main.css" %}">
+    {% endblock %}
+    {% block extra_style %}
+    {% endblock %}
 </head>
 <body>
+        <div class="navbar">
+            <div class="content">
+                <div class="navbar-item-left">
+                    <b><a href="/">{{ global_site_name }}</a></b>
+                </div>
+                {% if not user.is_anonymous %}
+                    <div class="navbar-item">
+                        <b>{{ user }}</b>
+                        [<a href="{% url "logout" %}">{% trans "Log out" %}</a>]
+                    </div>
+                {% else %}
+                    <div class="navbar-item">
+                        <a href="{% url "registration_register" %}">{% trans "Register" %}</a>
+                    </div>
+                    <div class="navbar-item">
+                        <a href="{% url "login" %}">{% trans "Log in" %}</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    <br><br>
     {% block content %}
     {% endblock %}
+    <br><br>
 </body>
 </html>

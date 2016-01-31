@@ -8,9 +8,9 @@ Each user can create a new blog. No limit for blogs per user. Once a new blog is
 
 A blog's creator can decide how to configure it:
 * Type of the blog: *open* (anyone can see everything, news are shown on the main page), or *private* (only users who joined the blog can see its content).
-* Who can join the blog: anyone, user with raiting above a decided value, only approved users.
-* Who can write to the blog: anyone with raiting above a decided value, only members of this blog.
-* Who can write comments: anyone with raiting above a decided value, only members of this blog.
+* Who can join the blog: anyone, user with rating above a decided value, only approved users.
+* Who can write to the blog: anyone with rating above a decided value, only members of this blog.
+* Who can write comments: anyone with rating above a decided value, only members of this blog.
 
 A blog's author can assign blog administrators and moderators and (in any time) resign them.
 Permissions are configurable:
@@ -20,10 +20,26 @@ Permissions are configurable:
 * Ban a member.
 * Change blog's settings.
 
-Each user has its raiting (karma). Users can vote up and down for any other users raising and dropping his karma respectively. Also, each member has individual blog's raiting, one value per each blog. This value only matters inside that particular blog and changes while blog members are voting for comments and posts.
+Each user has its rating (karma). Users can vote up and down for any other users raising and dropping his karma respectively. Also, each member has individual blog's rating, one value per each blog. This value only matters inside that particular blog and changes while blog members are voting for comments and posts.
 
 
 ## Tools
 
 * [Django](https://www.djangoproject.com) along with plugins for captcha, CKEditor, and maybe more.
 * [CKEditor](http://ckeditor.com) for WYSIWYG support.
+
+
+## Development status
+
+* <s>User auth</s> — done
+* User profiles
+* Blogs
+* Posts
+* Comments
+
+
+## Project structure
+
+* `collective_blog` — django project
+** `collective_blog` — root app; Holds config, root url dispatcher, common css, scripts, and templates.
+** `user` — auth and user profile stuff, everything behind `/u/`; Holds auth logic and user profiles.
