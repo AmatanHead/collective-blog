@@ -37,15 +37,19 @@ MANAGERS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'registration',
     'ckeditor',
     'ckeditor_uploader',
+    'captcha',
+
+    'user',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -64,7 +68,9 @@ ROOT_URLCONF = 'collective_blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'collective_blog/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,15 +80,37 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
-                "django.contrib.messages.context_processors.messages"
+                "django.contrib.messages.context_processors.messages",
                 'django.template.context_processors.media',
             ],
         },
-        'TEMPLATE_DEBUG': DEBUG,
     },
 ]
 
 WSGI_APPLICATION = 'collective_blog.wsgi.application'
+
+
+# Auth and registration setup
+
+AUTH_USER_MODEL = 'auth.User'
+
+LOGIN_URL = '/u/a/login/'
+
+LOGIN_REDIRECT_URL = '/'
+
+REGISTRATION_AUTO_LOGIN = True
+
+ACCOUNT_ACTIVATION_DAYS = 30
+
+REGISTRATION_FORM = 'user.forms.RegistrationFormCaptcha'
+
+# RECAPTCHA_PUBLIC_KEY = ''
+
+# RECAPTCHA_PRIVATE_KEY = ''
+
+NOCAPTCHA = True
+
+RECAPTCHA_USE_SSL = True
 
 
 # Localization
