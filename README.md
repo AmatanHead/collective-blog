@@ -26,5 +26,5 @@ Each user has its raiting (karma). Users can vote up and down for any other user
 ## Tools
 
 * [Django](https://www.djangoproject.com) along with plugins for captcha, CKEditor, and maybe more.
-* [Skeleton](http://getskeleton.com) css framework.
+* [Kube](https://imperavi.com/kube/) css framework.
 * [CKEditor](http://ckeditor.com) for WYSIWYG support.
