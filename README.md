@@ -26,7 +26,10 @@ Each user has its rating (karma). Users can vote up and down for any other users
 ## Tools
 
 * [Django](https://www.djangoproject.com) along with plugins for captcha, CKEditor, and maybe more.
-* [CKEditor](http://ckeditor.com) for WYSIWYG support.
+* [Markdown](https://github.com/google/py-gfm) (Github-Flavored, of course).
+* [Codemirror](https://eloquentjavascript.net).
+
+And **no** WYSIWYG! ('cause it's evil!)
 
 
 ## Development status
