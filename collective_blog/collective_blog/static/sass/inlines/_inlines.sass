@@ -1,0 +1,31 @@
+/*
+ * Inline elements
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* For basic typographical elements we befine all standard tags along
+ * with a set of non-standard.
+ *
+ * All classes defined in this section should be applied to
+ * blocks positioned `inline` or `inline-block`.
+ */
+
+%inline
+  color: inherit
+
+%inline-box
+  padding: 0 .3em
+  line-height: 1.3em
+  border-radius: 2px
+  font-size: .9em
+  white-space: nowrap
+  display: inline-block
+
+=inline-box-style($bg-color, $text-color)
+  color: $text-color
+  background: $bg-color
+  border: 1px solid darken($bg-color, 4)
+
+@import 'central'
+@import 'tags'

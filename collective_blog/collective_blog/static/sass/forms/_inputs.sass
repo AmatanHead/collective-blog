@@ -1,0 +1,149 @@
+/*
+ * Inputs
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import '../settings'
+@import '../misc/clear'
+@import '../misc/extract'
+
+input, textarea, select, button, .button
+  width: 100%
+  font-size: $input-font-size
+  line-height: $input-lineheight
+  border: 1px solid $input-border-color
+  padding: $input-border-padding
+  background: $input-bg-color
+  border-radius: $input-border-radius
+  display: block
+
+  +input-additional-style
+
+  margin-bottom: .3em
+
+  &:last-child
+    margin-bottom: 0
+
+  +clear
+
+  &.error
+    border: 1px solid $input-border-color-error
+
+  &.success
+    border: 1px solid $input-border-color-success
+
+  &:focus
+    border: 1px solid $input-border-color-accent
+
+  &:disabled, &.disabled
+    background: $input-bg-color-disabled !important
+    color: $input-color-disabled !important
+    border-color: $input-border-color !important
+
+select
+  display: block
+  background: inherit
+  height: $input-lineheight * $input-font-size + top($input-border-padding) + bottom($input-border-padding)
+
+  &[multiple="multiple"]
+    height: auto
+
+input[type="reset"],
+input[type="submit"],
+input[type="file"],
+input[type="radio"],
+input[type="checkbox"],
+select,
+button,
+.button
+  cursor: pointer
+  box-shadow: none
+  display: inline-block
+
+input[type="file"]
+  width: 100%
+
+input[type="radio"],
+input[type="checkbox"]
+  margin-right: .1em
+  padding: 0
+
+input[type="reset"],
+input[type="submit"],
+button,
+.button
+  padding-left: 2 * left($input-border-padding)
+  padding-right: 2 * right($input-border-padding)
+
+form section
+  margin-bottom: $input-group-margin-bottom
+
+label
+  font-size: $input-label-size
+
+  small, span.error, span.success, &.disabled
+    font-size: $input-label-size-small
+    color: $input-label-color-small
+    font-weight: normal
+
+  span.error
+    color: $input-label-color-error
+
+  span.success
+    color: $input-label-color-success
+
+  &.checkbox
+    cursor: pointer
+
+.desc
+  @extend label
+
+  font-weight: normal
+
+  font-size: $input-label-size-small
+  color: $input-label-color-small
+  margin: 0
+  margin-bottom: .2rem
+  border: none
+  line-height: 1
+
+  li
+    display: block
+    margin: 0 0 .2rem .1rem
+
+    &:before
+      content: "- "
+
+.errlist
+  @extend .desc
+
+  color: $input-label-color-error
+
+.inline
+  input, button, .button
+    display: inline-block
+    width: inherit
+    +no-clear
+
+  input
+    padding-left: left($input-border-padding) / 2
+    padding-right: right($input-border-padding) / 2
+
+.required
+  font-weight: bold
+
+button, .button
+  &.primary
+    color: $button-color-primary
+    background: $button-bg-color-primary
+    border: 1px solid $button-border-color-primary
+
+  &.secondary
+    color: $button-color-secondary
+    background: $button-bg-color-secondary
+    border: 1px solid $button-border-color-secondary
+
+  &.plain
+    border-style: dashed

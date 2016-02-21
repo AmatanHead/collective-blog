@@ -1,0 +1,134 @@
+/*
+ * Tables
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+table
+  @extend %group !optional
+
+  width: 100%
+  empty-cells: show
+  border-collapse: collapse
+  border-spacing: 0
+
+  td
+    line-height: 1
+    text-align: left
+    min-height: 1rem + 2 * $table-padding-vertical  // for empty cells
+    padding: $table-padding-vertical $table-padding-horizontal
+    border-bottom: $table-line-width solid $lines-color
+
+  tr:last-child td
+    border-bottom: none
+
+  // `th` is exactly like `td`. That's because you should use `thead` and `tfoot`
+  // for headers and footers
+  th
+    @extend td
+
+  caption
+    margin: 1.5 * $table-padding-vertical $table-padding-horizontal 0
+    text-align: left
+    text-transform: uppercase
+    color: $table-caption-color
+    font-weight: bold
+    letter-spacing: .07rem
+
+  thead
+    td
+      font-weight: bold
+
+    tr:last-child td
+      padding-bottom: .4 * $table-padding-vertical
+      border-bottom: $table-line-width-accent solid $lines-color
+    
+  tfoot
+    background: $table-footer-background-color
+
+    tr:first-child
+      td
+        border-top: $table-line-width-accent solid $lines-color
+
+  // For nested tables
+  table
+    border: $table-line-width solid $lines-color
+
+    td
+      border: $table-line-width solid $lines-color
+      background: transparent !important
+      margin: 0 !important
+
+
+  // Classes
+
+  &.bordered
+    border: $table-line-width solid $lines-color
+
+    &.responsive
+      +respond-to(low)
+        border-bottom: none
+
+    td
+      border: $table-line-width solid $lines-color
+
+  &.stripped
+    tr:nth-child(odd) td
+      background: $table-cell-color-stripped
+
+    thead tr:nth-child(odd) td
+      background: inherit
+
+    tfoot td
+      color: inherit
+      background: $table-footer-background-color !important
+
+  &.responsive
+    @extend %bleed-low-only !optional
+
+    caption
+      margin-left: 0
+
+    td, caption
+      @extend %unbleed-low-only !optional
+
+    +respond-to(low)
+      display: block
+      width: auto
+
+      thead
+        display: none
+
+      tbody
+        display: block
+
+      tfoot
+        display: block
+
+      tr
+        display: block
+        border-bottom: $table-line-width-accent solid $lines-color
+
+      td
+        display: block
+        text-align: right
+        min-height: 1rem + $table-padding-vertical
+        padding: 0.8 * $table-padding-vertical $table-padding-horizontal 0.5 * $table-padding-vertical
+
+        border: none !important
+        border-bottom: $table-line-width solid $lines-color !important
+
+      tr td:last-child
+        border-bottom: none !important
+
+      td:before
+        content: attr(data-label)
+        float: left
+        text-transform: uppercase
+        font-size: 86%
+        font-weight: bold
+        line-height: 1rem

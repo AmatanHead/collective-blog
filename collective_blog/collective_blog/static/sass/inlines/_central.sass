@@ -1,0 +1,121 @@
+/*
+ * Central inline elements
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+
+a
+  @extend %inline !optional
+  color: $a-color
+
+a:hover
+  -webkit-transition: $anim-duration
+  -moz-transition: $anim-duration
+  -o-transition: $anim-duration
+  transition: $anim-duration
+  color: $a-color-hover
+
+%inline a
+  color: inherit
+  font-weight: bold
+  text-decoration: underline
+
+%inline %inline-box
+  display: inline
+  border-radius: 0
+  line-height: inherit
+
+tt
+  @extend %inline !optional
+  font-size: $mono-stack
+
+big, .big
+  @extend %inline !optional
+  font-size: 1.1em
+
+small, .small
+  @extend %inline !optional
+  font-size: 0.9em
+
+abbr, acronym
+  @extend %inline !optional
+  border-bottom: 1px dotted $primary-text-color
+  cursor: help
+
+dfn
+  @extend %inline !optional
+  font-style: italic
+
+cite
+  @extend %inline !optional
+  font-style: italic
+  font-size: .9em
+  color: $secondary-text-color
+
+code, samp, output
+  @extend %inline !optional
+  @extend %inline-box
+  +inline-box-style(lighten($space-color, 4), $primary-text-color)
+  font-family: $mono-stack
+
+var
+  @extend %inline !optional
+  font-style: italic
+
+mark
+  @extend %inline !optional
+  @extend %inline-box
+  +inline-box-style($yellow-bg, none)
+
+kbd
+  @extend %inline !optional
+  @extend %inline-box
+  +inline-box-style($black-bg, $lines-color)
+
+ins
+  @extend %inline !optional
+  @extend %inline-box
+  +inline-box-style(desaturate(lighten($ins-color, 80), 40), none)
+  white-space: inherit
+
+del
+  @extend %inline !optional
+  @extend %inline-box
+  +inline-box-style(lighten($del-color, 50), none)
+  white-space: inherit
+
+u
+  @extend %inline !optional
+  text-decoration: underline
+
+s, strike
+  @extend %inline !optional
+  text-decoration: line-through
+
+i, em
+  @extend %inline !optional
+  font-style: italic
+
+b, strong
+  @extend %inline !optional
+  font-weight: bold
+
+sub, sup
+  @extend %inline !optional
+  font-size: 74%
+  line-height: 0
+  position: relative
+  margin-left: .05em
+
+sup
+  @extend %inline !optional
+  top: -0.4em
+
+sub
+  @extend %inline !optional
+  bottom: -0.2em

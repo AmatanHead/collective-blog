@@ -1,0 +1,14 @@
+/*
+ * Mixins for width control
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+$cols: 12
+
+=set-width($x)
+  width: 100% * $x / $cols
+
+=set-offset($x)
+  margin-left: 100% * $x / $cols

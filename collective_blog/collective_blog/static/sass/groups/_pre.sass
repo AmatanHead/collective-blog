@@ -1,0 +1,28 @@
+/*
+ * Pre and code highlighting
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+pre
+  @extend %group !optional
+
+  overflow: auto
+  color: $pre-color
+  background: $pre-background-color
+  
+  padding: 2rem
+  
+  font-family: $mono-stack
+  
+  border-radius: $pre-border-radius
+
+  +respond-to(low)
+    border-radius: 0  
+
+  @extend %bleed-low-only !optional
+  @extend %unbleed-low-only !optional

@@ -1,0 +1,52 @@
+/*
+ * Groups
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Content groups are regular content units like paragraphs or fieldsets.
+ *
+ * All groups are usually defined with their tags:
+ * p -- for paragraphs
+ * h1..h6 -- for headings
+ * address -- for address
+ * blockquote -- for quotations -- can nest other containers
+ * pre -- for prepared text
+ * ul, ol, dl -- for enumerations -- can nest othse uls, ols, dls
+ * table -- for tabulars -- can nest thead, tbody, tfoot, caption
+ * ...
+ *
+ * However, some containers may require using additional groups
+ * which will work only with one particular container
+ * (e.g. `fieldset` will work only inside `form`).
+ */
+
+%group
+  font-size: 1rem
+  margin-top: $group-margin
+  margin-bottom: $group-margin
+
+.group
+  @extend %group !optional
+
+.bleed-group
+  @extend %group !optional
+  @extend %bleed !optional
+  @extend %bleed-vertical !optional
+
+.unbleed-group
+  @extend %group !optional
+  @extend %unbleed !optional
+  @extend %unbleed-vertical !optional
+
+.no-vertical-padding
+  @extend %group !optional
+  padding-top: 0
+  padding-bottom: 0
+  margin-top: 0
+  margin-bottom: 0
+
+@import 'central'
+@import 'pre'
+@import 'headers'
+@import 'tables'

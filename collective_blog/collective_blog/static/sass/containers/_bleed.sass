@@ -1,0 +1,125 @@
+//
+// Layout bleed
+//
+// This code is a part of the Light package
+// which is distributed under MIT license terms.
+
+// To allow bleeding elements (e.g. set close to the border of the container)
+// we define `%bleed` class. Extending this class will set margines
+// of the extended element to compensate for container's padding.
+//
+// Use the below mixin for defining various compensation
+// values for various containers.
+//
+// If you need to keep text beginning at the same line, using `%unbleed`
+// will set padding to compensate for margine changes.
+//
+// See the example:
+//
+// |<-- container's border
+// |   :<-- container's padding
+// |   :
+// |   :
+// |   /--------------------------------------------
+// |   | Regular element/group
+// |   \--------------------------------------------
+// |   :
+// /------------------------------------------------
+// | Bleeded element/group
+// \------------------------------------------------
+// |   :
+// /------------------------------------------------
+// |   : Bleeded and unbleeded element/group
+// \------------------------------------------------
+// |   :
+//
+// Additionally, there are `%bleed-[x]-only` and `%unbleed-[x]-only`
+// (e.g. `%bleed-low-only` and `%unbleed-low-only`)
+// because you can't extexd media query.
+//
+// Extending `bleed-vertical` will also allow you to bleed top
+// and bottom margines for first and last groups in container
+//
+=bleed($top, $right, $bottom: $top, $left: $right)
+  %bleed
+    margin-left: -$left
+    margin-right: -$right
+
+  %bleed-vertical:first-child
+    margin-top: -$top
+
+  %bleed-vertical:last-child
+    margin-bottom: -$bottom
+
+  %unbleed
+    padding-left: $left
+    padding-right: $right
+
+  %unbleed-vertical:first-child
+    padding-top: $top
+
+  %unbleed-vertical:last-child
+    padding-bottom: $bottom
+
+  +respond-to(low)
+    %bleed-low-only
+      margin-left: -$left
+      margin-right: -$right
+
+    %bleed-low-only-vertical:first-child
+      margin-top: -$top
+
+    %bleed-low-only-vertical:last-child
+      margin-bottom: -$bottom
+
+    %unbleed-low-only
+      padding-left: $left
+      padding-right: $right
+
+    %unbleed-low-only-vertical:first-child
+      padding-top: $top
+
+    %unbleed-low-only-vertical:last-child
+      padding-bottom: $bottom
+
+  +respond-to(mid)
+    %bleed-mid-only
+      margin-left: -$left
+      margin-right: -$right
+
+    %bleed-mid-only-vertical:first-child
+      margin-top: -$top
+
+    %bleed-mid-only-vertical:last-child
+      margin-bottom: -$bottom
+
+    %unbleed-mid-only
+      padding-left: $left
+      padding-right: $right
+
+    %unbleed-mid-only-vertical:first-child
+      padding-top: $top
+
+    %unbleed-mid-only-vertical:last-child
+      padding-bottom: $bottom
+
+  +respond-to(large)
+    %bleed-large-only
+      margin-left: -$left
+      margin-right: -$right
+
+    %bleed-large-only-vertical:first-child
+      margin-top: -$top
+
+    %bleed-large-only-vertical:last-child
+      margin-bottom: -$bottom
+
+    %unbleed-large-only
+      padding-left: $left
+      padding-right: $right
+
+    %unbleed-large-only-vertical:first-child
+      padding-top: $top
+
+    %unbleed-large-only-vertical:last-child
+      padding-bottom: $bottom

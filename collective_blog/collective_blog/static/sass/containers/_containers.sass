@@ -1,0 +1,52 @@
+/*
+ * Containers
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Containers are elements
+ * for dividing content into large groups.
+ *
+ * They are placed into layout blocks. Their purpose is to show contents so
+ * they should not care about theirs position or width as layout blocks
+ * has taken care about it.
+ *
+ * Because of the above fact containers usually have 100% width.
+ * Their horizontal margin is usually 0.
+ * They can take care about splitting content apart by applying
+ * non-zero vertical margin, though.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+@import 'bleed'
+
+%container
+  // pass
+
+.primary.container
+  @extend %container !optional
+
+  +main-container-additional-style
+  
+  background: $main-container-color
+
+  margin: $main-container-spacing 0
+
+  @if $main-container-close
+    %block > &:first-child
+      margin-top: 0
+
+    %block > &:last-child
+      margin-bottom: 0
+
+  padding: $main-container-padding-vertical $main-container-padding-horizontal
+  +bleed($main-container-padding-vertical, $main-container-padding-horizontal)
+
+  +respond-to(low)
+    padding: $main-container-padding-vertical-low $main-container-padding-horizontal-low
+    +bleed($main-container-padding-vertical-low, $main-container-padding-horizontal-low)
+
+form
+  @extend .primary.container

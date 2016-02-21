@@ -1,0 +1,36 @@
+/*
+ * Layout
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Layout blocks are the largest blocks in your structure.
+ * They should provide page layout so that page's content can be
+ * placed in them without care about its width or margines or alignment.
+ *
+ * You will typically have many layout blocks in your project:
+ * one is for primary use, your content will lay there,
+ * anothers is for header, footer, navbar etc.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+%block
+  // pass
+
+.block
+  @extend %block !optional
+
+  display: block
+  max-width: $max-block-width
+
+  +respond-to(low)
+    margin: $layout-low-block-margin
+    width: $layout-low-block-width
+  +respond-to(mid)
+    margin: $layout-mid-block-margin
+    width: $layout-mid-block-width
+  +respond-to(large)
+    margin: $layout-large-block-margin
+    width: $layout-large-block-width

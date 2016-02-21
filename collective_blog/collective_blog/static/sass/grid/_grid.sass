@@ -1,0 +1,153 @@
+/*
+ * Grid
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/*
+ * Div-based grid can be used inside all block elements, including
+ * layout blocks and containers.
+ *
+ * Base grid class, `.grid`, has no status of group. Therefore it will
+ * have no padding inside containers so you'll need to put it inside
+ * `.group` div or something simmilar.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+@import '../misc/clear'
+@import '../containers/bleed'
+@import 'width_mixins'
+
+@import 'width'
+
+
+.grid
+  display: block
+  width: 100%
+  +clear
+
+  &.no-padding .row .column
+    padding: 0
+    // +bleed(0, 0)
+
+.row
+  display: block
+  width: 100%
+
+  &.no-padding .column
+    padding: 0
+    // +bleed(0, 0)
+  
+  margin-bottom: $grid-row-margin-bottom
+
+  &:last-child
+    margin-bottom: 0
+
+  +clear
+
+.column
+  display: block
+  float: left
+
+  padding: $grid-col-padding-vertical $grid-col-padding-horizontal
+  // +bleed($grid-col-padding-vertical, $grid-col-padding-horizontal)
+
+  &:first-child
+    padding-left: 0
+    // +bleed($grid-col-padding-vertical, $grid-col-padding-horizontal, $grid-col-padding-vertical, 0)
+
+    +respond-to(low)
+      // +bleed(0, 0)
+
+  &:last-child
+    padding-right: 0
+    // +bleed($grid-col-padding-vertical, 0, $grid-col-padding-vertical, $grid-col-padding-horizontal)
+
+    +respond-to(low)
+      // +bleed(0, 0)
+
+
+  +respond-to(low)
+    width: 100% !important
+    margin-left: 0 !important
+    padding: $grid-col-padding-vertical-low $grid-col-padding-horizontal-low
+    // +bleed(0, 0)
+
+  &.one, &.col-1
+    +set-width(1)
+  &.two, &.col-2
+    +set-width(2)
+  &.three, &.col-3
+    +set-width(3)
+  &.four, &.col-4
+    +set-width(4)
+  &.five, &.col-5
+    +set-width(5)
+  &.six, &.col-6
+    +set-width(6)
+  &.seven, &.col-7
+    +set-width(7)
+  &.eight, &.col-8
+    +set-width(8)
+  &.nine, &.col-9
+    +set-width(9)
+  &.ten, &.col-10
+    +set-width(10)
+  &.eleven, &.col-11
+    +set-width(11)
+  &.twelve, &.col-12
+    +set-width(12)
+
+  &.one-third
+    width: 100% * 1 / 3
+
+  &.two-thirds
+    width: 100% * 2 / 3
+
+  &.one-half
+    width: 100% * 1 / 2
+
+  /* Offsets */
+  &.offset-by-one, &.offset-1
+    +set-offset(1)
+  &.offset-by-two, &.offset-2
+    +set-offset(2)
+  &.offset-by-three, &.offset-3
+    +set-offset(3)
+  &.offset-by-four, &.offset-4
+    +set-offset(4)
+  &.offset-by-five, &.offset-5
+    +set-offset(5)
+  &.offset-by-six, &.offset-6
+    +set-offset(6)
+  &.offset-by-seven, &.offset-7
+    +set-offset(7)
+  &.offset-by-eight, &.offset-8
+    +set-offset(8)
+  &.offset-by-nine, &.offset-9
+    +set-offset(9)
+  &.offset-by-ten, &.offset-10
+    +set-offset(10)
+  &.offset-by-eleven, &.offset-11
+    +set-offset(11)
+
+  &.offset-by-one-third
+    margin-left: 100% * 1 / 3
+
+  &.offset-by-two-thirds
+    margin-left: 100% * 2 / 3
+
+  &.offset-by-one-half
+    margin-left: 100% * 1 / 2
+
+  &.secondary
+    +respond-to(low)
+      display: none
+
+  &.no-padding
+    padding: 0
+    // +bleed(0, 0)
+
+.columns
+  @extend .column

@@ -1,0 +1,48 @@
+/*
+ * Headers
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+=header-size($size, $height, $spacing: inherit)
+  font-size: $size
+  line-height: $height
+  letter-spacing: $spacing
+
+  margin-top: $size * .8
+
+  +respond-to(mid)
+    font-size: .9 * $size
+
+%header
+  @extend %group !optional
+  // font-weight: bold
+  color: $primary-text-color
+
+  a
+    text-decoration: none
+    color: $primary-text-color
+
+  small
+    font-size: $h-small-size
+    color: $h-small-color
+
+h1.title
+  @extend %header
+  +header-size($h1-title-size, $h1-title-lineheight)
+
+h1
+  @extend %header
+  +header-size($h1-size, $h1-lineheight)
+
+h2
+  @extend %header
+  +header-size($h2-size, $h2-lineheight)
+
+h3, h4, h5, h6
+  @extend %header
+  +header-size($h3-size, $h3-lineheight)

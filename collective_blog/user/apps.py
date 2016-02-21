@@ -13,7 +13,7 @@ class UserConfig(AppConfig):
 
         Profile = self.get_model('profile')
 
-        # For each new user created we want to automatically create its profile
+        # For each new user we want to create its profile automatically
         @receiver(post_save, sender=get_user_model(), dispatch_uid='create_profile_for_new_user', weak=False)
         def create_profile_for_new_user(sender, created, instance, **kwargs):
             if created:

@@ -1,0 +1,254 @@
+//
+// Settings
+//
+// This code is a part of the Light package
+// which is distributed under MIT license terms.
+
+// Media
+// =====
+
+$small: 35em
+$large: 55em
+$max-content-width: 100em
+
+
+// Fonts
+// =====
+
+=main-font
+  @import url(https://fonts.googleapis.com/css?family=PT+Mono&subset=latin,cyrillic)
+  @import url(https://fonts.googleapis.com/css?family=PT+Sans&subset=latin,cyrillic)
+
+$font-stack: "PT Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif
+$mono-stack: "PT Mono", monospace
+
+
+// Animations
+// ==========
+
+$anim-duration: .3s
+
+
+// Colors
+// ======
+
+$primary-text-color: #000000
+$text-color: #444444
+$secondary-text-color: #999999
+$lines-color: #eeeeee
+$space-color: #eeeeee
+$bg-color: #ffffff
+
+$a-color: #2f77d1
+$a-color-hover: #e21e3b
+
+$info-color: #2f77d1
+$info-bg: #ffffff
+$err-color: #d11149
+$err-bg: #ffffff
+$warn-color: #ffd61e
+$warn-bg: #444444
+$ok-color: #0a8754
+$ok-bg: #ffffff
+
+$black-bg: #444444
+$black-color: #eeeeee
+$blue-bg: #2f77d1
+$blue-color: #ffffff
+$orange-bg: #e87118
+$orange-color: #ffffff
+$purple-bg: #9467bd
+$purple-color: #ffffff
+$marshy-bg: #bcbd22
+$marshy-color: #ffffff
+$turquoise-bg: #0ec3cc
+$turquoise-color: #ffffff
+$red-bg: #d11149
+$red-color: #ffffff
+$yellow-bg: #ffd61e
+$yellow-color: #444444
+$green-bg: #0a8754
+$green-color: #ffffff
+
+$ins-color: #064c00
+$del-color: #e30412
+
+
+// Layout
+// ======
+
+$max-block-width: $max-content-width
+
+$layout-low-block-margin: auto
+$layout-low-block-width: 100%
+
+$layout-mid-block-margin: 0 4rem
+$layout-mid-block-width: auto
+
+$layout-large-block-margin: auto
+$layout-large-block-width: 60%
+
+
+// Containers
+// ==========
+
+$main-container-color: $bg-color
+
+// Margin between containers
+$main-container-spacing: 2rem
+
+// Fill top margin on first containers and bottom margin on last containers
+$main-container-close: true
+
+// Container padding
+$main-container-padding-vertical: 1rem
+$main-container-padding-horizontal: 4rem
+$main-container-padding-vertical-low: $main-container-padding-vertical
+$main-container-padding-horizontal-low: $main-container-padding-horizontal / 2
+
+// Mixin additional styles to main container
+=main-container-additional-style
+  box-shadow: 0px 3px 5px 0 darken($space-color, 10)
+
+
+// Groups
+// ======
+
+// Horizontal left offset for elements that require if (e.g. ul, ol)
+$elements-offset: 2rem
+
+// Gap between groups (top and bottom margin)
+$group-margin: .6rem
+
+$hr-color: $lines-color
+$hr-width: 1px
+$hr-linetype: solid
+$hr-margin: 1.2rem
+
+$blockquote-border-color: darken($lines-color, 4)
+
+$pre-color: $primary-text-color
+$pre-background-color: lighten($space-color, 4)
+$pre-border-radius: 4px
+
+$ul-offset: $elements-offset
+
+$ol-first-level: decimal
+$ol-second-level: lower-alpha
+$ol-third-level: lower-roman
+
+$h1-title-size: 2.8rem
+$h1-title-lineheight: 1.2
+$h1-size: 2.1rem
+$h1-lineheight: 1.3
+$h2-size: 1.68rem
+$h2-lineheight: 1.35
+$h3-size: 1.26rem
+$h3-lineheight: 1.5
+
+$h-small-size: 1.2rem
+$h-small-color: $secondary-text-color
+
+$table-padding-vertical: .7rem
+$table-padding-horizontal: 1rem
+$table-line-color: $lines-color
+$table-line-width: 1px
+$table-line-width-accent: 2px
+$table-cell-color-stripped: lighten($space-color, 4)
+$table-footer-background-color: darken($bg-color, 4)
+$table-caption-color: $primary-text-color
+$table-thead-color: $primary-text-color
+
+$group-controls-bg-color: lighten($space-color, 4)
+
+
+// Inlines
+// =======
+
+$tags-padding: .01rem .66em 0
+$tags-lineheight: 1.4em
+$tags-border-radius: 1.1em
+$tags-text-size: .9em
+
+=tags-additional-style
+  text-transform: lowercase
+  cursor: pointer
+
+$badge-border-radius: 3px
+
+// =tags-additional-style is applied too!
+=badge-additional-style
+  // pass
+
+
+// Grid
+// ====
+
+$grid-row-margin-bottom: $group-margin
+
+$grid-col-padding-vertical: 0
+$grid-col-padding-horizontal: .5rem
+$grid-col-padding-vertical-low: $grid-col-padding-vertical / 2
+$grid-col-padding-horizontal-low: 0
+
+
+// Forms
+// =====
+
+$input-font-size: .9rem
+$input-lineheight: 1.4
+
+$input-border-padding: .7rem
+
+$input-border-color: darken($lines-color, 4)
+$input-bg-color: transparent
+$input-border-color-accent: #000000
+
+$input-color-disabled: $secondary-text-color
+$input-bg-color-disabled: darken($bg-color, 4)
+
+$input-border-color-success: desaturate(lighten($green-bg, 30), 70)
+$input-border-color-error: desaturate(lighten($red-bg, 30), 30)
+
+$input-border-radius: 2px
+
+$input-group-margin-bottom: 1rem
+
+=input-additional-style
+  box-shadow: inset 0 1px 1px $space-color
+
+$input-label-size: .9rem
+
+$input-label-size-small: .9rem
+$input-label-color-small: $secondary-text-color
+
+$input-label-color-success: $green-bg
+$input-label-color-error: $red-bg
+
+$input-color-required: $red-bg
+
+$button-color-primary: $blue-color
+$button-bg-color-primary: $blue-bg
+$button-border-color-primary: $blue-bg
+
+$button-color-secondary: $blue-bg
+$button-bg-color-secondary: transparent
+$button-border-color-secondary: $blue-bg
+
+
+// Icons
+// =====
+
+$icon-fontsize-multiplier: .95
+
+$icon-fontfamily: '_entypo'
+
+=icon-font
+  @font-face
+    font-family: $icon-fontfamily
+    src: url('../fonts/entypo.eot')
+    src: url('../fonts/entypo.eot') format('embedded-opentype')
+    src: url('../fonts/entypo.woff') format('woff')
+    src: url('../fonts/entypo.ttf') format('truetype')
+    font-weight: normal
+    font-style: normal

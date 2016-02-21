@@ -1,0 +1,142 @@
+/*
+ * Tags and badges
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+
+%tag-animated
+  -webkit-transition: $anim-duration linear
+  -moz-transition: $anim-duration linear
+  -o-transition: $anim-duration linear
+  transition: $anim-duration linear
+  opacity: 1
+  max-width: 10em
+
+
+=tag-background($background, $color, $outline-border: $background, $outline-color: $background)
+  background: $background
+  color: $color
+
+  &.outline
+    // @if (lightness($outline-color) > 55)
+    //   background: lighten(desaturate($outline-color, 70), 40)
+    //   color: darken($outline-color, 10)
+    color: $outline-color
+    background: none
+    border: 1px solid $outline-border
+
+
+.tag
+  @extend %inline !optional
+  padding: $tags-padding
+  line-height: $tags-lineheight
+  border-radius: $tags-border-radius
+  font-size: $tags-text-size
+  overflow: hidden
+  white-space: nowrap
+  border: 1px solid transparent
+
+  +tags-additional-style
+
+  & > .icon
+    margin-right: .2em
+
+  & > .icon + .animated
+    margin-left: -.2em
+
+  &:hover > .icon + .animated
+    margin-left: 0
+
+  & > .animated
+    -webkit-transition: $anim-duration linear
+    -moz-transition: $anim-duration linear
+    -o-transition: $anim-duration linear
+    transition: $anim-duration linear
+    display: inline-block
+    opacity: 0
+    max-width: 0
+
+  &:hover .animated
+    @extend %tag-animated
+
+  +tag-background($lines-color, $text-color, darken($lines-color, 10), lighten($text-color, 10))
+
+  &.plain
+    border-radius: 0
+    padding: 0 .11em
+    +tag-background($main-container-color, $text-color, $main-container-color, $text-color)
+
+    &:first-child
+      padding-left: 0
+
+    &:last-child
+      padding-right: 0
+
+  &.black
+    +tag-background($black-bg, $black-color)
+
+  &.blue
+    +tag-background($blue-bg, $blue-color)
+
+  &.orange
+    +tag-background($orange-bg, $orange-color)
+
+  &.purple
+    +tag-background($purple-bg, $purple-color)
+
+  &.marshy
+    +tag-background($marshy-bg, $marshy-color)
+
+  &.turquoise
+    +tag-background($turquoise-bg, $turquoise-color)
+
+  &.red
+    +tag-background($red-bg, $red-color)
+
+  &.yellow
+    +tag-background($yellow-bg, $yellow-color)
+
+  &.green
+    +tag-background($green-bg, $green-color)
+
+  &.info
+    +tag-background($info-color, $info-bg)
+
+  &.err
+    +tag-background($err-color, $err-bg)
+
+  &.warn
+    +tag-background($warn-color, $warn-bg)
+
+  &.ok
+    +tag-background($ok-color, $ok-bg)
+
+
+.badge
+  @extend .tag
+
+  border-radius: $badge-border-radius
+
+  +badge-additional-style
+
+.badge-group
+  .badge
+    border-radius: 0
+    margin-right: -1px
+
+  &:hover .animated
+    @extend %tag-animated
+
+  .badge:first-child
+    border-top-left-radius: $badge-border-radius
+    border-bottom-left-radius: $badge-border-radius
+
+  .badge:last-child
+    border-top-right-radius: $badge-border-radius
+    border-bottom-right-radius: $badge-border-radius
+    margin-right: 0

@@ -1,0 +1,53 @@
+//
+// Extract calues from array
+//
+// Taken from github gist cocopon/sass_edge_functions
+//
+// Example:
+//
+// $padding: 1px 2px 3px;
+//   top($padding) ...... 1px
+//   right($padding) .... 2px
+//   bottom($padding) ... 3px
+//   left($padding) ..... 2px
+//
+// This code is a part of the Light package
+// which is distributed under MIT license terms.
+
+@function top($args)
+  $len: length($args)
+  @if ($len >= 1 and $len <= 4)
+    @return nth($args, 1)
+
+@function right($args)
+  $len: length($args)
+  @if ($len == 1)
+    @return nth($args, 1)
+  @if ($len == 2)
+    @return nth($args, 2)
+  @if ($len == 3)
+    @return nth($args, 2)
+  @if ($len == 4)
+    @return nth($args, 2)
+
+@function bottom($args)
+  $len: length($args)
+  @if ($len == 1)
+    @return nth($args, 1)
+  @if ($len == 2)
+    @return nth($args, 1)
+  @if ($len == 3)
+    @return nth($args, 3)
+  @if ($len == 4)
+    @return nth($args, 3)
+
+@function left($args)
+  $len: length($args)
+  @if ($len == 1)
+    @return nth($args, 1)
+  @if ($len == 2)
+    @return nth($args, 2)
+  @if ($len == 3)
+    @return nth($args, 2)
+  @if ($len == 4)
+    @return nth($args, 4)

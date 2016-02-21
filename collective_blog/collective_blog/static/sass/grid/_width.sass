@@ -1,0 +1,61 @@
+/*
+ * Width modifiers
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import 'width_mixins'
+
+=width-max
+  +respond-to(low)
+    width: 100%
+
+.width-one, .width-1
+  +width-max
+  +set-width(1)
+.width-two, .width-2
+  +width-max
+  +set-width(2)
+.width-three, .width-3
+  +width-max
+  +set-width(3)
+.width-four, .width-4
+  +width-max
+  +set-width(4)
+.width-five, .width-5
+  +width-max
+  +set-width(5)
+.width-six, .width-6
+  +width-max
+  +set-width(6)
+.width-seven, .width-7
+  +width-max
+  +set-width(7)
+.width-eight, .width-8
+  +width-max
+  +set-width(8)
+.width-nine, .width-9
+  +width-max
+  +set-width(9)
+.width-ten, .width-10
+  +width-max
+  +set-width(10)
+.width-eleven, .width-11
+  +width-max
+  +set-width(11)
+.width-twelve, .width-12
+  +width-max
+  +set-width(12)
+
+.width-one-third
+  +width-max
+  width: 100% * 1 / 3
+
+.width-two-thirds
+  +width-max
+  width: 100% * 2 / 3
+
+.width-one-half
+  +width-max
+  width: 100% * 1 / 2

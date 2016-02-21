@@ -1,0 +1,64 @@
+/*
+ * Central groups
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+
+@import '../settings'
+@import '../misc/media_queries'
+
+hr
+  @extend %group !optional
+  margin-top: $hr-margin
+  margin-bottom: $hr-margin
+  border: none
+  border-bottom: $hr-width $hr-linetype $hr-color
+  @extend %bleed-low-only !optional
+
+p
+  @extend %group !optional
+
+address
+  @extend %group !optional
+  font-style: normal
+  font-size: .95rem
+
+blockquote
+  @extend %group !optional
+
+  border-left: 2px solid $blockquote-border-color
+  padding-left: 1rem
+
+  margin-top: $group-margin / 0.6
+  margin-bottom: $group-margin / 0.6
+
+ul
+  @extend %group !optional
+  margin: 0 $ul-offset
+
+ol
+  @extend ul
+
+  li
+    list-style-type: $ol-first-level
+  ol li
+    list-style-type: $ol-second-level
+  ol ol li
+    list-style-type: $ol-third-level
+
+dl
+  @extend %group !optional
+
+  dt
+    font-weight: bold
+
+  dd
+    margin-left: $ul-offset
+
+.controls
+  @extend %group !optional
+  @extend %bleed !optional
+  @extend %unbleed !optional
+
+  background: $group-controls-bg-color
