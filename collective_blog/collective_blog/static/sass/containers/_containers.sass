@@ -31,7 +31,6 @@
   +main-container-additional-style
   
   background: $main-container-color
-
   margin: $main-container-spacing 0
 
   @if $main-container-close
@@ -48,5 +47,26 @@
     padding: $main-container-padding-vertical-low $main-container-padding-horizontal-low
     +bleed($main-container-padding-vertical-low, $main-container-padding-horizontal-low)
 
-form
+.shadowed.container
+  @extend %container !optional
+  text-align: center
+  margin: 2 * $main-container-spacing 0 $main-container-spacing / 2
+
+.login.container
+  @extend %container !optional
+
+  +main-container-additional-style
+
+  background: $main-container-color
+  margin: $main-container-spacing auto
+  max-width: 450px
+
+  padding: $main-container-padding-vertical $main-container-padding-horizontal
+
+  +respond-to(low)
+    max-width: none
+    margin: $main-container-spacing 0
+    padding: $main-container-padding-vertical-low $main-container-padding-horizontal-low
+
+.form.container
   @extend .primary.container

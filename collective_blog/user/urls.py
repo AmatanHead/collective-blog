@@ -1,8 +1,11 @@
 import django.contrib.auth.views as v
 from django.conf.urls import include, url
 
+from user.forms import AuthenticationForm
+
 urlpatterns = [
-    url(r'a/login/$', v.login, name='login'),
+    url(r'a/login/$', v.login,
+        {'authentication_form': AuthenticationForm}, name='login'),
 
     url(r'a/logout/$', v.logout, name='logout'),
 

@@ -1,44 +1,28 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load forms %}
 
 {% block title %}{% trans "Log in" %}{% endblock %}
 
-{% block content %}
-    <div class="content">
-        <form method="post" action="" class="forms">
-            {% csrf_token %}
-            <fieldset>
-                <legend>{% trans 'Log in' %}</legend>
-
-                <div class="container">
-
-                    {% form_errlist form %}
-
-                    <div class="row">
-                        {% form_field form.username "one-half column" %}
-                        {% form_field form.password "one-half column" %}
-                    </div>
-                </div>
-
-                <div class="control-buttons">
-                    <div class="container">
-                        <button type="submit" class="primary">{% trans "Log in" %}</button>
-                        <div class="button button-link"><a href="{% url 'registration_register' %}">{% trans "Register" %}</a></div>
-                        <div class="button button-link"><a href="{% url 'password_reset' %}">{% trans "Reset password" %}</a></div>
-                    </div>
-                </div>
-
-            </fieldset>
-
-{#            <div class="meta">#}
-{#                {% trans "Forgot your password?" %} <a href="{% url 'password_reset' %}">{% trans "Reset it" %}</a>.#}
-{#            </div>#}
-{#            <div class="meta">#}
-{#                {% trans "Not a member?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.#}
-{#            </div>#}
-
-            <input type="hidden" name="next" value="{{ next }}" />
-        </form>
+{% block nav %}
+    <div class="shadowed container">
+        <h3><a href="/">{{ global_site_name }}</a></h3>
     </div>
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="" class="login container">
+        <h2 class="title"><a href="/">{% trans 'Log in' %}</a></h2>
+        {% csrf_token %}
+        {{ form.as_section }}
+        <section class="separate">
+            <button type="submit" class="primary">{% trans "Log in" %}</button>
+        </section>
+        <section>
+            <small>
+                <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>
+                &bull;
+                <a href="{% url 'password_reset' %}">{% trans "Reset password" %}</a>
+            </small>
+        </section>
+    </form>
 {% endblock %}

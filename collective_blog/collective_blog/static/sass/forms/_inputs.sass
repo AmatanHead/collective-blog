@@ -80,6 +80,9 @@ button,
 form section
   margin-bottom: $input-group-margin-bottom
 
+form section.separate
+  padding-top: $input-group-margin-bottom / 2
+
 label
   font-size: $input-label-size
 
@@ -104,8 +107,7 @@ label
 
   font-size: $input-label-size-small
   color: $input-label-color-small
-  margin: 0
-  margin-bottom: .2rem
+  margin: 0 0 .2rem
   border: none
   line-height: 1
 
@@ -116,7 +118,7 @@ label
     &:before
       content: "- "
 
-.errlist
+.errorlist
   @extend .desc
 
   color: $input-label-color-error

@@ -7,35 +7,23 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     {% block style %}
-        <link rel="stylesheet" href="{% static "main.css" %}">
+        <link rel="stylesheet" href="{% static "build/main.css" %}">
     {% endblock %}
     {% block extra_style %}
     {% endblock %}
 </head>
 <body>
-        <div class="navbar">
-            <div class="content">
-                <div class="navbar-item-left">
-                    <b><a href="/">{{ global_site_name }}</a></b>
-                </div>
-                {% if not user.is_anonymous %}
-                    <div class="navbar-item">
-                        <b><a href="{% url 'self' %}">{{ user }}</a></b>
-                        [<a href="{% url "logout" %}">{% trans "Log out" %}</a>]
-                    </div>
-                {% else %}
-                    <div class="navbar-item">
-                        <a href="{% url "registration_register" %}">{% trans "Register" %}</a>
-                    </div>
-                    <div class="navbar-item">
-                        <a href="{% url "login" %}">{% trans "Log in" %}</a>
-                    </div>
-                {% endif %}
+    <div class="block">
+        {% block nav %}
+            <div class="primary container">
+                <h3><a href="/">{{ global_site_name }}</a></h3>
             </div>
-        </div>
-    <br><br>
-    {% block content %}
-    {% endblock %}
-    <br><br>
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
+
+    </div>
 </body>
 </html>
