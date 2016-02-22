@@ -1,14 +1,11 @@
-{% extends "registration/registration_base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {% block title %}{% trans "Activation email sent" %}{% endblock %}
 
 {% block content %}
-<div class="content">
-
-    <p>{% trans "Please check your email to complete the registration process." %}</p>
+<div class="primary container">
+    <p class="separate">{% trans "Please check your email to complete the registration process." %}</p>
     <p><a href="{% url 'login' %}">{% trans "Log in" %}</a></p>
-
 </div>
 {% endblock %}
-

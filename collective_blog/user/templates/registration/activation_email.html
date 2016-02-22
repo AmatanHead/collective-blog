@@ -8,16 +8,16 @@
 
 <body>
 <p>
-    {% blocktrans with site_name=site.name %}
-    You (or someone pretending to be you) have asked to register an account at
-    {{ site_name }}.  If this wasn't you, please ignore this email
-    and your address will be removed from our records.
+    {% blocktrans trimmed with site_name=site.name %}
+        You (or someone pretending to be you) have asked to register an account at
+        {{ site_name }}. If this wasn't you, please ignore this email
+        and your address will be removed from our records.
     {% endblocktrans %}
 </p>
 <p>
-    {% blocktrans %}
-    To activate this account, please click the following link within the next
-    {{ expiration_days }} days:
+    {% blocktrans trimmed %}
+        To activate this account, please click the following link within the next
+        {{ expiration_days }} days:
     {% endblocktrans %}
 </p>
 
@@ -27,7 +27,7 @@
     </a>
 </p>
 <p>
-    {% blocktrans %}Best regards{% endblocktrans %},
+    {% trans "Best regards" %},
     {{ site_name }}
 </p>
 </body>

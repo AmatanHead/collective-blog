@@ -47,7 +47,7 @@ class BaseFormRenderer(BaseForm):
             label = ''
 
         if bf.help_text:
-            help_text = '<span class="desc">' % force_text(bf.help_text)
+            help_text = '<div class="desc">%s</div>' % force_text(bf.help_text)
         else:
             help_text = ''
 
@@ -76,7 +76,10 @@ class BaseFormRenderer(BaseForm):
 
         served_fields = set()
 
-        html_output = '<section class="separate">%s</section>' % force_text(self.non_field_errors())
+        if self.non_field_errors():
+            html_output = '<section class="separate">%s</section>' % force_text(self.non_field_errors())
+        else:
+            html_output = ''
 
         for field in renderer:
             if isinstance(field, (list, tuple)):

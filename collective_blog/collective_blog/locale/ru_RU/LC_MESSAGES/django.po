@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-31 21:33+0300\n"
+"POT-Creation-Date: 2016-02-22 04:08+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,20 +19,8 @@ msgstr ""
 
 #: collective_blog/settings.py:132
 msgid "Russian"
-msgstr "Русский"
+msgstr ""
 
 #: collective_blog/settings.py:133
 msgid "English"
-msgstr "English"
-
-#: collective_blog/templates/base.html:23
-msgid "Log out"
-msgstr "Выйти"
-
-#: collective_blog/templates/base.html:30
-msgid "Register"
-msgstr "Зарегистрироваться"
-
-#: collective_blog/templates/base.html:33
-msgid "Log in"
-msgstr "Войти"
+msgstr ""

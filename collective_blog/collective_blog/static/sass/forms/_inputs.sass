@@ -77,12 +77,6 @@ button,
   padding-left: 2 * left($input-border-padding)
   padding-right: 2 * right($input-border-padding)
 
-form section
-  margin-bottom: $input-group-margin-bottom
-
-form section.separate
-  padding-top: $input-group-margin-bottom / 2
-
 label
   font-size: $input-label-size
 
@@ -111,12 +105,12 @@ label
   border: none
   line-height: 1
 
+  ul
+    margin: 0
+
   li
     display: block
     margin: 0 0 .2rem .1rem
-
-    &:before
-      content: "- "
 
 .errorlist
   @extend .desc
@@ -148,4 +142,4 @@ button, .button
     border: 1px solid $button-border-color-secondary
 
   &.plain
-    border-style: dashed
+    border: 1px dashed darken($input-border-color, 4)
