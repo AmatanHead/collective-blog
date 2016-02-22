@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% blocktrans trimmed with username=user %}User profile: {{ username }}{% endblocktrans %}{% endblock %}
+
+
+{% block content %}
+    <div class="primary container">
+        <h1>
+            {{ user|capfirst }}
+            <small>{% if self_profile %}{% trans "your profile" %}{% else %}{% trans "user profile" %}{% endif %}</small>
+        </h1>
+
+        {% if user.first_name or user.last_name %}
+            <p>{{ user.first_name }} {{ user.last_name }}</p>
+        {% endif %}
+
+        {% if user.profile.location %}
+            <p>{% blocktrans trimmed with location=user.profile.location %}From {{ location }}{% endblocktrans %}</p>
+        {% endif %}
+
+        {% if user.profile.birthday %}
+            <p>{% blocktrans trimmed with birthday=user.profile.birthday %}Birthday at {{ birthday }}{% endblocktrans %}</p>
+        {% endif %}
+
+        {% if user.profile.about_html %}
+            {{ user.profile.about_html|safe }}
+        {% endif %}
+
+        {% if editable %}
+            <a href="{% url 'edit_profile' username=user.username %}">{% trans "Edit profile" %}</a>
+        {% endif %}
+
+        <hr>
+
+        <p>{% trans "No membership" %}</p>
+
+        <hr>
+
+    </div>
+{% endblock %}

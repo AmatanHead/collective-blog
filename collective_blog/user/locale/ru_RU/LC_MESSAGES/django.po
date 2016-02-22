@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-22 04:08+0300\n"
+"POT-Creation-Date: 2016-02-22 21:14+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,63 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: user/models.py:14
+#: user/models/profile.py:21
+msgid "Location"
+msgstr ""
+
+#: user/models/profile.py:24
+msgid "Birthday"
+msgstr ""
+
+#: user/models/profile.py:27
+msgid "About"
+msgstr ""
+
+#: user/models/profile.py:28
+msgid "Tell us about yourself"
+msgstr ""
+
+#: user/models/profile.py:32
+msgid "Show email"
+msgstr ""
+
+#: user/models/profile.py:43
 msgid "Profile"
 msgstr ""
 
-#: user/models.py:15
+#: user/models/profile.py:44
 msgid "Profiles"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:4
+#, python-format
+msgid "User profile: %(username)s"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:11
+msgid "your profile"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:11
+msgid "user profile"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:19
+#, python-format
+msgid "From %(location)s"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:23
+#, python-format
+msgid "Birthday at %(birthday)s"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:31
+msgid "Edit profile"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:36
+msgid "No membership"
 msgstr ""
 
 #: user/templates/registration/activate.html:6

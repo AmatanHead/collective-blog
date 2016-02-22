@@ -28,6 +28,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Log all sql queries
+DB_DEBUG = DEBUG
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'SECRET_KEY'
 
@@ -69,6 +72,9 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 ]
+
+if DB_DEBUG:
+    MIDDLEWARE_CLASSES.append('collective_blog.middleware.TerminalLogging')
 
 ROOT_URLCONF = 'collective_blog.urls'
 
