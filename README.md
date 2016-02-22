@@ -46,3 +46,4 @@ And **no** WYSIWYG! ('cause it's evil!)
 * `collective_blog` — django project
   * `collective_blog` — root app; Holds config, root url dispatcher, common css, scripts, and templates.
   * `user` — auth and user profile stuff, everything behind `/u/`; Holds auth logic and user profiles.
+  * `appearance` — styles and form renderer.

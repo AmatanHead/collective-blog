@@ -1,33 +1,67 @@
+"""
+Base form classes for rendering light-compatible html.
+
+"""
+
 from django.forms.forms import BaseForm
 from django.utils.html import conditional_escape
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 
+import re
+
 
 class BaseFormRenderer(BaseForm):
+    """Mixin that provides functions for rendering light-compatible html"""
+
     def _render_group(self, group):
+        """Render several fields at the same line.
+        Responsive grid is used.
+
+        """
         if len(group) > 3:
             raise AssertionError('group \'%s\' is too long' % repr(group))
         elif len(group) == 3:
             cols = 'one-third'
+            offset_classes = ['',
+                              ' offset-by-one-third',
+                              ' offset-by-two-thirds']
         elif len(group) == 2:
             cols = 'one-half'
+            offset_classes = ['',
+                              ' offset-by-one-half']
         else:
             raise AssertionError('group \'%s\' is too short' % repr(group))
 
         html_output = '<div class="row">'
 
+        offset = 0
+
         for field in group:
-            html_output += '<div class="%s column">' % cols
-            html_output += self._render_field(field)
-            html_output += '</div>'
+            if field is None:
+                offset += 1
+            else:
+                offset_class = offset_classes[offset]
+                offset = 0
+                html_output += '<div class="%s column%s">' % (
+                    cols, offset_class)
+                html_output += self._render_field(field)
+                html_output += '</div>'
 
         html_output += '</div>'
 
         return html_output
 
+    # Matches `renderer` elements that will expand to <hr>s
+    _separator = re.compile(r'-+')
+
     def _render_field(self, field):
-        if field not in self.fields:
+        """Render a <section> with a single field"""
+        if field is None:
+            return '<section>&nbsp;</section>'
+        elif self._separator.match(field):
+            return '<hr>'
+        elif field not in self.fields:
             raise IndexError('unknown field %s' % field)
 
         bf = self[field]
@@ -70,7 +104,22 @@ class BaseFormRenderer(BaseForm):
                 })
 
     def as_section(self):
-        """Returns this form rendered as HTML <section>s."""
+        """Returns this form rendered as HTML <section>s.
+
+        Uou can set up `renderer` array in your class.
+        This array should contain a list of field names.
+
+        If such one is specified, this function will first render that fields.
+
+        Each element of the `renderer` list can be:
+        * A string of hyphens (e.g. '-----')
+          will render the `<hr>` tag.
+        * A name of a field will render that field.
+        * A tuple of two or three field names will render that fields
+          in a single row (using flexible grid).
+        * A `None` object will render an empty `<section>`.
+
+        """
 
         renderer = getattr(self, 'renderer', [])
 

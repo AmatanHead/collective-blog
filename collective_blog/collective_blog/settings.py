@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
     'collective_blog',
     'user',
+    'appearance',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -202,11 +203,6 @@ CKEDITOR_UPLOAD_PATH = 'upload/'
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-)
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'collective_blog/static'),
-    os.path.join(BASE_DIR, 'user/static'),
 )
 
 

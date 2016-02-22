@@ -1,3 +1,10 @@
+"""
+Forms that are used in built-in authentication and registration views.
+
+For most of that forms we just mixin renderer.
+
+"""
+
 from registration.forms import RegistrationFormUniqueEmail
 from captcha.fields import ReCaptchaField
 
@@ -5,7 +12,7 @@ from django.contrib.auth.forms import AuthenticationForm as _AuthenticationForm
 from django.contrib.auth.forms import PasswordResetForm as _PasswordResetForm
 from django.contrib.auth.forms import PasswordChangeForm as _PasswordChangeForm
 
-from collective_blog.forms import BaseFormRenderer
+from appearance.forms import BaseFormRenderer
 
 
 class AuthenticationForm(_AuthenticationForm, BaseFormRenderer):
