@@ -2,9 +2,43 @@
 
 from json import dumps, loads
 
+import hoep
+from .renderers import Hoep
+
+
 class Markdown(object):
-    def __init__(self, source, html=None):
+    def __init__(self, source, html=None, renderer=None):
+        """
+        Markdown data type contains source markdown data and cached
+        html.
+
+        :param source: Source markdown data.
+        :param html: Generated html. State is considered to be `clean` if the
+          html is provided and `dirty` otherwise.
+        :param renderer: A class instance with `render` method
+          (typically a `Hoep` instance).
+          Warning:
+
+        """
+        if renderer is None:
+            renderer = Hoep(
+                extensions=(
+                    hoep.EXT_AUTOLINK |
+                    hoep.EXT_FENCED_CODE |
+                    hoep.EXT_HIGHLIGHT |
+                    hoep.EXT_NO_INTRA_EMPHASIS |
+                    hoep.EXT_STRIKETHROUGH |
+                    hoep.EXT_SUPERSCRIPT |
+                    hoep.EXT_TABLES
+                ),
+                render_flags=(
+                    hoep.HTML_ESCAPE |
+                    hoep.HTML_EXPAND_TABS
+                )
+            )
+
         self._source = source
+        self._renderer = renderer
         if html is None:
             self._html = ''
             self._is_dirty = True
@@ -12,13 +46,10 @@ class Markdown(object):
             self._html = html
             self._is_dirty = False
 
-    def _source_get(self):
-        return self._source
-
     @property
     def source(self):
         """
-        Return source markdown string.
+        :return: The source markdown string.
 
         """
         return self._source
@@ -26,10 +57,12 @@ class Markdown(object):
     @source.setter
     def source(self, value):
         """
-        Set source markdown string and mark the object state as `dirty`.
+        Set the source markdown string and mark the object state as `dirty`.
 
         Setting source string does not cause any compilation process.
         That is, markdown compilation is done in a lazy way.
+
+        :param value: New source value.
 
         """
         self._source = value
@@ -38,7 +71,7 @@ class Markdown(object):
     @property
     def html(self):
         """
-        Returns html value.
+        :return: The html value.
 
         If the state of the object is `dirty`,
         html may not match the source data.
@@ -49,7 +82,7 @@ class Markdown(object):
     @property
     def is_dirty(self):
         """
-        Returns object state.
+        :return: Object state.
 
         For dirty objects, html is not guaranteed to match the source data.
 
@@ -59,7 +92,7 @@ class Markdown(object):
     @property
     def html_force(self):
         """
-        Returns html value.
+        :return: The html value.
 
         Accessing this property forces the html updating process.
 
@@ -74,15 +107,19 @@ class Markdown(object):
         The compilation process is not invoked on clean classes unless
         `force` is set to `True`.
 
+        :param force: Force compilation.
+
         """
         if self.is_dirty or force:
             # Dummy
-            self._html = (self._source + '\n<br>\n<mark>Compiled</mark><br>')
+            self._html = self._renderer.render(self._source)
             self._is_dirty = False
 
     def serialize(self):
         """
         Returns the JSON representation of the class.
+
+        :return: JSON string.
 
         """
         return dumps(dict(source=self.source, html=self.html))
@@ -93,19 +130,24 @@ class Markdown(object):
         Returns the markdown instance parsed from the JSON representation
         assuming that in is clean.
 
+        :param json: Source JSON string.
+        :return: A `Markdown` class instance.
+
         """
         data = loads(json)
-        return cls(data['source'], data['html'])
+        return cls(data['source'], data['html'] if 'html' in data else None)
 
     def deconstruct(self):
         """
         Deconstruct this field for further serialization
         (used in migrations)
 
+        :return: Standard deconstruction result.
+
         """
-        path = "markdown.datatype.Markdown"
+        path = "%s.%s" % (self.__class__.__module__, self.__class__.__name__)
         args = []
-        kwargs = dict(source=self.source)
+        kwargs = dict(source=self.source, renderer=self._renderer)
         if not self.is_dirty:
             kwargs.update(dict(html=self.html))
         return path, args, kwargs

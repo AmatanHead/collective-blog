@@ -27,15 +27,8 @@ class Profile(models.Model):
     birthday = models.DateField(null=True, blank=True,
                                 verbose_name=_('Birthday'))
 
-    # about_source = models.TextField(blank=True,
-    #                                 verbose_name=_('About'),
-    #                                 help_text=_('Tell us about yourself'))
-    #
-    # about_html = models.TextField(blank=True)
-
     about = MarkdownField(blank=True,
                           markdown=Markdown,
-                          default='Hi!',
                           verbose_name=_('About'),
                           help_text=_('Tell us about yourself'))
 

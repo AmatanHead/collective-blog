@@ -1,6 +1,6 @@
 """Markdown model fields"""
 
-from django.db.models import TextField
+from django.db.models import TextField, NOT_PROVIDED
 from django.core import exceptions
 from django import forms
 
@@ -9,19 +9,16 @@ from .datatype import Markdown
 
 
 class MarkdownField(TextField):
-    """
-    Database field for storing `Markdown` objects.
-
-    This field forces the html update process while preparing for query.
-    Therefore it is guaranteed that html stored in a database
-    is always ut-to-date.
-
-    """
-
     def __init__(self, *args, markdown=Markdown, db_column=None, source_validators=None,
                  html_validators=None, common_validators=None,
                  **kwargs):
         """
+        Database field for storing `Markdown` objects.
+
+        This field forces the html update process while preparing for query.
+        Therefore it is guaranteed that html stored in a database
+        is always ut-to-date.
+
         Parameters:
 
         :param verbose_name:, :param help_text: A standard features
@@ -102,6 +99,9 @@ class MarkdownField(TextField):
 
         super(MarkdownField, self).__init__(*args, **kwargs)
 
+        if self.default is NOT_PROVIDED:
+            self.default = self.markdown('', '')
+
         if not isinstance(self.default, self.markdown):
             self.default = self.markdown(str(self.default))
 
@@ -111,18 +111,26 @@ class MarkdownField(TextField):
 
         """
         name, path, args, kwargs = super(MarkdownField, self).deconstruct()
-        kwargs.update({
-            'db_column': self._db_column_cached,
-            'source_validators': self.source_validators,
-            'html_validators': self.html_validators,
-            'common_validators': self.common_validators,
-            'markdown': self.markdown,
-        })
+
+        if self._db_column_cached is not None:
+            kwargs.update(dict(db_column=self._db_column_cached))
+
+        if self.source_validators:
+            kwargs.update(dict(source_validators=self.source_validators))
+        if self.html_validators:
+            kwargs.update(dict(html_validators=self.html_validators))
+        if self.common_validators:
+            kwargs.update(dict(common_validators=self.common_validators))
+
+        kwargs.update(dict(markdown=self.markdown))
+
         return name, path, args, kwargs
 
     def run_validators(self, value):
         """
         Run all source, html, and common validators
+
+        :param value: `Markdown` class instance which needs to be validated.
 
         """
         # We are using custom validator lists so we need to overwrite
@@ -133,11 +141,16 @@ class MarkdownField(TextField):
 
     def from_db_value(self, value, *args, **kwargs):
         """
-        From database to python
+        From database to python.
+
+        :param value: JSON value that is stored in the database.
+        :param args:, :param kwargs: Other arguments are unused.
+
+        :return: The `Markdown` class instance.
 
         """
-        if value is None:
-            return value
+        if value is None or not value:
+            return None
         try:
             return self.markdown.deserialize(value)
         except Exception as e:
@@ -145,7 +158,10 @@ class MarkdownField(TextField):
 
     def get_prep_value(self, value):
         """
-        From python to database
+        From python to database.
+
+        :param value: A `Markdown` class instance.
+        :return: JSON serialized `Markdown` class.
 
         """
         if value is None:
@@ -158,6 +174,9 @@ class MarkdownField(TextField):
         """
         From any to python (used in processing forms)
 
+        :param value: Source string, `Markdown`, or None.
+        :return: None or `Markdown`.
+
         """
         if value is None:
             return value
@@ -166,15 +185,22 @@ class MarkdownField(TextField):
         else:
             return self.markdown(value)
 
-    def get_db_prep_lookup(self, lookup_type, value, connection,
-                           prepared=False):
+    def get_db_prep_lookup(self, *args, **kwargs):
         """
         Prepare value for the lookup (e.g. `value__gt=...`)
+
+        :param args:, :param kwargs: Unused.
 
         """
         raise NotImplementedError(self.get_db_prep_lookup)
 
     def formfield(self, **kwargs):
+        """
+        Returns a form field for this model field.
+
+        :param kwargs: Arguments for the form field class.
+        :return: A form field instance.
+        """
         defaults = {
             'form_class': MarkdownFormField,
             'markdown': self.markdown,
@@ -184,7 +210,11 @@ class MarkdownField(TextField):
 
     def contribute_to_class(self, cls, name, virtual_only=False):
         """
-        Register the field and add ancillary attributes
+        Register the field and add ancillary attributes.
+
+        :param cls: Model instance.
+        :param name: Field name.
+        :param virtual_only: Virtual only flag.
 
         """
         super(MarkdownField, self).contribute_to_class(cls, name, virtual_only)
@@ -224,7 +254,10 @@ class MarkdownFormField(forms.fields.CharField):
 
     def to_python(self, value):
         """
-        Text to python
+        Text to python.
+
+        :param value: Source string, `Markdown`, or None.
+        :return: None or `Markdown`.
 
         """
         if value in self.empty_values and value != '':
@@ -236,7 +269,10 @@ class MarkdownFormField(forms.fields.CharField):
 
     def prepare_value(self, value):
         """
-        Python to text
+        Python to text.
+
+        :param value: A `Markdown` class instance.
+        :return: Source text that will be displayed in a widget.
 
         """
         if isinstance(value, self.markdown):

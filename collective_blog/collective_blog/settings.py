@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'collective_blog',
     'user',
     'appearance',
+    'markdown',
 ]
 
 MIDDLEWARE_CLASSES = [
