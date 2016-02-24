@@ -32,7 +32,7 @@ a:hover
 
 tt
   @extend %inline !optional
-  font-size: $mono-stack
+  font-family: $mono-stack
 
 big, .big
   @extend %inline !optional
@@ -70,7 +70,7 @@ var
 mark
   @extend %inline !optional
   @extend %inline-box
-  +inline-box-style($yellow-bg, none)
+  +inline-box-style($yellow-bg, inherit)
 
 kbd
   @extend %inline !optional
@@ -80,13 +80,13 @@ kbd
 ins
   @extend %inline !optional
   @extend %inline-box
-  +inline-box-style(desaturate(lighten($ins-color, 80), 40), none)
+  +inline-box-style(desaturate(lighten($ins-color, 80), 40), inherit)
   white-space: inherit
 
 del
   @extend %inline !optional
   @extend %inline-box
-  +inline-box-style(lighten($del-color, 50), none)
+  +inline-box-style(lighten($del-color, 50), inherit)
   white-space: inherit
 
 u
