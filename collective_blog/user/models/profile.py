@@ -3,6 +3,9 @@ from collective_blog import settings
 
 from django.utils.translation import ugettext_lazy as _
 
+from markdown.fields import MarkdownField
+from markdown.datatype import Markdown
+
 
 class Profile(models.Model):
     """Additional model which holds profile data for each user.
@@ -15,21 +18,29 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
-                                related_name='profile')
+                                related_name='profile',
+                                editable=False)
 
     location = models.CharField(max_length=100, blank=True,
                                 verbose_name=_('Location'))
 
-    birthday = models.DateField(null=True,
+    birthday = models.DateField(null=True, blank=True,
                                 verbose_name=_('Birthday'))
 
-    about_source = models.TextField(blank=True,
-                                    verbose_name=_('About'),
-                                    help_text=_('Tell us about yourself'))
+    # about_source = models.TextField(blank=True,
+    #                                 verbose_name=_('About'),
+    #                                 help_text=_('Tell us about yourself'))
+    #
+    # about_html = models.TextField(blank=True)
 
-    about_html = models.TextField(blank=True)
+    about = MarkdownField(blank=True,
+                          markdown=Markdown,
+                          default='Hi!',
+                          verbose_name=_('About'),
+                          help_text=_('Tell us about yourself'))
 
-    email_is_public = models.BooleanField(verbose_name=_('Show email'), default=False)
+    email_is_public = models.BooleanField(verbose_name=_('Show email'),
+                                          default=False)
 
     # To go: karma, votes, liked tags
 
@@ -42,7 +53,7 @@ class Profile(models.Model):
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
-        ordering = ("user", )
+        ordering = ("user",)
 
     def __str__(self):
-        return self.user.username
+        return str(self.user)

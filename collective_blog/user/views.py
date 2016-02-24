@@ -15,11 +15,15 @@ def view_profile(request, username=None):
         user = get_object_or_404(User.objects.select_related('profile'),
                                  username=username)
 
-    self_profile = username is None or user.pk == request.user.pk,
+    is_self_profile = username is None or user.pk == request.user.pk
+
+    # user.profile.about = Profile.about_cls('Markdown')
+    # user.profile.save()
+    # print(user.profile.about)
 
     return render(request, 'profile/view_profile.html', {
         'user': user,
-        'self_profile': self_profile,
+        'self_profile': is_self_profile,
         'editable': Profile.can_edit_profile(request.user, user.profile),
     })
 
