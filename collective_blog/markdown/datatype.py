@@ -1,6 +1,6 @@
 """Markdown data type"""
 
-from json import dumps, loads
+from django.utils import encoding
 
 import hoep
 from .renderers import Hoep
@@ -110,7 +110,7 @@ class Markdown(object):
 
         """
         if self.is_dirty or force:
-            self._html = self._renderer.render(self._source)
+            self._html = self._renderer.render(encoding.force_text(self._source))
             self._is_dirty = False
 
     def deconstruct(self):

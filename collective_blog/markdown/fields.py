@@ -1,6 +1,7 @@
 """Markdown model fields"""
 
 from django.db.models import TextField, NOT_PROVIDED
+from django.utils import encoding
 from django import forms
 
 from .widgets import MarkdownTextarea
@@ -61,7 +62,7 @@ class HtmlCacheDescriptor(object):
         It is used to check that the cached data is up-to-date.
 
         """
-        source = str(len(field.source)) + '\t' + str(field.source)
+        source = encoding.force_text(len(field.source)) + '\t' + encoding.force_text(field.source)
         return '<!-- %s -->' % md5(source.encode()).hexdigest()
 
     hash_re = re.compile(r'^<!-- [a-zA-Z0-9]{32} -->')
@@ -90,7 +91,7 @@ class HtmlCacheDescriptor(object):
     def __set__(self, instance, value):
         self.setup(instance, '')
 
-        hash_str, html = self.split(str(value))
+        hash_str, html = self.split(encoding.force_text(value))
 
         field = getattr(instance, self.destination_field.state_name)
 
@@ -301,7 +302,7 @@ class MarkdownField(TextField):
             self.default = self.markdown('', '')
 
         if not isinstance(self.default, self.markdown):
-            self.default = self.markdown(str(self.default))
+            self.default = self.markdown(encoding.force_text(self.default))
 
         self._html_field = None
 

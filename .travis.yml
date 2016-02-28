@@ -1,0 +1,21 @@
+language: python
+services: mysql
+python:
+  - 2.7
+  - 3.4
+  - 3.5
+env:
+  - DJANGO=1.9.2 DJANGO_SETTINGS_MODULE="collective_blog.settings"
+install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libmysqlclient-dev
+  - pip install -q -r requirements.txt
+  - pip install -q pep8
+  - pip install -q mysqlclient
+before_script:
+  - mysql -e 'create database travis_ci_db;'
+  - cd collective_blog && python manage.py makemigrations && cd ../
+  - cd collective_blog && python manage.py migrate && cd ../
+script:
+  - cd collective_blog && python manage.py test && cd ../
+sudo: true

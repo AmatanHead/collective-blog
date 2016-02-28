@@ -16,33 +16,15 @@ from __future__ import unicode_literals
 import os
 from django.utils.translation import ugettext_lazy as _
 
-
 SITE_NAME = 'a.k.a. Блог'
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
-# TODO: checklist before deploying
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# Log all sql queries
-DB_DEBUG = DEBUG
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'SECRET_KEY'
-
-ALLOWED_HOSTS = ['localhost']
-
-ADMINS = []
-
-MANAGERS = []
-
+if os.getenv('TRAVIS', None):
+    from .travis_settings import *
+else:
+    from .test_settings import *
 
 # Application definition
 
@@ -82,32 +64,7 @@ if DB_DEBUG:
 
 ROOT_URLCONF = 'collective_blog.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'collective_blog/templates'),
-            os.path.join(BASE_DIR, 'user/templates'),
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',
-                'collective_blog.context_processors.sitename.sitename',
-            ],
-        },
-    },
-]
-
 WSGI_APPLICATION = 'collective_blog.wsgi.application'
-
 
 # Auth and registration setup
 
@@ -123,18 +80,11 @@ ACCOUNT_ACTIVATION_DAYS = 30
 
 REGISTRATION_FORM = 'user.forms.RegistrationFormCaptcha'
 
-# RECAPTCHA_PUBLIC_KEY = ''
-RECAPTCHA_PUBLIC_KEY = '6Lcd5hYTAAAAABq47ye0uJEeKh_b3BKVwZOcVwS-'
-
-# RECAPTCHA_PRIVATE_KEY = ''
-RECAPTCHA_PRIVATE_KEY = '6Lcd5hYTAAAAAB8q6JLA1-ZYVGXx3eIyekeQ-i0a'
-
 NOCAPTCHA = True
 
 RECAPTCHA_USE_SSL = True
 
 INCLUDE_AUTH_URLS = False
-
 
 # Localization
 #
@@ -143,18 +93,6 @@ LANGUAGES = [
     ('ru', _('Russian')),
     ('en', _('English')),
 ]
-
-
-# Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -174,7 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -188,19 +125,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Files upload settings
 # https://docs.djangoproject.com/en/1.9/topics/files/
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 MEDIA_URL = '/media/'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
@@ -210,9 +141,3 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
-
-
-# Email settings
-# https://docs.djangoproject.com/en/1.9/topics/email/
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
