@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for collective_blog project.
 
@@ -9,6 +10,8 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
+
+from __future__ import unicode_literals
 
 import os
 from django.utils.translation import ugettext_lazy as _

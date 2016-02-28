@@ -215,12 +215,7 @@ class MarkdownDescriptor(object):
 
 
 class MarkdownField(TextField):
-    def __init__(self, *args,
-                 markdown=Markdown,
-                 state_name=None, cls_name=None,
-                 source_validators=None, html_validators=None,
-                 common_validators=None,
-                 **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Database field for storing `Markdown` objects.
 
@@ -263,6 +258,14 @@ class MarkdownField(TextField):
 
 
         """
+        markdown = kwargs.pop('markdown', Markdown)
+        state_name = kwargs.pop('state_name', None)
+        cls_name = kwargs.pop('cls_name', None)
+        source_validators = kwargs.pop('source_validators', None)
+        html_validators = kwargs.pop('html_validators', None)
+        common_validators = kwargs.pop('common_validators', None)
+
+
         if not common_validators:
             common_validators = []
         if not html_validators:
@@ -412,8 +415,12 @@ class MarkdownFormField(forms.fields.CharField):
 
     """
 
-    def __init__(self, *args, source_validators=None, html_validators=None,
-                 common_validators=None, markdown=None, **kwargs):
+    def __init__(self, *args, **kwargs):
+        source_validators = kwargs.pop('source_validators', None)
+        html_validators = kwargs.pop('html_validators', None)
+        common_validators = kwargs.pop('common_validators', None)
+        markdown = kwargs.pop('markdown', None)
+
         if not common_validators:
             common_validators = []
         if not html_validators:
