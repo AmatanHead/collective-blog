@@ -25,6 +25,7 @@ Each user has its rating (karma). Users can vote up and down for any other users
 
 ## Tools
 
+* Python 2.7 || >= 3.4
 * [Django](https://www.djangoproject.com) along with plugins for captcha, CKEditor, and maybe more.
 * [Markdown](https://github.com/google/py-gfm) (Github-Flavored, of course).
 * [Codemirror](https://eloquentjavascript.net).

@@ -1,7 +1,8 @@
 from django.db import models
-from collective_blog import settings
+from django.db.models.deletion import ProtectedError
+from django.utils.translation import ugettext_lazy as _, ugettext as __
 
-from django.utils.translation import ugettext_lazy as _
+from collective_blog import settings
 
 from markdown.fields import MarkdownField, HtmlCacheField
 from markdown.datatype import Markdown
@@ -41,9 +42,30 @@ class Profile(models.Model):
 
     @classmethod
     def can_edit_profile(cls, user, profile):
-        return (user.pk == profile.user.pk or
-                user.has_perm('user.can_change_profile') or
-                user.has_perm('auth.can_change_user'))
+        has_perms = user.is_active and user.is_staff and (
+            user.has_perm('user.change_profile') or
+            user.has_perm('auth.change_user'))
+
+        return user.is_active and (user.pk == profile.user.pk or has_perms)
+
+    @classmethod
+    def can_see_email(cls, user, profile):
+        has_perms = user.is_active and user.is_staff and (
+            user.has_perm('user.change_profile') or
+            user.has_perm('auth.change_user'))
+
+        return profile.email_is_public or user.pk == profile.user.pk or has_perms
+
+    @classmethod
+    def visible_email(cls, user, profile):
+        if cls.can_see_email(user, profile) and not profile.email_is_public:
+            return profile.user.email + ' (' + __('Only you can see the email') + ')'
+        elif profile.email_is_public:
+            return profile.user.email
+
+    def delete(self, using=None, keep_parents=False):
+        self.user.delete()
+        super(Profile, self).delete(using, keep_parents)
 
     class Meta:
         verbose_name = _("Profile")
