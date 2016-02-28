@@ -9,135 +9,18 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
+
 """
 
-from __future__ import unicode_literals
-
 import os
-from django.utils.translation import ugettext_lazy as _
 
-SITE_NAME = 'a.k.a. Блог'
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-if os.getenv('TRAVIS', None):
+if 'TRAVIS' in os.environ:
+    print('\033[00;32m'
+          'Loading travis settings'
+          '\033[0;00m')
     from .travis_settings import *
 else:
+    print('\033[00;32m'
+          'Loading development settings'
+          '\033[0;00m')
     from .test_settings import *
-
-# Application definition
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    'registration',
-    'ckeditor',
-    'ckeditor_uploader',
-    'captcha',
-
-    'collective_blog',
-    'user',
-    'appearance',
-    'markdown',
-]
-
-MIDDLEWARE_CLASSES = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-]
-
-if DB_DEBUG:
-    MIDDLEWARE_CLASSES.append('collective_blog.middleware.TerminalLogging')
-
-ROOT_URLCONF = 'collective_blog.urls'
-
-WSGI_APPLICATION = 'collective_blog.wsgi.application'
-
-# Auth and registration setup
-
-AUTH_USER_MODEL = 'auth.User'
-
-LOGIN_URL = '/u/a/login/'
-
-LOGIN_REDIRECT_URL = '/'
-
-REGISTRATION_AUTO_LOGIN = True
-
-ACCOUNT_ACTIVATION_DAYS = 30
-
-REGISTRATION_FORM = 'user.forms.RegistrationFormCaptcha'
-
-NOCAPTCHA = True
-
-RECAPTCHA_USE_SSL = True
-
-INCLUDE_AUTH_URLS = False
-
-# Localization
-#
-
-LANGUAGES = [
-    ('ru', _('Russian')),
-    ('en', _('English')),
-]
-
-# Password validation
-# https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.9/topics/i18n/
-
-LANGUAGE_CODE = 'ru-RU'
-
-TIME_ZONE = 'Europe/Moscow'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-# Files upload settings
-# https://docs.djangoproject.com/en/1.9/topics/files/
-
-MEDIA_URL = '/media/'
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_URL = '/static/'
-
-CKEDITOR_UPLOAD_PATH = 'upload/'
-
-STATICFILES_FINDERS = (
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-)
