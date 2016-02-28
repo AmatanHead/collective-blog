@@ -23,8 +23,8 @@
             <p>{% blocktrans trimmed with birthday=user.profile.birthday %}Birthday at {{ birthday }}{% endblocktrans %}</p>
         {% endif %}
 
-        {% if user.profile.about.html %}
-            {{ user.profile.about.html|safe }}
+        {% if user.profile.about.html_force %}
+            {{ user.profile.about.html_force|safe }}
         {% endif %}
 
         {% if editable %}

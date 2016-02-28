@@ -3,7 +3,7 @@ from collective_blog import settings
 
 from django.utils.translation import ugettext_lazy as _
 
-from markdown.fields import MarkdownField
+from markdown.fields import MarkdownField, HtmlCacheField
 from markdown.datatype import Markdown
 
 
@@ -31,6 +31,8 @@ class Profile(models.Model):
                           markdown=Markdown,
                           verbose_name=_('About'),
                           help_text=_('Tell us about yourself'))
+
+    _about_html = HtmlCacheField(about)
 
     email_is_public = models.BooleanField(verbose_name=_('Show email'),
                                           default=False)

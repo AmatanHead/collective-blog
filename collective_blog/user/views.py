@@ -17,7 +17,7 @@ def view_profile(request, username=None):
 
     is_self_profile = username is None or user.pk == request.user.pk
 
-    # user.profile.about = Profile.about_cls('Markdown')
+    print(user.profile.about.is_dirty)
     # user.profile.save()
     # print(user.profile.about)
 

@@ -17,7 +17,6 @@ class Markdown(object):
           html is provided and `dirty` otherwise.
         :param renderer: A class instance with `render` method
           (typically a `Hoep` instance).
-          Warning:
 
         """
         if renderer is None:
@@ -111,31 +110,8 @@ class Markdown(object):
 
         """
         if self.is_dirty or force:
-            # Dummy
             self._html = self._renderer.render(self._source)
             self._is_dirty = False
-
-    def serialize(self):
-        """
-        Returns the JSON representation of the class.
-
-        :return: JSON string.
-
-        """
-        return dumps(dict(source=self.source, html=self.html))
-
-    @classmethod
-    def deserialize(cls, json):
-        """
-        Returns the markdown instance parsed from the JSON representation
-        assuming that in is clean.
-
-        :param json: Source JSON string.
-        :return: A `Markdown` class instance.
-
-        """
-        data = loads(json)
-        return cls(data['source'], data['html'] if 'html' in data else None)
 
     def deconstruct(self):
         """
