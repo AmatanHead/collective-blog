@@ -2,6 +2,7 @@
 
 from django.db.models import TextField, NOT_PROVIDED
 from django.utils import encoding
+from django.core import exceptions
 from django import forms
 
 from .widgets import MarkdownTextarea
@@ -236,9 +237,8 @@ class MarkdownField(TextField):
           to the source markdown field.
         :param html_validators: A list of validators that will be applied
           to the html markdown field.
-        :param common_validators: A list of validators that will receive both
-          source and html as a positional arguments
-          (e.g. `def validator(source, html): ...` ).
+        :param validators: A list of validators that will receive
+          a `Markdown` class instance.
         :param markdown: A class derived from `Markdown` that will be used for
           storing the value.
 
@@ -248,7 +248,6 @@ class MarkdownField(TextField):
         :param primary_key:
         :param unique:
         :param db_index:
-        :param validators:
         :param null:
         :param rel:
         :param unique_for_date:
@@ -257,17 +256,16 @@ class MarkdownField(TextField):
         :param choices:
         :param db_tablespace:
 
-
         """
         markdown = kwargs.pop('markdown', Markdown)
         state_name = kwargs.pop('state_name', None)
         cls_name = kwargs.pop('cls_name', None)
+
         source_validators = kwargs.pop('source_validators', None)
         html_validators = kwargs.pop('html_validators', None)
-        common_validators = kwargs.pop('common_validators', None)
 
-        if not common_validators:
-            common_validators = []
+        self.validators = kwargs.pop('validators', [])
+
         if not html_validators:
             html_validators = []
         if not source_validators:
@@ -275,7 +273,6 @@ class MarkdownField(TextField):
 
         self.source_validators = source_validators
         self.html_validators = html_validators
-        self.common_validators = common_validators
 
         self.cls_name = cls_name
         self.state_name = state_name
@@ -286,7 +283,6 @@ class MarkdownField(TextField):
         kwargs.pop('max_length', '')
         kwargs.pop('unique', '')
         kwargs.pop('db_index', '')
-        kwargs.pop('validators', '')
         kwargs.pop('rel', '')
         kwargs.pop('null', '')
         kwargs.pop('unique_for_date', '')
@@ -316,8 +312,6 @@ class MarkdownField(TextField):
             kwargs.update(dict(source_validators=self.source_validators))
         if self.html_validators:
             kwargs.update(dict(html_validators=self.html_validators))
-        if self.common_validators:
-            kwargs.update(dict(common_validators=self.common_validators))
         if self.cls_name is not None:
             kwargs.update(dict(cls_name=self.cls_name))
         if self.state_name is not None:
@@ -327,6 +321,51 @@ class MarkdownField(TextField):
 
         return name, path, args, kwargs
 
+    def run_validator(self, validator, *args, **kwargs):
+        """
+        Runs a single validator on a value.
+
+        :param validator: A callable. The validator to run.
+        :param args: Arguments for the validator
+        :param kwargs: Keyword arguments for the validator
+        :return: List of errors.
+
+        """
+        for validator in self.validators:
+            try:
+                validator(*args, **kwargs)
+                return []
+            except exceptions.ValidationError as e:
+                if hasattr(e, 'code') and e.code in self.error_messages:
+                    e.message = self.error_messages[e.code]
+                return e.error_list
+
+    def run_validators(self, value):
+        """
+        Run validators on the given value.
+
+        :param value: the `Markdown` class instance which needs validation.
+        :return: None
+        :raise: ValidationError
+
+        """
+        if value in self.empty_values:
+            return
+
+        errors = []
+
+        for validator in iter(self.source_validators):
+            errors.extend(self.run_validator(validator, [value.source]))
+
+        for validator in iter(self.html_validators):
+            errors.extend(self.run_validator(validator, [value.html]))
+
+        for validator in iter(self.validators):
+            errors.extend(self.run_validator(validator, [value]))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
     def validate(self, value, model_instance):
         """
         Run all source, html, and common validators
@@ -335,7 +374,12 @@ class MarkdownField(TextField):
         :param value: `Markdown` class instance which needs to be validated.
 
         """
-        pass
+        if not self.editable:
+            # Skip validation for non-editable fields.
+            return
+
+        if not self.blank and value in self.empty_values:
+            raise exceptions.ValidationError(self.error_messages['blank'], code='blank')
 
     def get_prep_value(self, value):
         """
@@ -384,7 +428,11 @@ class MarkdownField(TextField):
         defaults = {
             'form_class': MarkdownFormField,
             'markdown': self.markdown,
+            '_validators': self.validators,
+            '_source_validators': self.source_validators,
+            '_html_validators': self.html_validators,
         }
+
         defaults.update(kwargs)
         return super(MarkdownField, self).formfield(**defaults)
 
@@ -416,32 +464,80 @@ class MarkdownFormField(forms.fields.CharField):
     """
 
     def __init__(self, *args, **kwargs):
-        source_validators = kwargs.pop('source_validators', None)
-        html_validators = kwargs.pop('html_validators', None)
-        common_validators = kwargs.pop('common_validators', None)
+        source_validators = kwargs.pop('source_validators', [])
+        _source_validators = kwargs.pop('_source_validators', [])
+        html_validators = kwargs.pop('html_validators', [])
+        _html_validators = kwargs.pop('_html_validators', [])
+        validators = kwargs.pop('validators', [])
+        _validators = kwargs.pop('_validators', [])
+
         markdown = kwargs.pop('markdown', None)
 
-        if not common_validators:
-            common_validators = []
-        if not html_validators:
-            html_validators = []
-        if not source_validators:
-            source_validators = []
+        self.validators = validators + _validators
+        self.html_validators = html_validators + _html_validators
+        self.source_validators = source_validators + _source_validators
 
         self.markdown = markdown
-        self.common_validators = common_validators
-        self.html_validators = html_validators
-        self.source_validators = source_validators
 
         defaults = {'widget': MarkdownTextarea}
         defaults.update(kwargs)
 
         super(MarkdownFormField, self).__init__(*args, **defaults)
 
+    def run_validator(self, validator, *args, **kwargs):
+        """
+        Runs a single validator on a value.
+
+        :param validator: A callable. The validator to run.
+        :param args: Arguments for the validator
+        :param kwargs: Keyword arguments for the validator
+        :return: List of errors.
+
+        """
+        for validator in self.validators:
+            try:
+                validator(*args, **kwargs)
+                return []
+            except exceptions.ValidationError as e:
+                if hasattr(e, 'code') and e.code in self.error_messages:
+                    e.message = self.error_messages[e.code]
+                return e.error_list
+
     def run_validators(self, value):
-        # We are using custom validator lists so we need to overwrite
-        # this function.
-        pass
+        """
+        Run validators on the given value.
+
+        :param value: the `Markdown` class instance which needs validation.
+        :return: None
+        :raise: ValidationError
+
+        """
+        if value in self.empty_values:
+            return
+
+        errors = []
+
+        for validator in iter(self.source_validators):
+            errors.extend(self.run_validator(validator, [value.source]))
+
+        for validator in iter(self.html_validators):
+            errors.extend(self.run_validator(validator, [value.html]))
+
+        for validator in iter(self.validators):
+            errors.extend(self.run_validator(validator, [value]))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
+
+    def validate(self, value):
+        """
+        Run all source, html, and common validators
+
+        :param value: `Markdown` class instance which needs to be validated.
+
+        """
+        if value in self.empty_values and self.required:
+            raise exceptions.ValidationError(self.error_messages['required'], code='required')
 
     def to_python(self, value):
         """

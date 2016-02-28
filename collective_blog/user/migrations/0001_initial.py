@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 import markdown.datatype
-import markdown.fields
+import markdown.models
 import markdown.renderers
 
 
@@ -25,8 +25,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('location', models.CharField(blank=True, max_length=100, verbose_name='Location')),
                 ('birthday', models.DateField(blank=True, null=True, verbose_name='Birthday')),
-                ('about', markdown.fields.MarkdownField(blank=True, cls_name='about_cls', default=markdown.datatype.Markdown(html='', renderer=markdown.renderers.Hoep(extensions=1371, render_flags=528), source=''), help_text='Tell us about yourself', markdown=markdown.datatype.Markdown, state_name='_about_state', verbose_name='About')),
-                ('_about_html', markdown.fields.HtmlCacheField(blank=True, editable=False, markdown_field=markdown.fields.MarkdownField(blank=True, cls_name='about_cls', default=markdown.datatype.Markdown(html='', renderer=markdown.renderers.Hoep(extensions=1371, render_flags=528), source=''), help_text='Tell us about yourself', markdown=markdown.datatype.Markdown, state_name='_about_state', verbose_name='About'), null=True)),
+                ('about', markdown.models.MarkdownField(blank=True, cls_name='about_cls', default=markdown.datatype.Markdown(html='', renderer=markdown.renderers.Hoep(extensions=1371, render_flags=528), source=''), help_text='Tell us about yourself', markdown=markdown.datatype.Markdown, state_name='_about_state', verbose_name='About')),
+                ('_about_html', markdown.models.HtmlCacheField(blank=True, editable=False, markdown_field=markdown.models.MarkdownField(blank=True, cls_name='about_cls', default=markdown.datatype.Markdown(html='', renderer=markdown.renderers.Hoep(extensions=1371, render_flags=528), source=''), help_text='Tell us about yourself', markdown=markdown.datatype.Markdown, state_name='_about_state', verbose_name='About'), null=True)),
                 ('email_is_public', models.BooleanField(default=False, verbose_name='Show email')),
                 ('user', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
             ],

@@ -9,6 +9,11 @@ from __future__ import unicode_literals
 
 from .common_settings import *
 
+print('\033[00;32m'
+      'Loading development settings'
+      '\033[0;00m')
+
+
 DEBUG = True
 
 # Log all sql queries

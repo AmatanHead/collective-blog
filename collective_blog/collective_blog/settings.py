@@ -15,12 +15,6 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 
 if 'TRAVIS' in os.environ:
-    print('\033[00;32m'
-          'Loading travis settings'
-          '\033[0;00m')
     from .travis_settings import *
 else:
-    print('\033[00;32m'
-          'Loading development settings'
-          '\033[0;00m')
-    from .test_settings import *
+    from .dev_settings import *

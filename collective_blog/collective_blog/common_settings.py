@@ -20,22 +20,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # This list may be extended in build-specific configs
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'collective_blog',
+    'user',
+    'appearance',
+    'markdown',
 
     'registration',
     'ckeditor',
     'ckeditor_uploader',
     'captcha',
 
-    'collective_blog',
-    'user',
-    'appearance',
-    'markdown',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 ]
 
 # This list may be extended in build-specific configs
