@@ -3,10 +3,9 @@
 from django.db.models import TextField, NOT_PROVIDED
 from django.utils import encoding
 from django.core import exceptions
-from django import forms
 
-from .widgets import MarkdownTextarea
 from .datatype import Markdown
+from .forms import MarkdownFormField
 
 from hashlib import md5
 import re
@@ -32,10 +31,12 @@ class HtmlCacheDescriptor(object):
         When setting html value, we check if the hash is correct.
         If the hash is correct, we set `is_dirty` flag to be false.
 
+        :param destination_field: Object to which the descriptor is pointing.
+
         """
         self.destination_field = destination_field
 
-        # These field must not be cached!
+        # These fields must not be cached!
         # If html_cache field is being loaded before the main field,
         # these values can be `None`.
 
@@ -49,6 +50,9 @@ class HtmlCacheDescriptor(object):
         We can't do that when the model instance is created because we have
         no access to the initialization process. Thus, we set up the class
         on first read/write operation.
+
+        :param instance: A model instance.
+        :param html: Default html content.
 
         """
 
@@ -178,7 +182,7 @@ class MarkdownDescriptor(object):
     def __init__(self, destination_field):
         self.destination_field = destination_field
 
-        # These field must not be cached!
+        # These fields must not be cached!
         # If html_cache field is being loaded before the main field,
         # these values can be `None`.
 
@@ -192,6 +196,9 @@ class MarkdownDescriptor(object):
         We can't do that when the model instance is created because we have
         no access to the initialization process. Thus, we set up the class
         on first read/write operation.
+
+        :param instance: A model instance.
+        :param value: Default source content.
 
         """
 
@@ -227,8 +234,8 @@ class MarkdownField(TextField):
 
         Parameters:
 
-        :param blank: TODO
-        :param default: TODO
+        :param default: Can be either a string ot a `Markdown` class instance.
+          Strings are converted to `Markdown` objects.
         :param state_name: A name for the state field.
           Default is `<name>_state`.
         :param cls_name: A name for the markdown generator class.
@@ -349,9 +356,6 @@ class MarkdownField(TextField):
         :raise: ValidationError
 
         """
-        if value in self.empty_values:
-            return
-
         errors = []
 
         for validator in iter(self.source_validators):
@@ -378,7 +382,7 @@ class MarkdownField(TextField):
             # Skip validation for non-editable fields.
             return
 
-        if not self.blank and value in self.empty_values:
+        if not self.blank and value in self.empty_values or value.source in self.empty_values:
             raise exceptions.ValidationError(self.error_messages['blank'], code='blank')
 
     def get_prep_value(self, value):
@@ -455,114 +459,3 @@ class MarkdownField(TextField):
 
         setattr(cls, self.cls_name, ClsDescriptor(self.markdown))
         setattr(cls, self.name, MarkdownDescriptor(self))
-
-
-class MarkdownFormField(forms.fields.CharField):
-    """
-    Form field for editing markdown objects.
-
-    """
-
-    def __init__(self, *args, **kwargs):
-        source_validators = kwargs.pop('source_validators', [])
-        _source_validators = kwargs.pop('_source_validators', [])
-        html_validators = kwargs.pop('html_validators', [])
-        _html_validators = kwargs.pop('_html_validators', [])
-        validators = kwargs.pop('validators', [])
-        _validators = kwargs.pop('_validators', [])
-
-        markdown = kwargs.pop('markdown', None)
-
-        self.validators = validators + _validators
-        self.html_validators = html_validators + _html_validators
-        self.source_validators = source_validators + _source_validators
-
-        self.markdown = markdown
-
-        defaults = {'widget': MarkdownTextarea}
-        defaults.update(kwargs)
-
-        super(MarkdownFormField, self).__init__(*args, **defaults)
-
-    def run_validator(self, validator, *args, **kwargs):
-        """
-        Runs a single validator on a value.
-
-        :param validator: A callable. The validator to run.
-        :param args: Arguments for the validator
-        :param kwargs: Keyword arguments for the validator
-        :return: List of errors.
-
-        """
-        for validator in self.validators:
-            try:
-                validator(*args, **kwargs)
-                return []
-            except exceptions.ValidationError as e:
-                if hasattr(e, 'code') and e.code in self.error_messages:
-                    e.message = self.error_messages[e.code]
-                return e.error_list
-
-    def run_validators(self, value):
-        """
-        Run validators on the given value.
-
-        :param value: the `Markdown` class instance which needs validation.
-        :return: None
-        :raise: ValidationError
-
-        """
-        if value in self.empty_values:
-            return
-
-        errors = []
-
-        for validator in iter(self.source_validators):
-            errors.extend(self.run_validator(validator, [value.source]))
-
-        for validator in iter(self.html_validators):
-            errors.extend(self.run_validator(validator, [value.html]))
-
-        for validator in iter(self.validators):
-            errors.extend(self.run_validator(validator, [value]))
-
-        if errors:
-            raise exceptions.ValidationError(errors)
-
-    def validate(self, value):
-        """
-        Run all source, html, and common validators
-
-        :param value: `Markdown` class instance which needs to be validated.
-
-        """
-        if value in self.empty_values and self.required:
-            raise exceptions.ValidationError(self.error_messages['required'], code='required')
-
-    def to_python(self, value):
-        """
-        Text to python.
-
-        :param value: Source string, `Markdown`, or None.
-        :return: None or `Markdown`.
-
-        """
-        if value in self.empty_values and value != '':
-            return value
-        elif isinstance(value, self.markdown):
-            return value
-        else:
-            return self.markdown(value)
-
-    def prepare_value(self, value):
-        """
-        Python to text.
-
-        :param value: A `Markdown` class instance.
-        :return: Source text that will be displayed in a widget.
-
-        """
-        if isinstance(value, self.markdown):
-            return value.source
-        else:
-            return value
