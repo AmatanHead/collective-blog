@@ -26,6 +26,13 @@ ADMINS = []
 
 MANAGERS = []
 
+# ReCaptcha
+# These are the test keys
+
+RECAPTCHA_PUBLIC_KEY = '6Lcd5hYTAAAAABq47ye0uJEeKh_b3BKVwZOcVwS-'
+
+RECAPTCHA_PRIVATE_KEY = '6Lcd5hYTAAAAAB8q6JLA1-ZYVGXx3eIyekeQ-i0a'
+
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
