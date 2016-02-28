@@ -266,7 +266,6 @@ class MarkdownField(TextField):
         html_validators = kwargs.pop('html_validators', None)
         common_validators = kwargs.pop('common_validators', None)
 
-
         if not common_validators:
             common_validators = []
         if not html_validators:

@@ -18,4 +18,5 @@ before_script:
   - cd collective_blog && python manage.py migrate && cd ../
 script:
   - cd collective_blog && python manage.py test && cd ../
+  - pep8 ./collective_blog/ --ignore=E501
 sudo: true
