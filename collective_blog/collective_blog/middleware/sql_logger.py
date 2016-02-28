@@ -3,7 +3,8 @@ from django.db import connection
 
 # From https://djangosnippets.org/snippets/264/
 class TerminalLogging:
-    def process_response(self, request, response):
+    @staticmethod
+    def process_response(request, response):
         from sys import stdout
         if stdout.isatty():
             for query in connection.queries:

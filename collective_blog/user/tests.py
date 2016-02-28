@@ -14,7 +14,10 @@ class TestProfileModel(test.TransactionTestCase):
         User.objects.create(username="test", password="test")
 
     def test_profile_creation(self):
-        """Test that profile is created for each user"""
+        """
+        Test that profile is created for each user.
+
+        """
 
         user = User.objects.create(username="test2", password="test2")
         self.assertIsInstance(user.profile, Profile)
@@ -22,13 +25,19 @@ class TestProfileModel(test.TransactionTestCase):
         self.assertIsInstance(user.profile, Profile)
 
     def test_profile_assigned(self):
-        """Test that profile is assigned for each user"""
+        """
+        Test that profile is assigned for each user.
+
+        """
 
         user = User.objects.get(username="test")
         self.assertIsInstance(user.profile, Profile)
 
     def test_profile_deleted(self):
-        """Test that profile is deleted properly"""
+        """
+        Test that profile is deleted properly.
+
+        """
 
         user = User.objects.get(username="test")
         user.delete()
@@ -36,7 +45,10 @@ class TestProfileModel(test.TransactionTestCase):
         self.assertEqual(profile.count(), 0)
 
     def test_user_deleted(self):
-        """Test that user is deleted properly"""
+        """
+        Test that user is deleted properly.
+
+        """
         user = User.objects.get(username="test")
         user.profile.delete()
         users = User.objects.filter(username="test")
@@ -82,8 +94,10 @@ class TestProfileModelPerms(test.TransactionTestCase):
         ordinary_user.save()
 
     def test_can_edit_profile(self):
-        """Test that only moderators and the user
-        can edit the user's profile"""
+        """
+        Test that only moderators and the user can edit the user's profile.
+
+        """
 
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
         moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
@@ -112,6 +126,11 @@ class TestProfileModelPerms(test.TransactionTestCase):
         self.assertTrue(Profile.can_edit_profile(user2, profile))
 
     def test_can_see_the_email(self):
+        """
+        Test that only moderators and the user can see
+        the user's private email.
+
+        """
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
         moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
         moderator_without_perms = User.objects.get(username='moderator_without_perms')
@@ -158,6 +177,10 @@ class TestProfileModelPerms(test.TransactionTestCase):
         self.assertTrue(Profile.can_see_email(user2, profile))
 
     def test_visible_email(self):
+        """
+        Test that private emails are displayed correctly.
+
+        """
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
         moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
         moderator_without_perms = User.objects.get(username='moderator_without_perms')

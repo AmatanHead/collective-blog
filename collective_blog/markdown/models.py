@@ -61,18 +61,23 @@ class HtmlCacheDescriptor(object):
         if not hasattr(instance, self.destination_field.state_name):
             setattr(instance, self.destination_field.state_name, markdown_cls('', html))
 
-    def hash(self, field):
+    @staticmethod
+    def hash(string):
         """
         Calculates and returns the hash of the source markdown data.
         It is used to check that the cached data is up-to-date.
 
+        :param string: A string that needs to be cached.
+        :return: A hash string.
+
         """
-        source = encoding.force_text(len(field.source)) + '\t' + encoding.force_text(field.source)
+        source = '%s\t%s' % (len(encoding.force_text(string)), encoding.force_text(string))
         return '<!-- %s -->' % md5(source.encode()).hexdigest()
 
     hash_re = re.compile(r'^<!-- [a-zA-Z0-9]{32} -->')
 
-    def split(self, html):
+    @classmethod
+    def split(cls, html):
         """
         Extract hash from the passed html.
 
@@ -80,7 +85,7 @@ class HtmlCacheDescriptor(object):
         :return: Pair `(hash, html)`. `hash` may be empty.
 
         """
-        hash_match = self.hash_re.match(html)
+        hash_match = cls.hash_re.match(html)
         if hash_match is None:
             return '', html
         else:
@@ -91,10 +96,13 @@ class HtmlCacheDescriptor(object):
 
         field = getattr(instance, self.destination_field.state_name)
 
-        return self.hash(field) + field.html_force
+        return self.hash(field.source) + field.html_force
 
     def __set__(self, instance, value):
         self.setup(instance, '')
+
+        if value is None:
+            value = ''
 
         hash_str, html = self.split(encoding.force_text(value))
 
@@ -103,7 +111,7 @@ class HtmlCacheDescriptor(object):
         field._html = html
 
         # Check that the cache is up-to-date
-        if hash_str == self.hash(field):
+        if hash_str == self.hash(field.source):
             field._is_dirty = False
         else:
             field._is_dirty = True
@@ -220,7 +228,7 @@ class MarkdownDescriptor(object):
             setattr(instance, self.destination_field.state_name, value)
         else:
             field = getattr(instance, self.destination_field.state_name)
-            field._source = value
+            field._source = encoding.force_text(value)
 
 
 class MarkdownField(TextField):
@@ -268,18 +276,10 @@ class MarkdownField(TextField):
         state_name = kwargs.pop('state_name', None)
         cls_name = kwargs.pop('cls_name', None)
 
-        source_validators = kwargs.pop('source_validators', None)
-        html_validators = kwargs.pop('html_validators', None)
-
         self.validators = kwargs.pop('validators', [])
 
-        if not html_validators:
-            html_validators = []
-        if not source_validators:
-            source_validators = []
-
-        self.source_validators = source_validators
-        self.html_validators = html_validators
+        self.source_validators = kwargs.pop('source_validators', [])
+        self.html_validators = kwargs.pop('html_validators', [])
 
         self.cls_name = cls_name
         self.state_name = state_name
@@ -300,6 +300,7 @@ class MarkdownField(TextField):
 
         super(MarkdownField, self).__init__(*args, **kwargs)
 
+        # Default is iet in the `super` call
         if self.default is NOT_PROVIDED:
             self.default = self.markdown('', '')
 
@@ -328,7 +329,7 @@ class MarkdownField(TextField):
 
         return name, path, args, kwargs
 
-    def run_validator(self, validator, *args, **kwargs):
+    def run_validator(self, validator, args=None, kwargs=None):
         """
         Runs a single validator on a value.
 
@@ -338,14 +339,17 @@ class MarkdownField(TextField):
         :return: List of errors.
 
         """
-        for validator in self.validators:
-            try:
-                validator(*args, **kwargs)
-                return []
-            except exceptions.ValidationError as e:
-                if hasattr(e, 'code') and e.code in self.error_messages:
-                    e.message = self.error_messages[e.code]
-                return e.error_list
+        if kwargs is None:
+            kwargs = {}
+        if args is None:
+            args = []
+        try:
+            validator(*args, **kwargs)
+            return []
+        except exceptions.ValidationError as e:
+            if hasattr(e, 'code') and e.code in self.error_messages:
+                e.message = self.error_messages[e.code]
+            return e.error_list
 
     def run_validators(self, value):
         """
@@ -382,7 +386,7 @@ class MarkdownField(TextField):
             # Skip validation for non-editable fields.
             return
 
-        if not self.blank and value in self.empty_values or value.source in self.empty_values:
+        if not self.blank and (value in self.empty_values or value.source in self.empty_values):
             raise exceptions.ValidationError(self.error_messages['blank'], code='blank')
 
     def get_prep_value(self, value):
@@ -415,7 +419,7 @@ class MarkdownField(TextField):
 
     def get_db_prep_lookup(self, *args, **kwargs):
         """
-        Prepare value for the lookup (e.g. `value__gt=...`)
+        Prepare value for the lookup (e.g. `var__gt=...`)
 
         :param args:, :param kwargs: Unused.
 
