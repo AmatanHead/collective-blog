@@ -8,11 +8,11 @@ from .models import MarkdownField, HtmlCacheField, HtmlCacheDescriptor
 from .datatype import Markdown
 
 
-def md_validator(md):
-    if '!' in md.source:
+def md_validator(markdown):
+    if '!' in markdown.source:
         raise exceptions.ValidationError('=(')
 
-    if '!' in md.html:
+    if '!' in markdown.html:
         raise exceptions.ValidationError('=(')
 
 
@@ -83,16 +83,16 @@ class MarkdownModelFieldTest(TransactionTestCase):
 
         """
         test = TestModel()
-        with self.assertRaises(exceptions.ValidationError) as c:
+        with self.assertRaises(exceptions.ValidationError) as result:
             test.clean_fields()
-        self.assertIn('raw', c.exception.error_dict)
-        self.assertIn('raw2', c.exception.error_dict)
+        self.assertIn('raw', result.exception.error_dict)
+        self.assertIn('raw2', result.exception.error_dict)
 
         test = TestModel(raw='Source')
-        with self.assertRaises(exceptions.ValidationError) as c:
+        with self.assertRaises(exceptions.ValidationError) as result:
             test.clean_fields()
-        self.assertNotIn('raw', c.exception.error_dict)
-        self.assertIn('raw2', c.exception.error_dict)
+        self.assertNotIn('raw', result.exception.error_dict)
+        self.assertIn('raw2', result.exception.error_dict)
 
     def test_validators(self):
         """
@@ -103,32 +103,32 @@ class MarkdownModelFieldTest(TransactionTestCase):
 
         test.html_validated.source = '!'
         test.html_validated.compile()
-        with self.assertRaises(exceptions.ValidationError) as c:
+        with self.assertRaises(exceptions.ValidationError) as result:
             test.clean_fields()
-        self.assertIn('html_validated', c.exception.error_dict)
-        self.assertNotIn('source_validated', c.exception.error_dict)
+        self.assertIn('html_validated', result.exception.error_dict)
+        self.assertNotIn('source_validated', result.exception.error_dict)
 
         test.html_validated.source = ''
         test.html_validated.compile()
         test.source_validated.source = '!'
-        with self.assertRaises(exceptions.ValidationError) as c:
+        with self.assertRaises(exceptions.ValidationError) as result:
             test.clean_fields()
-        self.assertIn('source_validated', c.exception.error_dict)
-        self.assertNotIn('html_validated', c.exception.error_dict)
+        self.assertIn('source_validated', result.exception.error_dict)
+        self.assertNotIn('html_validated', result.exception.error_dict)
 
         test.source_validated.source = ''
 
         test.validated.source = '!'
-        with self.assertRaises(exceptions.ValidationError) as c:
+        with self.assertRaises(exceptions.ValidationError) as result:
             test.clean_fields()
-        self.assertIn('validated', c.exception.error_dict)
+        self.assertIn('validated', result.exception.error_dict)
 
         test.validated.compile()
         test.validated.source = ''
 
-        with self.assertRaises(exceptions.ValidationError) as c:
+        with self.assertRaises(exceptions.ValidationError) as result:
             test.clean_fields()
-        self.assertIn('validated', c.exception.error_dict)
+        self.assertIn('validated', result.exception.error_dict)
 
     def test_plain_var_access(self):
         """
@@ -145,12 +145,12 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertIsInstance(test.raw, Markdown)
         self.assertEqual(test.raw.source, 'String')
 
-        md = Markdown('String 2')
+        markdown = Markdown('String 2')
 
-        test.raw = md
+        test.raw = markdown
 
         self.assertIsInstance(test.raw, Markdown)
-        self.assertIs(test.raw, md)
+        self.assertIs(test.raw, markdown)
         self.assertEqual(test.raw.source, 'String 2')
 
         test = TestModel(raw='Source', raw2='Source2', cached=[{}])
@@ -173,9 +173,9 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertEqual(test.cached.html, '')
         self.assertTrue(test.cached.is_dirty)
 
-        md = MarkdownDerived('String')
+        markdown = MarkdownDerived('String')
 
-        test.cached = md
+        test.cached = markdown
 
         self.assertIsInstance(test.cached, Markdown)
         self.assertEqual(test.cached.source, 'String')
@@ -186,12 +186,12 @@ class MarkdownModelFieldTest(TransactionTestCase):
 
         self.assertIsInstance(test.cached, Markdown)
         self.assertEqual(test.cached.source, 'String')
-        self.assertEqual(test.cached.html, md.html_force)
+        self.assertEqual(test.cached.html, markdown.html_force)
         self.assertFalse(test.cached.is_dirty)
 
-        md = MarkdownDerived('String 2')
+        markdown = MarkdownDerived('String 2')
 
-        test = TestModel(raw='Source', raw2='Source2', cached=md)
+        test = TestModel(raw='Source', raw2='Source2', cached=markdown)
 
         self.assertIsInstance(test.cached, Markdown)
         self.assertEqual(test.cached.source, 'String 2')
@@ -202,7 +202,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
 
         self.assertIsInstance(test.cached, Markdown)
         self.assertEqual(test.cached.source, 'String 2')
-        self.assertEqual(test.cached.html, md.html_force)
+        self.assertEqual(test.cached.html, markdown.html_force)
         self.assertFalse(test.cached.is_dirty)
 
     def test_raw_cache_access(self):
@@ -211,12 +211,12 @@ class MarkdownModelFieldTest(TransactionTestCase):
         cache values.
 
         """
-        md = MarkdownDerived('String')
-        source = md.source
+        markdown = MarkdownDerived('String')
+        source = markdown.source
 
-        test = TestModel(raw='Source', raw2='Source2', cached=md)
+        test = TestModel(raw='Source', raw2='Source2', cached=markdown)
 
-        self.assertIs(test.cached, md)
+        self.assertIs(test.cached, markdown)
 
         test.cached_c = 'Cache is broken!'
 
@@ -241,12 +241,12 @@ class MarkdownModelFieldTest(TransactionTestCase):
         hashed1 = HtmlCacheDescriptor.hash(source1)
         hashed2 = HtmlCacheDescriptor.hash(source2)
 
-        h1, s1 = HtmlCacheDescriptor.split(hashed1 + source1)
-        h2, s2 = HtmlCacheDescriptor.split(hashed2 + source2)
+        hash1, _source1 = HtmlCacheDescriptor.split(hashed1 + source1)
+        hash2, _source2 = HtmlCacheDescriptor.split(hashed2 + source2)
 
-        self.assertEqual(s1, source1)
-        self.assertEqual(s2, source2)
-        self.assertNotEqual(h1, h2)
+        self.assertEqual(_source1, source1)
+        self.assertEqual(_source2, source2)
+        self.assertNotEqual(hash1, hash2)
 
         source1 = ''
         source2 = None
@@ -254,12 +254,12 @@ class MarkdownModelFieldTest(TransactionTestCase):
         hashed1 = HtmlCacheDescriptor.hash(source1)
         hashed2 = HtmlCacheDescriptor.hash(source2)
 
-        h1, s1 = HtmlCacheDescriptor.split(hashed1 + source1)
-        h2, s2 = HtmlCacheDescriptor.split(hashed2 + str(source2))
+        hash1, _source1 = HtmlCacheDescriptor.split(hashed1 + source1)
+        hash2, _source2 = HtmlCacheDescriptor.split(hashed2 + str(source2))
 
-        self.assertEqual(s1, source1)
-        self.assertEqual(s2, str(source2))
-        self.assertNotEqual(h1, h2)
+        self.assertEqual(_source1, source1)
+        self.assertEqual(_source2, str(source2))
+        self.assertNotEqual(hash1, hash2)
 
     def test_contribute_to_class(self):
         test = TestModel(raw='Source', raw2='Source2')

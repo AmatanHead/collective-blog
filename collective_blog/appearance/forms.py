@@ -64,28 +64,28 @@ class BaseFormRenderer(BaseForm):
         elif field not in self.fields:
             raise IndexError('unknown field %s' % field)
 
-        bf = self[field]
+        field = self[field]
 
         errors = self.error_class(
-            [conditional_escape(error) for error in bf.errors])
+            [conditional_escape(error) for error in field.errors])
 
-        if bf.css_classes():
-            css_classes = ' class="%s"' % bf.css_classes()
+        if field.css_classes():
+            css_classes = ' class="%s"' % field.css_classes()
         else:
             css_classes = ''
 
-        if bf.label:
-            label = conditional_escape(force_text(bf.label))
-            label = bf.label_tag(label) or ''
+        if field.label:
+            label = conditional_escape(force_text(field.label))
+            label = field.label_tag(label) or ''
         else:
             label = ''
 
-        if bf.help_text:
-            help_text = '<div class="desc">%s</div>' % force_text(bf.help_text)
+        if field.help_text:
+            help_text = '<div class="desc">%s</div>' % force_text(field.help_text)
         else:
             help_text = ''
 
-        if bf.is_hidden and not errors:
+        if field.is_hidden and not errors:
             hidden = ' style="display: none;"'
         else:
             hidden = ''
@@ -100,7 +100,7 @@ class BaseFormRenderer(BaseForm):
                     'label': label,
                     'help_text': help_text,
                     'errors': errors,
-                    'field': str(bf),
+                    'field': str(field),
                 })
 
     def as_section(self):

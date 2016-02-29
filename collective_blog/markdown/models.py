@@ -300,7 +300,7 @@ class MarkdownField(TextField):
 
         super(MarkdownField, self).__init__(*args, **kwargs)
 
-        # Default is iet in the `super` call
+        # Default is set in the `super` call
         if self.default is NOT_PROVIDED:
             self.default = self.markdown('', '')
 
