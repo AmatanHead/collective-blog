@@ -7,7 +7,6 @@ python:
 env:
   - DJANGO=1.9.2
     DJANGO_SETTINGS_MODULE="collective_blog.settings"
-    CODACY_PROJECT_TOKEN="542eebf92a6a429cb852fd103bb55140"
 install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libmysqlclient-dev

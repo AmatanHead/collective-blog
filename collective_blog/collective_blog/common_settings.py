@@ -16,6 +16,10 @@ SITE_NAME = 'a.k.a. Блог'
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'TEST_SECRET_KEY')
+if SECRET_KEY == 'TEST_SECRET_KEY':
+    print('\033[01;31mWarning: no secret key set!\033[0;00m')
+
 # Application definition
 
 # This list may be extended in build-specific configs
@@ -88,6 +92,12 @@ REGISTRATION_AUTO_LOGIN = True
 ACCOUNT_ACTIVATION_DAYS = 30
 
 REGISTRATION_FORM = 'user.forms.RegistrationFormCaptcha'
+
+RECAPTCHA_PUBLIC_KEY = '6LcijRkTAAAAAHQDkKW_ks9jgYpqJ9KPq1nfaq4w'
+
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY', '')
+if RECAPTCHA_PRIVATE_KEY == '':
+    print('\033[01;31mWarning: no recaptcha key set!\033[0;00m')
 
 NOCAPTCHA = True
 
