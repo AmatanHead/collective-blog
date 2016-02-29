@@ -5,18 +5,26 @@ python:
   - 3.4
   - 3.5
 env:
-  - DJANGO=1.9.2 DJANGO_SETTINGS_MODULE="collective_blog.settings"
+  - DJANGO=1.9.2
+    DJANGO_SETTINGS_MODULE="collective_blog.settings"
+    CODACY_PROJECT_TOKEN="542eebf92a6a429cb852fd103bb55140"
 install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libmysqlclient-dev
   - pip install -q -r requirements.txt
   - pip install -q pep8
   - pip install -q mysqlclient
+  - pip install -q -U coverage codacy-coverage
 before_script:
   - mysql -e 'create database travis_ci_db;'
 script:
-  - cd collective_blog && python manage.py makemigrations && cd ../
-  - cd collective_blog && python manage.py migrate && cd ../
-  - cd collective_blog && python manage.py test && cd ../
-  - pep8 ./collective_blog/ --ignore=E501
+  - cd collective_blog
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - coverage run --source=. --omit=migrations manage.py test
+  - pep8 . --exclude=migrations --ignore=E501
+after_success:
+  - coverage report
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
 sudo: true
