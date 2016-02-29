@@ -24,6 +24,8 @@ script:
   - coverage run --source=. --omit=migrations manage.py test
   - pep8 . --exclude=migrations --ignore=E501
 after_success:
+  - cd ../
+  - coverage combine ./collective_blog/.coverage
   - coverage report
   - coverage xml
   - python-codacy-coverage -r coverage.xml
