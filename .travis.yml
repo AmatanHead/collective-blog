@@ -17,11 +17,11 @@ install:
   - pip install -q -U coverage codacy-coverage
 before_script:
   - mysql -e 'create database travis_ci_db;'
-script:
   - cd collective_blog
+script:
   - python manage.py makemigrations
   - python manage.py migrate
-  - coverage run --source=. --omit=migrations manage.py test
+  - coverage run --source=. --omit=migrations --branch manage.py test
   - pep8 . --exclude=migrations --ignore=E501
 after_success:
   - cd ../
