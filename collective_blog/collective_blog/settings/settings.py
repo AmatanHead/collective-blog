@@ -30,8 +30,6 @@ INSTALLED_APPS = [
     'markdown',
 
     'registration',
-    'ckeditor',
-    'ckeditor_uploader',
     'captcha',
 
     'django.contrib.admin',
@@ -63,6 +61,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
@@ -146,14 +145,21 @@ USE_TZ = True
 
 MEDIA_URL = '/media/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, '../../media')
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
 
-CKEDITOR_UPLOAD_PATH = 'upload/'
+STATIC_ROOT = os.path.join(BASE_DIR, '../../static')
 
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
+
+# Email settings
+# https://docs.djangoproject.com/en/1.9/topics/email/
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
