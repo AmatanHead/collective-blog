@@ -1,6 +1,8 @@
 from django import forms
 from django.core import exceptions
 
+from .datatype import Markdown
+from .renderer import BaseRenderer
 from .widgets import MarkdownTextarea
 
 
@@ -18,13 +20,12 @@ class MarkdownFormField(forms.fields.CharField):
         validators = kwargs.pop('validators', [])
         _validators = kwargs.pop('_validators', [])
 
-        markdown = kwargs.pop('markdown', None)
-
         self.validators = validators + _validators
         self.html_validators = html_validators + _html_validators
         self.source_validators = source_validators + _source_validators
 
-        self.markdown = markdown
+        self.markdown_cls = kwargs.pop('markdown', Markdown)
+        self.renderer = kwargs.pop('renderer', BaseRenderer())
 
         defaults = {'widget': MarkdownTextarea}
         defaults.update(kwargs)
@@ -96,10 +97,10 @@ class MarkdownFormField(forms.fields.CharField):
         """
         if value in self.empty_values and value != '':
             return value
-        elif isinstance(value, self.markdown):
+        elif isinstance(value, self.markdown_cls):
             return value
         else:
-            return self.markdown(value)
+            return self.markdown_cls(self.renderer, value)
 
     def prepare_value(self, value):
         """
@@ -109,7 +110,7 @@ class MarkdownFormField(forms.fields.CharField):
         :return: Source text that will be displayed in a widget.
 
         """
-        if isinstance(value, self.markdown):
+        if isinstance(value, self.markdown_cls):
             return value.source
         else:
             return value

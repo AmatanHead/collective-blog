@@ -41,7 +41,7 @@ class TestProfileModel(test.TransactionTestCase):
 
         user = User.objects.get(username="test")
         user.delete()
-        profile = Profile.objects.filter(user__username="test")
+        profile = Profile.objects.all()
         self.assertEqual(profile.count(), 0)
 
     def test_user_deleted(self):
@@ -51,7 +51,7 @@ class TestProfileModel(test.TransactionTestCase):
         """
         user = User.objects.get(username="test")
         user.profile.delete()
-        users = User.objects.filter(username="test")
+        users = User.objects.all()
         self.assertEqual(users.count(), 0)
 
 

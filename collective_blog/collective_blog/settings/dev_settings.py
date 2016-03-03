@@ -25,3 +25,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
 }
+
+print('\033[01;33mWarning: recaptcha is running in the debug mode!\033[0;00m')
+os.environ['RECAPTCHA_TESTING'] = 'True'

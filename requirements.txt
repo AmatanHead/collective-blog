@@ -2,6 +2,6 @@ Django>=1.9.2
 django-ckeditor==5.0.3
 django-recaptcha==1.0.5
 django-registration-redux==1.4
-misaka==2.0.0
-hoep==1.0.2
 django-fake-model==0.1.4
+mistune==0.7.2
+Pygments==2.1.2

@@ -5,6 +5,7 @@ from django.utils import encoding
 from django.core import exceptions
 
 from .datatype import Markdown
+from .renderer import BaseRenderer
 from .forms import MarkdownFormField
 
 from hashlib import md5
@@ -59,7 +60,7 @@ class HtmlCacheDescriptor(object):
         markdown_cls = getattr(instance, self.destination_field.cls_name)
 
         if not hasattr(instance, self.destination_field.state_name):
-            setattr(instance, self.destination_field.state_name, markdown_cls('', html))
+            setattr(instance, self.destination_field.state_name, markdown_cls(self.destination_field.renderer, '', html))
 
     @staticmethod
     def hash(string):
@@ -213,7 +214,7 @@ class MarkdownDescriptor(object):
         markdown_cls = getattr(instance, self.destination_field.cls_name)
 
         if not hasattr(instance, self.destination_field.state_name):
-            setattr(instance, self.destination_field.state_name, markdown_cls(value))
+            setattr(instance, self.destination_field.state_name, markdown_cls(self.destination_field.renderer, value))
 
     def __get__(self, instance, owner):
         self.setup(instance, '')
@@ -248,6 +249,8 @@ class MarkdownField(TextField):
           Default is `<name>_state`.
         :param cls_name: A name for the markdown generator class.
           Default is `<name>_cls`.
+        :param renderer_name: A name for the markdown renderer class.
+          Default is `<name>_renderer`.
         :param source_validators: A list of validators that will be applied
           to the source markdown field.
         :param html_validators: A list of validators that will be applied
@@ -256,6 +259,8 @@ class MarkdownField(TextField):
           a `Markdown` class instance.
         :param markdown: A class derived from `Markdown` that will be used for
           storing the value.
+        :param renderer: A class instance derived from `BaseRenderer`
+          that will be used for rendering html.
 
 
         Ignored parameters:
@@ -272,19 +277,18 @@ class MarkdownField(TextField):
         :param db_tablespace:
 
         """
-        markdown = kwargs.pop('markdown', Markdown)
-        state_name = kwargs.pop('state_name', None)
-        cls_name = kwargs.pop('cls_name', None)
+        # TODO renderer_name
 
         self.validators = kwargs.pop('validators', [])
 
         self.source_validators = kwargs.pop('source_validators', [])
         self.html_validators = kwargs.pop('html_validators', [])
 
-        self.cls_name = cls_name
-        self.state_name = state_name
-
-        self.markdown = markdown
+        self.markdown_cls = kwargs.pop('markdown', Markdown)
+        self.renderer = kwargs.pop('renderer', BaseRenderer())
+        self.state_name = kwargs.pop('state_name', None)
+        self.cls_name = kwargs.pop('cls_name', None)
+        self.renderer_name = kwargs.pop('renderer_name', None)
 
         kwargs.pop('primary_key', '')
         kwargs.pop('max_length', '')
@@ -302,10 +306,10 @@ class MarkdownField(TextField):
 
         # Default is set in the `super` call
         if self.default is NOT_PROVIDED:
-            self.default = self.markdown('', '')
+            self.default = self.markdown_cls(self.renderer, '', '')
 
-        if not isinstance(self.default, self.markdown):
-            self.default = self.markdown(encoding.force_text(self.default))
+        if not isinstance(self.default, self.markdown_cls):
+            self.default = self.markdown_cls(self.renderer, encoding.force_text(self.default))
 
         self._html_field = None
 
@@ -322,10 +326,13 @@ class MarkdownField(TextField):
             kwargs.update(dict(html_validators=self.html_validators))
         if self.cls_name is not None:
             kwargs.update(dict(cls_name=self.cls_name))
+        if self.renderer_name is not None:
+            kwargs.update(dict(renderer_name=self.renderer_name))
         if self.state_name is not None:
             kwargs.update(dict(state_name=self.state_name))
 
-        kwargs.update(dict(markdown=self.markdown))
+        kwargs.update(dict(markdown=self.markdown_cls,
+                           renderer=self.renderer))
 
         return name, path, args, kwargs
 
@@ -412,10 +419,10 @@ class MarkdownField(TextField):
         """
         if value is None:
             return value
-        elif isinstance(value, self.markdown):
+        elif isinstance(value, self.markdown_cls):
             return value
         else:
-            return self.markdown(value)
+            return self.markdown_cls(self.renderer, value)
 
     def get_db_prep_lookup(self, *args, **kwargs):
         """
@@ -435,7 +442,8 @@ class MarkdownField(TextField):
         """
         defaults = {
             'form_class': MarkdownFormField,
-            'markdown': self.markdown,
+            'markdown': self.markdown_cls,
+            'renderer': self.renderer,
             '_validators': self.validators,
             '_source_validators': self.source_validators,
             '_html_validators': self.html_validators,
@@ -461,5 +469,5 @@ class MarkdownField(TextField):
         if self.state_name is None:
             self.state_name = '_' + self.name + '_state'
 
-        setattr(cls, self.cls_name, ClsDescriptor(self.markdown))
+        setattr(cls, self.cls_name, ClsDescriptor(self.markdown_cls))
         setattr(cls, self.name, MarkdownDescriptor(self))

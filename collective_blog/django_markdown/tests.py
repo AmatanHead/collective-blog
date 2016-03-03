@@ -6,6 +6,7 @@ from django_fake_model.models import FakeModel
 
 from .models import MarkdownField, HtmlCacheField, HtmlCacheDescriptor
 from .datatype import Markdown
+from .renderers import BaseRenderer
 
 
 def md_validator(markdown):
@@ -30,8 +31,8 @@ class TestModel(FakeModel):
     raw2 = MarkdownField()
 
     default = MarkdownField(default='Default')
-    default2 = MarkdownField(default=Markdown('Default'))
-    default3 = MarkdownField(default=Markdown('Default', 'Html'))
+    default2 = MarkdownField(default=Markdown(BaseRenderer(), 'Default'))
+    default3 = MarkdownField(default=Markdown(BaseRenderer(), 'Default', 'Html'))
 
     cached = MarkdownField(markdown=MarkdownDerived, blank=True)
     cached_c = HtmlCacheField(cached)
@@ -145,7 +146,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertIsInstance(test.raw, Markdown)
         self.assertEqual(test.raw.source, 'String')
 
-        markdown = Markdown('String 2')
+        markdown = Markdown(BaseRenderer(), 'String 2')
 
         test.raw = markdown
 
@@ -173,7 +174,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertEqual(test.cached.html, '')
         self.assertTrue(test.cached.is_dirty)
 
-        markdown = MarkdownDerived('String')
+        markdown = MarkdownDerived(BaseRenderer(), 'String')
 
         test.cached = markdown
 
@@ -189,7 +190,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertEqual(test.cached.html, markdown.html_force)
         self.assertFalse(test.cached.is_dirty)
 
-        markdown = MarkdownDerived('String 2')
+        markdown = MarkdownDerived(BaseRenderer(), 'String 2')
 
         test = TestModel(raw='Source', raw2='Source2', cached=markdown)
 
@@ -211,7 +212,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         cache values.
 
         """
-        markdown = MarkdownDerived('String')
+        markdown = MarkdownDerived(BaseRenderer(), 'String')
         source = markdown.source
 
         test = TestModel(raw='Source', raw2='Source2', cached=markdown)

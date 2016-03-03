@@ -1,13 +1,15 @@
-"""Markdown data type"""
+"""
+Markdown data type.
+
+This is the datatype that is stored in the markdown field.
+
+"""
 
 from django.utils import encoding
 
-import hoep
-from .renderers import Hoep
-
 
 class Markdown(object):
-    def __init__(self, source, html=None, renderer=None):
+    def __init__(self, renderer, source, html=None):
         """
         Markdown data type contains source markdown data and cached
         html.
@@ -15,29 +17,13 @@ class Markdown(object):
         :param source: Source markdown data.
         :param html: Generated html. State is considered to be `clean` if the
           html is provided and `dirty` otherwise.
-        :param renderer: A class instance with `render` method
-          (typically a `Hoep` instance).
+        :param renderer: An instance of a `renderers.BaseRenderer` subclass
+          that will be used to render an html.
 
         """
-        if renderer is None:
-            renderer = Hoep(
-                extensions=(
-                    hoep.EXT_AUTOLINK |
-                    hoep.EXT_FENCED_CODE |
-                    hoep.EXT_HIGHLIGHT |
-                    hoep.EXT_NO_INTRA_EMPHASIS |
-                    hoep.EXT_STRIKETHROUGH |
-                    hoep.EXT_SUPERSCRIPT |
-                    hoep.EXT_TABLES
-                ),
-                render_flags=(
-                    hoep.HTML_ESCAPE |
-                    hoep.HTML_EXPAND_TABS
-                )
-            )
-
         self._source = source
         self._renderer = renderer
+
         if html is None:
             self._html = ''
             self._is_dirty = True
@@ -110,7 +96,7 @@ class Markdown(object):
 
         """
         if self.is_dirty or force:
-            self._html = self._renderer.render(encoding.force_text(self._source))
+            self._html = self._renderer(encoding.force_text(self._source))
             self._is_dirty = False
 
     def deconstruct(self):

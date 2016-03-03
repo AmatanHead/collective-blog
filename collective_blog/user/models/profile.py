@@ -3,8 +3,8 @@ from django.utils.translation import ugettext_lazy as _, ugettext as __
 
 from collective_blog import settings
 
-from markdown.models import MarkdownField, HtmlCacheField
-from markdown.datatype import Markdown
+from django_markdown.models import MarkdownField, HtmlCacheField
+from django_markdown.datatype import Markdown
 
 
 class Profile(models.Model):
