@@ -7,12 +7,13 @@ from .widgets import MarkdownTextarea
 
 
 class MarkdownFormField(forms.fields.CharField):
-    """
-    Form field for editing markdown objects.
-
-    """
+    # TODO tests
 
     def __init__(self, *args, **kwargs):
+        """
+        Form field for editing markdown objects.
+
+        """
         source_validators = kwargs.pop('source_validators', [])
         _source_validators = kwargs.pop('_source_validators', [])
         html_validators = kwargs.pop('html_validators', [])

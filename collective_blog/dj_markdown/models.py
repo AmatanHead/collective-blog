@@ -277,8 +277,6 @@ class MarkdownField(TextField):
         :param db_tablespace:
 
         """
-        # TODO renderer_name
-
         self.validators = kwargs.pop('validators', [])
 
         self.source_validators = kwargs.pop('source_validators', [])
@@ -466,8 +464,12 @@ class MarkdownField(TextField):
         if self.cls_name is None:
             self.cls_name = self.name + '_cls'
 
+        if self.renderer_name is None:
+            self.renderer_name = self.name + '_renderer'
+
         if self.state_name is None:
             self.state_name = '_' + self.name + '_state'
 
         setattr(cls, self.cls_name, ClsDescriptor(self.markdown_cls))
+        setattr(cls, self.renderer_name, self.renderer)
         setattr(cls, self.name, MarkdownDescriptor(self))

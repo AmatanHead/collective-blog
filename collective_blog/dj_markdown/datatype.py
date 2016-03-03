@@ -9,6 +9,7 @@ from django.utils import encoding
 
 
 class Markdown(object):
+    # TODO tests
     def __init__(self, renderer, source, html=None):
         """
         Markdown data type contains source markdown data and cached

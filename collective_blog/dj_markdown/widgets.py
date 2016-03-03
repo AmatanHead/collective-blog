@@ -18,12 +18,24 @@ class MarkdownTextarea(forms.Textarea):
 
 
 class CodeMirror(MarkdownTextarea):
-    """
-    Widget that uses the `CodeMirror` editor
-
-    """
-
     def __init__(self, *args, **kwargs):
+        """
+        Widget that uses the `CodeMirror` editor.
+
+        :param mode: Syntax mode name.
+        :param addons: List of addons (each element is a relative path
+          to the addon, without `.js` extension. Example: `mode/overlay`)
+        :param theme: Theme name.
+        :param theme_path: Path to the theme file.
+          Default is `dj_markdown/codemirror/theme/<theme>.css`
+        :param keymap: A keymap name.
+        :param options: A dict of options that will be passed
+          to the codemirror editor.
+        :param additional_modes: Load additional modes for `overlay` extension.
+        :param js_var_format: A name of the js variable in which
+          the codemirror instance is saved.
+
+        """
         self.mode = kwargs.pop('mode', 'markdown')
         self.addons = kwargs.pop('addons', [])
         self.theme = kwargs.pop('theme', 'default')
@@ -41,6 +53,11 @@ class CodeMirror(MarkdownTextarea):
 
     @property
     def media(self):
+        """
+        Construct a list of mediafiles required for this widget.
+
+        :return: `forms.Media` instance.
+        """
         css = ['dj_markdown/codemirror/lib/codemirror.css']
         if self.theme:
             css.append(self.theme_path)
