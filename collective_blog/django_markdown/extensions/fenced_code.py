@@ -77,7 +77,12 @@ class FencedBlockPreprocessor(Preprocessor):
                     formatter = Formatter()
                     code = highlight(m.group('code'), lexer, formatter)
                 except ClassNotFound:
-                    code = '<pre>%s</pre>' % self._escape(m.group('code'))
+                    code = self._escape(m.group('code'))
+                    if lang:
+                        formatter = lambda x: '<li>%s</li>' % x
+                        code = ''.join(map(formatter, code.split('\n')))
+                        code = '<ol>%s</ol>' % code
+                    code = '<pre>%s</pre>' % code
 
                 placeholder = self.markdown.htmlStash.store(code, safe=True)
                 text = '%s\n%s\n%s' % (text[:m.start()],

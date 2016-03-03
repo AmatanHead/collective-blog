@@ -18,8 +18,28 @@ pre
   padding: 2rem
   
   font-family: $mono-stack
+
+  font-size: .9em
   
   border-radius: $pre-border-radius
+
+  ol
+    margin-left: 0
+
+    li
+      list-style-type: none
+      counter-increment: list
+      margin-top: -1px
+
+    li:before
+      content: counter(list)
+      border-right: 1px solid $pre-line-color
+      padding-right: .6em
+      margin: 0 1em 0 -1em
+      display: inline-block
+      width: 2.45em
+      text-align: right
+      color: $pre-secondary-color
 
   +respond-to(low)
     border-radius: 0
