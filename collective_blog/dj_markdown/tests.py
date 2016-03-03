@@ -6,7 +6,7 @@ from django_fake_model.models import FakeModel
 
 from .models import MarkdownField, HtmlCacheField, HtmlCacheDescriptor
 from .datatype import Markdown
-from .renderers import BaseRenderer
+from .renderer import BaseRenderer
 
 
 def md_validator(markdown):

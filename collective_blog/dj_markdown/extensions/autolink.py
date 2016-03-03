@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Adds automatic link insertion.
 
@@ -13,6 +14,7 @@ from __future__ import unicode_literals
 import re
 import markdown
 
+
 # We can't re-use the built-in AutolinkPattern because we need to add protocols
 # to links without them.
 class AutolinkPattern(markdown.inlinepatterns.Pattern):
@@ -26,6 +28,7 @@ class AutolinkPattern(markdown.inlinepatterns.Pattern):
 
         el.text = markdown.util.AtomicString(m.group(2))
         return el
+
 
 class AutolinkExtension(markdown.Extension):
     """An extension that turns all URLs into links.

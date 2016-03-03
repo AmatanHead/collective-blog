@@ -10,6 +10,7 @@ Copied from https://github.com/google/py-gfm/
 
 import markdown
 
+
 # We can't re-use the built-in AutomailPattern because we need to add mailto:.
 # We also don't care about HTML-encoding the email.
 class AutomailPattern(markdown.inlinepatterns.Pattern):
@@ -18,6 +19,7 @@ class AutomailPattern(markdown.inlinepatterns.Pattern):
         el.set('href', self.unescape('mailto:' + m.group(2)))
         el.text = markdown.util.AtomicString(m.group(2))
         return el
+
 
 class AutomailExtension(markdown.Extension):
     """An extension that turns all email addresses into links."""

@@ -10,7 +10,8 @@ Copied from https://github.com/google/py-gfm/
 
 import markdown
 
-STRIKE_RE = r'(~{2})(.+?)(~{2})' # ~~strike~~
+STRIKE_RE = r'(~{2})(.+?)(~{2})'  # ~~strike~~
+
 
 class StrikethroughExtension(markdown.Extension):
     """An extension that supports PHP-Markdown style strikethrough.
