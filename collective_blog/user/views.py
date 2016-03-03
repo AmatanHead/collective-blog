@@ -8,7 +8,6 @@ User = get_user_model()
 
 
 def view_profile(request, username=None):
-
     if username is None:
         user = request.user
     else:
@@ -16,10 +15,6 @@ def view_profile(request, username=None):
                                  username=username)
 
     is_self_profile = username is None or user.pk == request.user.pk
-
-    print(user.profile.about.is_dirty)
-    # user.profile.save()
-    # print(user.profile.about)
 
     return render(request, 'profile/view_profile.html', {
         'user': user,

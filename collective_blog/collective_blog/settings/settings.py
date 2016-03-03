@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'collective_blog',
     'user',
     'appearance',
-    'django_markdown',
+    'dj_markdown',
 
     'registration',
     'captcha',

@@ -3,10 +3,14 @@ from django.utils.translation import ugettext_lazy as _, ugettext as __
 
 from collective_blog import settings
 
-from django_markdown.models import MarkdownField, HtmlCacheField
-from django_markdown.datatype import Markdown
-from django_markdown.renderer import BaseRenderer
-from django_markdown.extensions import FencedCodeExtension, EscapeHtml
+from dj_markdown.models import MarkdownField, HtmlCacheField
+from dj_markdown.datatype import Markdown
+from dj_markdown.renderer import BaseRenderer
+from dj_markdown.extensions import (FencedCodeExtension,
+                                    EscapeHtmlExtension,
+                                    SemiSaneListExtension,
+                                    StrikethroughExtension,
+                                    AutomailExtension, AutolinkExtension)
 
 class Profile(models.Model):
     """Additional model which holds profile data for each user.
@@ -32,14 +36,17 @@ class Profile(models.Model):
                           markdown=Markdown,
                           renderer=BaseRenderer(
                               extensions=[
-                                  'markdown.extensions.sane_lists',
                                   'markdown.extensions.smarty',
                                   'markdown.extensions.abbr',
                                   'markdown.extensions.def_list',
                                   'markdown.extensions.tables',
                                   'markdown.extensions.smart_strong',
                                   FencedCodeExtension(),
-                                  EscapeHtml(),
+                                  EscapeHtmlExtension(),
+                                  SemiSaneListExtension(),
+                                  StrikethroughExtension(),
+                                  AutolinkExtension(),
+                                  AutomailExtension(),
                               ]
                           ),
                           verbose_name=_('About'),

@@ -1,17 +1,11 @@
 """
-Fenced Code Extension for Python Markdown
-=========================================
+Adds fenced code block support.
 
-This extension adds Fenced Code Blocks to Python-Markdown.
-
-See <https://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html>
-for documentation.
+Copied from
+https://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html
 
 Original code Copyright 2007-2008 [Waylan Limberg](http://achinghead.com/).
-
-
 All changes Copyright 2008-2014 The Python Markdown Project
-
 License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
 
 """
@@ -28,11 +22,26 @@ from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 
+from django.utils.html import escape
+
 
 class FencedCodeExtension(Extension):
+    """
+    Adds fenced code blocks, e.g.
+
+    ```lang
+
+    ...
+
+    ```
+
+    """
 
     def extendMarkdown(self, md, md_globals):
-        """ Add FencedBlockPreprocessor to the Markdown instance. """
+        """
+        Add FencedBlockPreprocessor to the Markdown instance.
+
+        """
         md.registerExtension(self)
 
         md.preprocessors.add('fenced_code_block',
@@ -41,6 +50,11 @@ class FencedCodeExtension(Extension):
 
 
 class Formatter(HtmlFormatter):
+    """
+    Formats a highlighted code block so that it is compatible with
+    the `Light` framework layout.
+
+    """
     def _wrap_pre(self, inner):
         yield 0, ('<pre><ol>')
         for tup in inner:
@@ -50,6 +64,11 @@ class Formatter(HtmlFormatter):
 
 
 class FencedBlockPreprocessor(Preprocessor):
+    """
+    Main fenced code block renderer.
+
+    """
+
     block_re = re.compile(
         r'(?P<fence>^(?:`{3}))[ ]*'
         r'(?P<lang>[a-zA-Z0-9_+-]*)?[ ]*\n'
@@ -77,7 +96,7 @@ class FencedBlockPreprocessor(Preprocessor):
                     formatter = Formatter()
                     code = highlight(m.group('code'), lexer, formatter)
                 except ClassNotFound:
-                    code = self._escape(m.group('code'))
+                    code = escape(m.group('code'))
                     if lang:
                         formatter = lambda x: '<li>%s</li>' % x
                         code = ''.join(map(formatter, code.split('\n')))
@@ -91,11 +110,3 @@ class FencedBlockPreprocessor(Preprocessor):
             else:
                 break
         return text.split("\n")
-
-    def _escape(self, txt):
-        """ basic html escaping """
-        txt = txt.replace('&', '&amp;')
-        txt = txt.replace('<', '&lt;')
-        txt = txt.replace('>', '&gt;')
-        txt = txt.replace('"', '&quot;')
-        return txt

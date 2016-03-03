@@ -3,5 +3,5 @@ django-ckeditor==5.0.3
 django-recaptcha==1.0.5
 django-registration-redux==1.4
 django-fake-model==0.1.4
-mistune==0.7.2
 Pygments==2.1.2
+Markdown==2.6.5

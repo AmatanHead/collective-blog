@@ -1,0 +1,3 @@
+[submodule "collective_blog/dj_markdown/static/dj_markdown/codemirror"]
+	path = collective_blog/dj_markdown/static/dj_markdown/codemirror
+	url = https://github.com/codemirror/CodeMirror.git
