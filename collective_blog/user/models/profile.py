@@ -10,7 +10,9 @@ from dj_markdown.extensions import (FencedCodeExtension,
                                     EscapeHtmlExtension,
                                     SemiSaneListExtension,
                                     StrikethroughExtension,
-                                    AutomailExtension, AutolinkExtension)
+                                    AutomailExtension,
+                                    AutolinkExtension,
+                                    CommentExtension)
 
 class Profile(models.Model):
     """Additional model which holds profile data for each user.
@@ -47,6 +49,7 @@ class Profile(models.Model):
                                   StrikethroughExtension(),
                                   AutolinkExtension(),
                                   AutomailExtension(),
+                                  CommentExtension(),
                               ]
                           ),
                           verbose_name=_('About'),
