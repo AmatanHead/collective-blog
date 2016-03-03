@@ -5,7 +5,8 @@ from collective_blog import settings
 
 from django_markdown.models import MarkdownField, HtmlCacheField
 from django_markdown.datatype import Markdown
-
+from django_markdown.renderer import BaseRenderer
+from django_markdown.extensions import FencedCodeExtension, EscapeHtml
 
 class Profile(models.Model):
     """Additional model which holds profile data for each user.
@@ -29,6 +30,18 @@ class Profile(models.Model):
 
     about = MarkdownField(blank=True,
                           markdown=Markdown,
+                          renderer=BaseRenderer(
+                              extensions=[
+                                  'markdown.extensions.sane_lists',
+                                  'markdown.extensions.smarty',
+                                  'markdown.extensions.abbr',
+                                  'markdown.extensions.def_list',
+                                  'markdown.extensions.tables',
+                                  'markdown.extensions.smart_strong',
+                                  FencedCodeExtension(),
+                                  EscapeHtml(),
+                              ]
+                          ),
                           verbose_name=_('About'),
                           help_text=_('Tell us about yourself'))
 
