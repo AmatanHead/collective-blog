@@ -5,10 +5,12 @@ Markdown widgets
 
 from django import forms
 from django.utils.safestring import mark_safe
+from django.utils.deconstruct import deconstructible
 
 from json import dumps
 
 
+@deconstructible
 class MarkdownTextarea(forms.Textarea):
     """
     Basic textarea widget for rendering Markdown objects
@@ -17,6 +19,7 @@ class MarkdownTextarea(forms.Textarea):
     pass
 
 
+@deconstructible
 class CodeMirror(MarkdownTextarea):
     def __init__(self, *args, **kwargs):
         """

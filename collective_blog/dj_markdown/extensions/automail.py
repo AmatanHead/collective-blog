@@ -8,6 +8,8 @@ Copied from https://github.com/google/py-gfm/
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
+from django.utils.deconstruct import deconstructible
+
 import markdown
 
 
@@ -21,6 +23,7 @@ class AutomailPattern(markdown.inlinepatterns.Pattern):
         return el
 
 
+@deconstructible
 class AutomailExtension(markdown.Extension):
     """An extension that turns all email addresses into links."""
 

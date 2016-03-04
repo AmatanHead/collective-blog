@@ -22,16 +22,16 @@ from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 
 from django.utils.html import escape
+from django.utils.deconstruct import deconstructible
 
 
+@deconstructible
 class FencedCodeExtension(Extension):
     """
     Adds fenced code blocks, e.g.
 
     ```lang
-
     ...
-
     ```
 
     """

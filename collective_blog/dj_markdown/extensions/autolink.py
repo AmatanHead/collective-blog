@@ -11,6 +11,8 @@ Copied from https://github.com/google/py-gfm/
 
 from __future__ import unicode_literals
 
+from django.utils.deconstruct import deconstructible
+
 import re
 import markdown
 
@@ -30,6 +32,7 @@ class AutolinkPattern(markdown.inlinepatterns.Pattern):
         return el
 
 
+@deconstructible
 class AutolinkExtension(markdown.Extension):
     """An extension that turns all URLs into links.
 
