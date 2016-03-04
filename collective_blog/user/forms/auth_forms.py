@@ -17,26 +17,26 @@ from collective_blog.settings import DEBUG
 
 
 class AuthenticationForm(_AuthenticationForm, BaseFormRenderer):
-    pass
+    ignore_required_style = True
 
 
 class PasswordResetForm(_PasswordResetForm, BaseFormRenderer):
-    pass
+    ignore_required_style = True
 
 
 class PasswordChangeForm(_PasswordChangeForm, BaseFormRenderer):
-    pass
+    ignore_required_style = True
 
 
 class RegistrationFormCaptcha(RegistrationFormUniqueEmail, BaseFormRenderer):
+    ignore_required_style = True
+
     if DEBUG:
         def __init__(self, *args, **kwargs):
             if 'data' in kwargs:
                 kwargs['data'] = kwargs['data'].copy()
-            else:
-                kwargs['data'] = {}
-            kwargs['data']['g-recaptcha-response'] = 'PASSED'
-            print(kwargs['data'])
+                if kwargs['data']['g-recaptcha-response']:
+                    kwargs['data']['g-recaptcha-response'] = 'PASSED'
             super().__init__(*args, **kwargs)
         captcha = ReCaptchaField(help_text='This ReCaptcha is running '
                                            'with DEBUG=True.')

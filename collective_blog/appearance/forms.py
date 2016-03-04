@@ -69,8 +69,14 @@ class BaseFormRenderer(BaseForm):
         errors = self.error_class(
             [conditional_escape(error) for error in field.errors])
 
-        if field.css_classes():
-            css_classes = ' class="%s"' % field.css_classes()
+        classes = field.css_classes().split()
+
+        if (field.field.required and
+                not getattr(self, 'ignore_required_style', None)):
+            classes.append('required')
+
+        if classes:
+            css_classes = ' class="%s"' % ' '.join(classes)
         else:
             css_classes = ''
 
