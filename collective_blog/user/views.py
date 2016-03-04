@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from .models import Profile
-from .forms import ProfileForm
+from .forms import ProfileForm, UserForm
 
 User = get_user_model()
 
@@ -41,19 +41,22 @@ def edit_profile(request, username=None):
 
         if request.POST:
             form = ProfileForm(request.POST, instance=user.profile)
-            print(form.is_valid())
-            if form.is_valid():
+            user_form = UserForm(request.POST, instance=user)
+            if form.is_valid() and user_form.is_valid():
                 form.save()
+                user_form.save()
                 return HttpResponseRedirect(
                     reverse('view_profile',
                             kwargs=dict(username=user.username))
                 )
         else:
             form = ProfileForm(instance=user.profile)
+            user_form = UserForm(instance=user)
 
         return render(request, 'profile/edit_profile.html', {
             'user': user,
             'form': form,
+            'user_form': user_form,
             'self_profile': username is None or user.pk == request.user.pk,
         })
 

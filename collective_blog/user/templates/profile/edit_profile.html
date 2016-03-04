@@ -4,6 +4,7 @@
 {% block title %}{% blocktrans trimmed with username=user|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 {% block extra_head %}
+    {{ user_form.media }}
     {{ form.media }}
 {% endblock %}
 
@@ -14,6 +15,7 @@
             <small>{% if self_profile %}{% trans "edit your profile" %}{% else %}{% trans "edit user profile" %}{% endif %}</small>
         </h1>
         {% csrf_token %}
+        {{ user_form.as_section }}
         {{ form.as_section }}
         <section class="inline separate">
             <button type="submit" class="primary">{% trans "Save" %}</button>

@@ -1,8 +1,23 @@
-from django.forms import ModelForm
+from django.contrib.auth import get_user_model
+from django.forms import ModelForm, inlineformset_factory
 
 from ..models import Profile
 from dj_markdown.widgets import CodeMirror
 from appearance.forms import BaseFormRenderer
+
+
+User = get_user_model()
+
+
+class UserForm(ModelForm, BaseFormRenderer):
+    renderer = [
+        'email',
+        ('first_name', 'last_name'),
+    ]
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
 
 
 class ProfileForm(ModelForm, BaseFormRenderer):
