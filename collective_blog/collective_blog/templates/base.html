@@ -28,7 +28,13 @@
         {% block footer %}
             <br><br>
         {% endblock %}
-
     </div>
+
+    {% block scripts %}
+        <script src="{% static "d3.min.js" %}"></script>
+    {% endblock %}
+    {% block extra_scripts %}
+    {% endblock %}
+
 </body>
 </html>
