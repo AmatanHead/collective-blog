@@ -81,10 +81,13 @@ class Profile(models.Model):
 
     @classmethod
     def visible_email(cls, user, profile):
+        if not profile.user.email:
+            return ''
         if cls.can_see_email(user, profile) and not profile.email_is_public:
             return profile.user.email + ' (' + __('Only you can see the email') + ')'
         elif profile.email_is_public:
             return profile.user.email
+        return ''
 
     def delete(self, using=None, keep_parents=False):
         self.user.delete()

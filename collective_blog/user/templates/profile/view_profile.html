@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% blocktrans trimmed with username=user %}User profile: {{ username }}{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans trimmed with username=user|capfirst %}{{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 
 {% block content %}
@@ -15,6 +15,10 @@
             <p>{{ user.first_name }} {{ user.last_name }}</p>
         {% endif %}
 
+        {% if show_email and visible_email %}
+            <p>{{ visible_email }}</p>
+        {% endif %}
+
         {% if user.profile.location %}
             <p>{% blocktrans trimmed with location=user.profile.location %}From {{ location }}{% endblocktrans %}</p>
         {% endif %}
@@ -24,11 +28,27 @@
         {% endif %}
 
         {% if user.profile.about.html_force %}
+            {% if user.first_name or user.last_name or user.profile.location or user.profile.birthday %}
+                <hr>
+            {% endif %}
             {{ user.profile.about.html_force|safe }}
+            {% if editable or self_profile %}
+                <hr>
+            {% endif %}
         {% endif %}
 
-        {% if editable %}
-            <a href="{% url 'edit_profile' username=user.username %}">{% trans "Edit profile" %}</a>
+        {% if editable or self_profile %}
+            <p>
+                {% if editable %}
+                    <a href="{% url 'edit_profile' username=user.username %}">{% trans "Edit profile" %}</a>
+                {% endif %}
+                {% if editable and self_profile %}
+                    &bull;
+                {% endif %}
+                {% if self_profile %}
+                    <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>
+                {% endif %}
+            </p>
         {% endif %}
 
         <hr>

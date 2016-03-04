@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% blocktrans trimmed with username=user|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+    <form class="primary container" method="post">
+        <h1>
+            {{ user|capfirst }}
+            <small>{% if self_profile %}{% trans "edit your profile" %}{% else %}{% trans "edit user profile" %}{% endif %}</small>
+        </h1>
+        {% csrf_token %}
+        {{ form.as_section }}
+        <section class="inline separate">
+            <button type="submit" class="primary">{% trans "Save" %}</button>
+            <a class="plain button" href="{% url 'view_profile' username=user.username %}">{% trans "Cancel" %}</a>
+        </section>
+    </form>
+{% endblock %}

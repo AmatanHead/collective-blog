@@ -1,1 +1,2 @@
-from user.forms.auth_forms import *
+from .auth_forms import *
+from .profile_form import *

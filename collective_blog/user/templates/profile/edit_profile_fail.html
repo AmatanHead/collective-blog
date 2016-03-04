@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% blocktrans trimmed with username=user|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
+
+
+{% block content %}
+    <div class="primary container">
+        <h1>
+            {{ user|capfirst }}
+            <small>{% if self_profile %}{% trans "edit your profile" %}{% else %}{% trans "edit user profile" %}{% endif %}</small>
+        </h1>
+
+        <p>
+            {% blocktrans trimmed %}
+                Sorry, you have no permission to edit this profile.
+            {% endblocktrans %}
+        </p>
+
+    </div>
+{% endblock %}

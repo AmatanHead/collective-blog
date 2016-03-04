@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
-from user.models import Profile
+from .models import Profile
+from .forms import ProfileForm
 
 User = get_user_model()
 
@@ -20,6 +23,8 @@ def view_profile(request, username=None):
         'user': user,
         'self_profile': is_self_profile,
         'editable': Profile.can_edit_profile(request.user, user.profile),
+        'show_email': Profile.can_see_email(request.user, user.profile),
+        'visible_email': Profile.visible_email(request.user, user.profile),
     })
 
 
@@ -29,4 +34,30 @@ def self_profile(request):
 
 
 def edit_profile(request, username=None):
-    pass
+    user = get_object_or_404(User.objects.select_related('profile'),
+                             username=username)
+
+    if Profile.can_edit_profile(request.user, user.profile):
+
+        if request.POST:
+            form = ProfileForm(request.POST, instance=user.profile)
+            print(form.is_valid())
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(
+                    reverse('view_profile',
+                            kwargs=dict(username=user.username))
+                )
+        else:
+            form = ProfileForm(instance=user.profile)
+
+        return render(request, 'profile/edit_profile.html', {
+            'user': user,
+            'form': form,
+            'self_profile': username is None or user.pk == request.user.pk,
+        })
+
+    else:
+        return render(request, 'profile/edit_profile_fail.html', {
+            'user': user
+        }, status=403)
