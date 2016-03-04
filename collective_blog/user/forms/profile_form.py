@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.forms import ModelForm
+from django.forms import ModelForm, ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 from ..models import Profile
 from dj_markdown.widgets import CodeMirror
@@ -18,6 +19,16 @@ class UserForm(ModelForm, BaseFormRenderer):
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['email'].required = True
+
+    def clean_email(self):
+        """
+        Validate that the supplied email address is unique for the
+        site.
+
+        """
+        if User.objects.filter(email__iexact=self.cleaned_data['email']):
+            raise ValidationError(_('This email is already used'))
+        return self.cleaned_data['email']
 
     class Meta:
         model = User

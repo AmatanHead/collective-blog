@@ -32,6 +32,7 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True,
                                 verbose_name=_('Location'))
 
+    # TODO proper widget
     birthday = models.DateField(null=True, blank=True,
                                 verbose_name=_('Birthday'))
 
@@ -54,7 +55,8 @@ class Profile(models.Model):
                               ]
                           ),
                           verbose_name=_('About'),
-                          help_text=_('Tell us about yourself'))
+                          help_text=_('Tell us about yourself '
+                                      '(use the markdown, Luke!)'))
 
     _about_html = HtmlCacheField(about)
 

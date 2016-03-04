@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from .models import Profile
+from .models import Profile, Karma
 from .forms import ProfileForm, UserForm
 
 User = get_user_model()
@@ -25,6 +25,7 @@ def view_profile(request, username=None):
         'editable': Profile.can_edit_profile(request.user, user.profile),
         'show_email': Profile.can_see_email(request.user, user.profile),
         'visible_email': Profile.visible_email(request.user, user.profile),
+        'karma': Karma.objects.filter(user=user).score(),
     })
 
 

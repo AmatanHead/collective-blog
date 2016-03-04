@@ -11,6 +11,21 @@
             <small>{% if self_profile %}{% trans "your profile" %}{% else %}{% trans "user profile" %}{% endif %}</small>
         </h1>
 
+        <span style="font-size: 1.1em">
+            <span class="badge-group">
+                {% if karma.score > 5 %}
+                    <span class="green badge">{% trans "Karma" %}</span><span class="green badge outline">{{ karma.score }}</span>
+                {% elif karma.score < -5 %}
+                    <span class="orange badge">{% trans "Karma" %}</span><span class="orange badge outline">{{ karma.score }}</span>
+                {% else %}
+                    <span class="gray badge">{% trans "Karma" %}</span><span class="gray badge outline">{{ karma.score }}</span>
+                {% endif %}
+            </span>
+            &nbsp;
+            <span class="gray badge outline" id="karma-upvote-button"><span class="arrow-up center icon"></span></span>
+            <span class="gray badge outline" id="karma-downvote-button"><span class="arrow-down center icon"></span></span>
+        </span>
+
         {% if user.first_name or user.last_name %}
             <p>{{ user.first_name }} {{ user.last_name }}</p>
         {% endif %}
