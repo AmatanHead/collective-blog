@@ -14,6 +14,7 @@ from dj_markdown.extensions import (FencedCodeExtension,
                                     AutolinkExtension,
                                     CommentExtension)
 
+
 class Profile(models.Model):
     """Additional model which holds profile data for each user.
 
