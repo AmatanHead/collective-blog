@@ -26,7 +26,8 @@ class UserForm(ModelForm, BaseFormRenderer):
         site.
 
         """
-        if User.objects.filter(email__iexact=self.cleaned_data['email']):
+        email_match = User.objects.filter(email__iexact=self.cleaned_data['email']).first()
+        if email_match and email_match.pk != self.instance.pk:
             raise ValidationError(_('This email is already used'))
         return self.cleaned_data['email']
 
