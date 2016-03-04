@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.forms import ModelForm, inlineformset_factory
+from django.forms import ModelForm
 
 from ..models import Profile
 from dj_markdown.widgets import CodeMirror
@@ -14,6 +14,10 @@ class UserForm(ModelForm, BaseFormRenderer):
         'email',
         ('first_name', 'last_name'),
     ]
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = True
 
     class Meta:
         model = User
