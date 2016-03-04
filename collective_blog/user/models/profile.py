@@ -91,6 +91,10 @@ class Profile(models.Model):
             return profile.user.email
         return ''
 
+    @classmethod
+    def can_vote(cls, user, profile):
+        return user.is_active and user.pk != profile.user.pk
+
     def delete(self, using=None, keep_parents=False):
         self.user.delete()
         super(Profile, self).delete(using, keep_parents)

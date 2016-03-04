@@ -13,17 +13,13 @@
 
         <span style="font-size: 1.1em">
             <span class="badge-group">
-                {% if karma.score > 5 %}
-                    <span class="green badge">{% trans "Karma" %}</span><span class="green badge outline">{{ karma.score }}</span>
-                {% elif karma.score < -5 %}
-                    <span class="orange badge">{% trans "Karma" %}</span><span class="orange badge outline">{{ karma.score }}</span>
-                {% else %}
-                    <span class="gray badge">{% trans "Karma" %}</span><span class="gray badge outline">{{ karma.score }}</span>
-                {% endif %}
+                <span class="{{ karma_color }} badge karma-color">{% trans "Karma" %}</span><span class="{{ karma_color }} badge outline karma-color" id="karma-score">{{ karma.score }}</span>
             </span>
             &nbsp;
-            <span class="gray badge outline" id="karma-upvote-button"><span class="arrow-up center icon"></span></span>
-            <span class="gray badge outline" id="karma-downvote-button"><span class="arrow-down center icon"></span></span>
+            <span class="gray badge {% if self_vote.vote != 1 %}outline{% endif %}" id="karma-upvote-button"><span class="arrow-up center icon"></span></span>
+            <span class="gray badge {% if self_vote.vote != -1 %}outline{% endif %}" id="karma-downvote-button"><span class="arrow-down center icon"></span></span>
+            &nbsp;
+            <span id="karma-error" class="gray badge outline" style="opacity: 0"></span>
         </span>
 
         {% if user.first_name or user.last_name %}
@@ -73,4 +69,51 @@
         <hr>
 
     </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+
+        function vote(vote) {
+            d3.text('{% url "vote_user" username=user.username %}?vote=' + vote,
+                    function (error, data) {
+                        var score = parseInt(data);
+
+                        if (isFinite(score)) {
+                            d3.select('#karma-score').text(score);
+                            d3.select('#karma-upvote-button')
+                                    .classed('outline', vote != 1);
+                            d3.select('#karma-downvote-button')
+                                    .classed('outline', vote != -1);
+                            d3.selectAll('.karma-color')
+                                    .classed('gray', score < 10 && score > -10)
+                                    .classed('green', score >= 10)
+                                    .classed('orange', score <= -10);
+                        } else {
+                            d3.select('#karma-error').text(data)
+                                    .interrupt()
+                                    .style('opacity', 1)
+                                    .transition()
+                                    .duration(3000)
+                                    .style('opacity', 0);
+                        }
+                    }
+            )
+        }
+
+        d3.select('#karma-upvote-button').on('click', function (e) {
+            if (d3.select('#karma-upvote-button').classed('outline')) {
+                vote(1);
+            } else {
+                vote(0);
+            }
+        });
+        d3.select('#karma-downvote-button').on('click', function (e) {
+            if (d3.select('#karma-downvote-button').classed('outline')) {
+                vote(-1);
+            } else {
+                vote(0);
+            }
+        });
+    </script>
 {% endblock %}

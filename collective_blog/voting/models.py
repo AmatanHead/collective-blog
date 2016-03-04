@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum, Count, QuerySet
+from django.db.models import Sum, Count, QuerySet, ObjectDoesNotExist
 
 from collective_blog import settings
 
@@ -70,10 +70,16 @@ class AbstractVote(models.Model):
         :param user: Who votes.
         :param obj: For what votes.
         :param vote: +1, 0, or -1.
+
         """
         assert vote in [-1, 0, 1]
 
         if vote == 0:
-            cls.filter(user=user, obj=obj).delete()
+            cls.objects.filter(user=user, object=obj).delete()
         else:
-            cls.objects.update_or_create(user=user, vote=vote, object=obj)
+            try:
+                v = cls.objects.get(user=user, object=obj)
+                v.vote = vote
+                v.save()
+            except ObjectDoesNotExist:
+                cls.objects.create(user=user, object=obj, vote=vote)
