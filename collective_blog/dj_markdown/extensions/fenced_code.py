@@ -57,7 +57,6 @@ class Formatter(HtmlFormatter):
     def _wrap_pre(self, inner):
         yield 0, ('<pre><ol>')
         for tup in inner:
-            print(tup)
             yield tup[0], '<li>%s</li>' % tup[1]
         yield 0, '</ol></pre>'
 
