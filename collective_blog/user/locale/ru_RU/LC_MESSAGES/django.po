@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-22 21:14+0300\n"
+"POT-Creation-Date: 2016-03-04 16:20+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,37 +17,65 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: user/models/profile.py:21
+#: user/models/profile.py:33
 msgid "Location"
 msgstr ""
 
-#: user/models/profile.py:24
+#: user/models/profile.py:36
 msgid "Birthday"
 msgstr ""
 
-#: user/models/profile.py:27
+#: user/models/profile.py:56
 msgid "About"
 msgstr ""
 
-#: user/models/profile.py:28
+#: user/models/profile.py:57
 msgid "Tell us about yourself"
 msgstr ""
 
-#: user/models/profile.py:32
+#: user/models/profile.py:61
 msgid "Show email"
 msgstr ""
 
-#: user/models/profile.py:43
+#: user/models/profile.py:97
 msgid "Profile"
 msgstr ""
 
-#: user/models/profile.py:44
+#: user/models/profile.py:98
 msgid "Profiles"
+msgstr ""
+
+#: user/templates/profile/edit_profile.html:4
+#: user/templates/profile/edit_profile_fail.html:4
+#, python-format
+msgid "Edit %(username)s's profile"
+msgstr ""
+
+#: user/templates/profile/edit_profile.html:15
+#: user/templates/profile/edit_profile_fail.html:11
+msgid "edit your profile"
+msgstr ""
+
+#: user/templates/profile/edit_profile.html:15
+#: user/templates/profile/edit_profile_fail.html:11
+msgid "edit user profile"
+msgstr ""
+
+#: user/templates/profile/edit_profile.html:21
+msgid "Save"
+msgstr ""
+
+#: user/templates/profile/edit_profile.html:22
+msgid "Cancel"
+msgstr ""
+
+#: user/templates/profile/edit_profile_fail.html:15
+msgid "Sorry, you have no permission to edit this profile."
 msgstr ""
 
 #: user/templates/profile/view_profile.html:4
 #, python-format
-msgid "User profile: %(username)s"
+msgid "%(username)s's profile"
 msgstr ""
 
 #: user/templates/profile/view_profile.html:11
@@ -58,21 +86,26 @@ msgstr ""
 msgid "user profile"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:19
+#: user/templates/profile/view_profile.html:23
 #, python-format
 msgid "From %(location)s"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:23
+#: user/templates/profile/view_profile.html:27
 #, python-format
 msgid "Birthday at %(birthday)s"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:31
+#: user/templates/profile/view_profile.html:43
 msgid "Edit profile"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:36
+#: user/templates/profile/view_profile.html:49
+#: user/templates/registration/password_change_form.html:4
+msgid "Change password"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:56
 msgid "No membership"
 msgstr ""
 
@@ -176,12 +209,15 @@ msgstr ""
 msgid "Password successfully changed!"
 msgstr ""
 
-#: user/templates/registration/password_change_form.html:4
-#: user/templates/registration/password_change_form.html:8
-msgid "Change password"
+#: user/templates/registration/password_change_done.html:9
+msgid "To the main page"
 msgstr ""
 
-#: user/templates/registration/password_change_form.html:13
+#: user/templates/registration/password_change_form.html:10
+msgid "change password"
+msgstr ""
+
+#: user/templates/registration/password_change_form.html:16
 #: user/templates/registration/password_reset_confirm.html:32
 msgid "Let's go!"
 msgstr ""
