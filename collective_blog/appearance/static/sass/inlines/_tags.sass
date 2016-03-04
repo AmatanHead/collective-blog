@@ -43,6 +43,9 @@
 
   +tags-additional-style
 
+  & > .icon.center
+    margin-right: 0
+
   & > .icon
     margin-right: .2em
 
@@ -76,6 +79,9 @@
 
     &:last-child
       padding-right: 0
+
+  &.gray
+    +tag-background($lines-color, $text-color, $lines-color, lighten($text-color, 10))
 
   &.black
     +tag-background($black-bg, $black-color)
