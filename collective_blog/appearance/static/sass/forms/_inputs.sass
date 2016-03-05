@@ -8,6 +8,7 @@
 @import '../settings'
 @import '../misc/clear'
 @import '../misc/extract'
+@import '../misc/media_queries'
 
 input, textarea, select, button, .button
   width: 100%
@@ -126,6 +127,10 @@ label
   input
     padding-left: left($input-border-padding) / 2
     padding-right: right($input-border-padding) / 2
+
+  .full-width-on-low
+    +respond-to(low)
+      width: 100%
 
 .required
   font-weight: bold

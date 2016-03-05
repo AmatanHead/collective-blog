@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-05 20:31+0300\n"
+"POT-Creation-Date: 2016-03-05 23:46+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,138 +33,189 @@ msgstr ""
 msgid "About this blog"
 msgstr ""
 
-#: blog/models/blog.py:57
+#: blog/models/blog.py:59
 msgid "Open"
 msgstr ""
 
-#: blog/models/blog.py:58
+#: blog/models/blog.py:60
 msgid "Private"
 msgstr ""
 
-#: blog/models/blog.py:62
+#: blog/models/blog.py:64
 msgid "Type of the blog"
 msgstr ""
 
-#: blog/models/blog.py:65
+#: blog/models/blog.py:67
 msgid "Anyone can join"
 msgstr ""
 
-#: blog/models/blog.py:66
+#: blog/models/blog.py:68
 msgid "Only users with high karma can join"
 msgstr ""
 
-#: blog/models/blog.py:67
+#: blog/models/blog.py:69
 msgid "Manual approval required"
 msgstr ""
 
-#: blog/models/blog.py:72
+#: blog/models/blog.py:74
 msgid "Who can join the blog"
 msgstr ""
 
-#: blog/models/blog.py:76
+#: blog/models/blog.py:78
 msgid "Join karma threshold"
 msgstr ""
 
-#: blog/models/blog.py:79
+#: blog/models/blog.py:81
 msgid "Anyone can add post"
 msgstr ""
 
-#: blog/models/blog.py:80
+#: blog/models/blog.py:82
 msgid "Only users with high karma can add post"
 msgstr ""
 
-#: blog/models/blog.py:85
+#: blog/models/blog.py:87
 msgid "Who can add posts"
 msgstr ""
 
-#: blog/models/blog.py:88
+#: blog/models/blog.py:90
 msgid "Require membership to write posts"
 msgstr ""
 
-#: blog/models/blog.py:91
+#: blog/models/blog.py:93
 msgid "Post karma threshold"
 msgstr ""
 
-#: blog/models/blog.py:94
+#: blog/models/blog.py:96
 msgid "Anyone can comment"
 msgstr ""
 
-#: blog/models/blog.py:95
+#: blog/models/blog.py:97
 msgid "Only users with high karma can comment"
 msgstr ""
 
-#: blog/models/blog.py:101
+#: blog/models/blog.py:103
 msgid "Who can comment in the blog"
 msgstr ""
 
-#: blog/models/blog.py:104
+#: blog/models/blog.py:106
 msgid "Require membership to write comments"
 msgstr ""
 
-#: blog/models/blog.py:107
+#: blog/models/blog.py:109
 msgid "Comment karma threshold"
 msgstr ""
 
-#: blog/models/blog.py:194
+#: blog/models/blog.py:196
 msgid "A request has been sent"
 msgstr ""
 
-#: blog/models/blog.py:197
+#: blog/models/blog.py:199
 msgid "Success"
 msgstr ""
 
-#: blog/models/blog.py:199
+#: blog/models/blog.py:201
 msgid "You can't join this blog"
 msgstr ""
 
-#: blog/models/blog.py:208
+#: blog/models/blog.py:210 blog/models/post.py:61
 msgid "Blog"
 msgstr ""
 
-#: blog/models/blog.py:209
+#: blog/models/blog.py:211
 msgid "Blogs"
 msgstr ""
 
-#: blog/models/blog.py:225
+#: blog/models/blog.py:227
 msgid "Owner"
 msgstr ""
 
-#: blog/models/blog.py:226
+#: blog/models/blog.py:228
 msgid "Member"
 msgstr ""
 
-#: blog/models/blog.py:227
+#: blog/models/blog.py:229
 msgid "Banned"
 msgstr ""
 
-#: blog/models/blog.py:228
+#: blog/models/blog.py:230
 msgid "Administrator"
 msgstr ""
 
-#: blog/models/blog.py:229
+#: blog/models/blog.py:231
 msgid "Waiting for approval"
 msgstr ""
 
-#: blog/models/blog.py:238
+#: blog/models/blog.py:240
 msgid "Can change blog's settings"
 msgstr ""
 
-#: blog/models/blog.py:241
+#: blog/models/blog.py:243
 msgid "Can edit posts"
 msgstr ""
 
-#: blog/models/blog.py:243
+#: blog/models/blog.py:245
 msgid "Can delete posts"
 msgstr ""
 
-#: blog/models/blog.py:246
+#: blog/models/blog.py:248
 msgid "Can edit comments"
 msgstr ""
 
-#: blog/models/blog.py:248
+#: blog/models/blog.py:250
 msgid "Can delete comments"
 msgstr ""
 
-#: blog/models/blog.py:251
+#: blog/models/blog.py:253
 msgid "Can ban a member"
+msgstr ""
+
+#: blog/models/post.py:29
+msgid "Author"
+msgstr ""
+
+#: blog/models/post.py:32
+msgid "Caption"
+msgstr ""
+
+#: blog/models/post.py:35
+msgid "Is draft"
+msgstr ""
+
+#: blog/models/post.py:54
+msgid "Content"
+msgstr ""
+
+#: blog/models/post.py:68
+msgid "You must choose a blog before publishing"
+msgstr ""
+
+#: blog/models/post.py:79
+msgid "Post"
+msgstr ""
+
+#: blog/models/post.py:80
+msgid "Posts"
+msgstr ""
+
+#: blog/templates/blog/feed.html:49
+msgid "Nothing to show"
+msgstr ""
+
+#: blog/templates/blog/feed.html:51
+msgid "There is no entries we have to show you. Maybe you'd like to write one?"
+msgstr ""
+
+#: blog/templates/blog/tags/post_preview.html:7
+#: blog/templates/blog/tags/post_preview.html:20
+msgid "Author:"
+msgstr ""
+
+#: blog/templates/blog/tags/post_preview.html:12
+#, python-format
+msgid ""
+"This post have very low rating (%(rating)s). It was hidden from your feed."
+msgstr ""
+
+#: blog/templates/blog/tags/post_preview.html:41
+msgid "Rating"
 msgstr ""

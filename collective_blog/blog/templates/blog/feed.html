@@ -13,6 +13,37 @@
                 {% post_preview post %}
             </div>
         {% endfor %}
+
+        <div class="inline primary container">
+
+            <p class="centered">
+
+                {% if posts.has_previous %}
+                    <a class="full-width-on-low button" href="{% url "homepage" page=posts.previous_page_number %}">&lt;&lt;&lt;</a>
+                {% else %}
+                    <span class="disabled full-width-on-low button">&lt;&lt;&lt;</span>
+                {% endif %}
+
+                &nbsp;&nbsp;
+
+                {% for page in pages %}
+                    {% if page == posts.number %}
+                        <span class="full-width-on-low button">{{ page }}</span>
+                    {% else %}
+                        <a class="full-width-on-low button" href="{% url "homepage" page=page %}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                &nbsp;&nbsp;
+
+                {% if posts.has_next %}
+                    <a class="full-width-on-low button" href="{% url "homepage" page=posts.next_page_number %}">&gt;&gt;&gt;</a>
+                {% else %}
+                    <span class="disabled full-width-on-low button">&gt;&gt;&gt;</span>
+                {% endif %}
+            </p>
+        </div>
+
     {% else %}
         <div class="primary container">
             <h1>{% trans "Nothing to show" %}</h1>

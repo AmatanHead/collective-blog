@@ -1,27 +1,44 @@
 {% load i18n %}
 {% load humanize %}
 
-<h1 class="title">{{ post.heading }}</h1>
-<p>
-    {% trans "Author:" %}
-    <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username }}</a>,
-    {{ post.created|naturaltime }}
-</p>
-{% if post.blog %}
+{% if post.rating < 20 %}
+    <h2>{{ post.heading }}</h2>
     <p>
-        <span class="badge">
-            {% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}
-            {{ post.blog.name }}
+        {% trans "Author:" %}
+        <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username }}</a>,
+        {{ post.created|naturaltime }}
+    </p>
+    <p>
+        {% blocktrans trimmed with rating=post.rating %}
+            This post have very low rating ({{ rating }}). It was hidden from your feed.
+        {% endblocktrans %}
+    </p>
+{% else %}
+
+    <h1 class="title">{{ post.heading }}</h1>
+    <p>
+        {% trans "Author:" %}
+        <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username }}</a>,
+        {{ post.created|naturaltime }}
+    </p>
+    {% if post.blog %}
+        <p>
+            <span class="badge">
+                {% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}
+                {{ post.blog.name }}
+            </span>
+        </p>
+    {% endif %}
+
+    <hr>
+
+    {{ post.content.html_force|safe }}
+
+    <hr>
+
+    <p>
+        <span class="badge-group">
+            <span class="gray badge">{% trans "Rating" %}</span><span class="gray badge outline">{% if post.rating == None %}0{% else %}{{ post.rating }}{% endif %}</span>
         </span>
     </p>
 {% endif %}
-
-<hr>
-
-{{ post.content.html_force|safe }}
-
-<hr>
-
-<p>
-    Blog stats here...
-</p>

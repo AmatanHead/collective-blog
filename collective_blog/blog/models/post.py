@@ -1,3 +1,5 @@
+"""Post and its rating"""
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -17,6 +19,8 @@ from dj_markdown.extensions import (FencedCodeExtension,
                                     StrikethroughExtension,
                                     AutomailExtension,
                                     AutolinkExtension)
+
+from voting.models import AbstractVote
 
 
 class Post(models.Model):
@@ -78,3 +82,8 @@ class Post(models.Model):
 
     def __str__(self):
         return str(self.heading)
+
+
+class PostVote(AbstractVote):
+    object = models.ForeignKey(Post, on_delete=models.CASCADE,
+                               related_name='votes')
