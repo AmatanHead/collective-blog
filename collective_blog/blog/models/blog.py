@@ -53,6 +53,8 @@ class Blog(models.Model):
 
     _about_html = HtmlCacheField(about)
 
+    icon = models.CharField(max_length=100, blank=True)
+
     TYPES = (
         ('O', _('Open')),
         ('P', _('Private')),

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title %}{{ global_site_name }}{% endblock %}
+
+
+{% block content %}
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="primary container">
+                {% post_preview post %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="primary container">
+            <h1>{% trans "Nothing to show" %}</h1>
+            <p>
+                {% blocktrans trimmed %}
+                    There is no entries we have to show you.
+                    Maybe you'd like to write one?
+                {% endblocktrans %}
+            </p>
+        </div>
+    {% endif %}
+
+{% endblock %}
