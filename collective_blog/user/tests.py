@@ -1,3 +1,5 @@
+"""Tests for user profile"""
+
 from django import test
 
 from django.contrib.auth import get_user_model
@@ -14,10 +16,7 @@ class TestProfileModel(test.TransactionTestCase):
         User.objects.create(username="test", password="test")
 
     def test_profile_creation(self):
-        """
-        Test that profile is created for each user.
-
-        """
+        """Test that profile is created for each user"""
 
         user = User.objects.create(username="test2", password="test2")
         self.assertIsInstance(user.profile, Profile)
@@ -25,19 +24,13 @@ class TestProfileModel(test.TransactionTestCase):
         self.assertIsInstance(user.profile, Profile)
 
     def test_profile_assigned(self):
-        """
-        Test that profile is assigned for each user.
-
-        """
+        """Test that profile is assigned for each user"""
 
         user = User.objects.get(username="test")
         self.assertIsInstance(user.profile, Profile)
 
     def test_profile_deleted(self):
-        """
-        Test that profile is deleted properly.
-
-        """
+        """Test that profile is deleted properly"""
 
         user = User.objects.get(username="test")
         user.delete()
@@ -45,10 +38,8 @@ class TestProfileModel(test.TransactionTestCase):
         self.assertEqual(profile.count(), 0)
 
     def test_user_deleted(self):
-        """
-        Test that user is deleted properly.
+        """Test that user is deleted properly"""
 
-        """
         user = User.objects.get(username="test")
         user.profile.delete()
         users = User.objects.all()
@@ -94,10 +85,7 @@ class TestProfileModelPerms(test.TransactionTestCase):
         ordinary_user.save()
 
     def test_can_edit_profile(self):
-        """
-        Test that only moderators and the user can edit the user's profile.
-
-        """
+        """Test that only moderators and the user can edit the user's profile"""
 
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
         moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
@@ -113,24 +101,21 @@ class TestProfileModelPerms(test.TransactionTestCase):
         profile = user.profile
         user2 = User.objects.get(username="test")
 
-        self.assertTrue(Profile.can_edit_profile(moderator_with_perms, profile))
-        self.assertTrue(Profile.can_edit_profile(moderator_with_perms2, profile))
-        self.assertFalse(Profile.can_edit_profile(moderator_without_perms, profile))
-        self.assertFalse(Profile.can_edit_profile(user_with_perms, profile))
-        self.assertFalse(Profile.can_edit_profile(user_with_perms2, profile))
-        self.assertTrue(Profile.can_edit_profile(superuser, profile))
-        self.assertFalse(Profile.can_edit_profile(disabled_superuser, profile))
-        self.assertFalse(Profile.can_edit_profile(disabled_superuser2, profile))
-        self.assertFalse(Profile.can_edit_profile(ordinary_user, profile))
-        self.assertTrue(Profile.can_edit_profile(user, profile))
-        self.assertTrue(Profile.can_edit_profile(user2, profile))
+        self.assertTrue(profile.can_be_edited_by(moderator_with_perms))
+        self.assertTrue(profile.can_be_edited_by(moderator_with_perms2))
+        self.assertFalse(profile.can_be_edited_by(moderator_without_perms))
+        self.assertFalse(profile.can_be_edited_by(user_with_perms))
+        self.assertFalse(profile.can_be_edited_by(user_with_perms2))
+        self.assertTrue(profile.can_be_edited_by(superuser))
+        self.assertFalse(profile.can_be_edited_by(disabled_superuser))
+        self.assertFalse(profile.can_be_edited_by(disabled_superuser2))
+        self.assertFalse(profile.can_be_edited_by(ordinary_user))
+        self.assertTrue(profile.can_be_edited_by(user))
+        self.assertTrue(profile.can_be_edited_by(user2))
 
     def test_can_see_the_email(self):
-        """
-        Test that only moderators and the user can see
-        the user's private email.
+        """Test that only moderators and the user can seethe user's private email"""
 
-        """
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
         moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
         moderator_without_perms = User.objects.get(username='moderator_without_perms')
@@ -145,17 +130,17 @@ class TestProfileModelPerms(test.TransactionTestCase):
         profile = user.profile
         user2 = User.objects.get(username="test")
 
-        self.assertTrue(Profile.can_see_email(moderator_with_perms, profile))
-        self.assertTrue(Profile.can_see_email(moderator_with_perms2, profile))
-        self.assertFalse(Profile.can_see_email(moderator_without_perms, profile))
-        self.assertFalse(Profile.can_see_email(user_with_perms, profile))
-        self.assertFalse(Profile.can_see_email(user_with_perms2, profile))
-        self.assertTrue(Profile.can_see_email(superuser, profile))
-        self.assertFalse(Profile.can_see_email(disabled_superuser, profile))
-        self.assertFalse(Profile.can_see_email(disabled_superuser2, profile))
-        self.assertFalse(Profile.can_see_email(ordinary_user, profile))
-        self.assertTrue(Profile.can_see_email(user, profile))
-        self.assertTrue(Profile.can_see_email(user2, profile))
+        self.assertTrue(profile.email_can_be_seen_by(moderator_with_perms))
+        self.assertTrue(profile.email_can_be_seen_by(moderator_with_perms2))
+        self.assertFalse(profile.email_can_be_seen_by(moderator_without_perms))
+        self.assertFalse(profile.email_can_be_seen_by(user_with_perms))
+        self.assertFalse(profile.email_can_be_seen_by(user_with_perms2))
+        self.assertTrue(profile.email_can_be_seen_by(superuser))
+        self.assertFalse(profile.email_can_be_seen_by(disabled_superuser))
+        self.assertFalse(profile.email_can_be_seen_by(disabled_superuser2))
+        self.assertFalse(profile.email_can_be_seen_by(ordinary_user))
+        self.assertTrue(profile.email_can_be_seen_by(user))
+        self.assertTrue(profile.email_can_be_seen_by(user2))
 
         user.profile.email_is_public = True
         user.profile.save()
@@ -164,23 +149,21 @@ class TestProfileModelPerms(test.TransactionTestCase):
         profile = user.profile
         user2 = User.objects.get(username="test")
 
-        self.assertTrue(Profile.can_see_email(moderator_with_perms, profile))
-        self.assertTrue(Profile.can_see_email(moderator_with_perms2, profile))
-        self.assertTrue(Profile.can_see_email(moderator_without_perms, profile))
-        self.assertTrue(Profile.can_see_email(user_with_perms, profile))
-        self.assertTrue(Profile.can_see_email(user_with_perms2, profile))
-        self.assertTrue(Profile.can_see_email(superuser, profile))
-        self.assertTrue(Profile.can_see_email(disabled_superuser, profile))
-        self.assertTrue(Profile.can_see_email(disabled_superuser2, profile))
-        self.assertTrue(Profile.can_see_email(ordinary_user, profile))
-        self.assertTrue(Profile.can_see_email(user, profile))
-        self.assertTrue(Profile.can_see_email(user2, profile))
+        self.assertTrue(profile.email_can_be_seen_by(moderator_with_perms))
+        self.assertTrue(profile.email_can_be_seen_by(moderator_with_perms2))
+        self.assertTrue(profile.email_can_be_seen_by(moderator_without_perms))
+        self.assertTrue(profile.email_can_be_seen_by(user_with_perms))
+        self.assertTrue(profile.email_can_be_seen_by(user_with_perms2))
+        self.assertTrue(profile.email_can_be_seen_by(superuser))
+        self.assertTrue(profile.email_can_be_seen_by(disabled_superuser))
+        self.assertTrue(profile.email_can_be_seen_by(disabled_superuser2))
+        self.assertTrue(profile.email_can_be_seen_by(ordinary_user))
+        self.assertTrue(profile.email_can_be_seen_by(user))
+        self.assertTrue(profile.email_can_be_seen_by(user2))
 
     def test_visible_email(self):
-        """
-        Test that private emails are displayed correctly.
+        """Test that private emails are displayed correctly"""
 
-        """
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
         moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
         moderator_without_perms = User.objects.get(username='moderator_without_perms')
@@ -195,17 +178,17 @@ class TestProfileModelPerms(test.TransactionTestCase):
         profile = user.profile
         user2 = User.objects.get(username="test")
 
-        self.assertEqual(Profile.visible_email(moderator_with_perms, profile), "a.b@example.com (%s)" % __('Only you can see the email'))
-        self.assertEqual(Profile.visible_email(moderator_with_perms2, profile), "a.b@example.com (%s)" % __('Only you can see the email'))
-        self.assertEqual(Profile.visible_email(moderator_without_perms, profile), '')
-        self.assertEqual(Profile.visible_email(user_with_perms, profile), '')
-        self.assertEqual(Profile.visible_email(user_with_perms2, profile), '')
-        self.assertEqual(Profile.visible_email(superuser, profile), "a.b@example.com (%s)" % __('Only you can see the email'))
-        self.assertEqual(Profile.visible_email(disabled_superuser, profile), '')
-        self.assertEqual(Profile.visible_email(disabled_superuser2, profile), '')
-        self.assertEqual(Profile.visible_email(ordinary_user, profile), '')
-        self.assertEqual(Profile.visible_email(user, profile), "a.b@example.com (%s)" % __('Only you can see the email'))
-        self.assertEqual(Profile.visible_email(user2, profile), "a.b@example.com (%s)" % __('Only you can see the email'))
+        self.assertEqual(profile.email_as_seen_by(moderator_with_perms), "a.b@example.com (%s)" % __('Only you can see the email'))
+        self.assertEqual(profile.email_as_seen_by(moderator_with_perms2), "a.b@example.com (%s)" % __('Only you can see the email'))
+        self.assertEqual(profile.email_as_seen_by(moderator_without_perms), '')
+        self.assertEqual(profile.email_as_seen_by(user_with_perms), '')
+        self.assertEqual(profile.email_as_seen_by(user_with_perms2), '')
+        self.assertEqual(profile.email_as_seen_by(superuser), "a.b@example.com (%s)" % __('Only you can see the email'))
+        self.assertEqual(profile.email_as_seen_by(disabled_superuser), '')
+        self.assertEqual(profile.email_as_seen_by(disabled_superuser2), '')
+        self.assertEqual(profile.email_as_seen_by(ordinary_user), '')
+        self.assertEqual(profile.email_as_seen_by(user), "a.b@example.com (%s)" % __('Only you can see the email'))
+        self.assertEqual(profile.email_as_seen_by(user2), "a.b@example.com (%s)" % __('Only you can see the email'))
 
         user.profile.email_is_public = True
         user.profile.save()
@@ -214,14 +197,14 @@ class TestProfileModelPerms(test.TransactionTestCase):
         profile = user.profile
         user2 = User.objects.get(username="test")
 
-        self.assertEqual(Profile.visible_email(moderator_with_perms, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(moderator_with_perms2, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(moderator_without_perms, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(user_with_perms, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(user_with_perms2, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(superuser, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(disabled_superuser, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(disabled_superuser2, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(ordinary_user, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(user, profile), "a.b@example.com")
-        self.assertEqual(Profile.visible_email(user2, profile), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(moderator_with_perms), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(moderator_with_perms2), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(moderator_without_perms), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(user_with_perms), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(user_with_perms2), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(superuser), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(disabled_superuser), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(disabled_superuser2), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(ordinary_user), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(user), "a.b@example.com")
+        self.assertEqual(profile.email_as_seen_by(user2), "a.b@example.com")

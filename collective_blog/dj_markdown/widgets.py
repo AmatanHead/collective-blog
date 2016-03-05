@@ -1,7 +1,4 @@
-"""
-Markdown widgets
-
-"""
+"""Markdown widgets"""
 
 from django import forms
 from django.utils.safestring import mark_safe
@@ -12,18 +9,14 @@ from json import dumps
 
 @deconstructible
 class MarkdownTextarea(forms.Textarea):
-    """
-    Basic textarea widget for rendering Markdown objects
-
-    """
+    """Basic textarea widget for rendering Markdown objects"""
     pass
 
 
 @deconstructible
 class CodeMirror(MarkdownTextarea):
     def __init__(self, *args, **kwargs):
-        """
-        Widget that uses the `CodeMirror` editor.
+        """Widget that uses the `CodeMirror` editor
 
         :param mode: Syntax mode name.
         :param addons: List of addons (each element is a relative path
@@ -56,8 +49,7 @@ class CodeMirror(MarkdownTextarea):
 
     @property
     def media(self):
-        """
-        Construct a list of mediafiles required for this widget.
+        """Construct a list of mediafiles required for this widget
 
         :return: `forms.Media` instance.
         """
@@ -78,11 +70,12 @@ class CodeMirror(MarkdownTextarea):
         )
 
     def render(self, name, value, attrs=None):
-        """
-        Render this widget.
+        """Render this widget
 
+        :param value: Current field vlue.
+        :param attrs: Attributes of the widget.
         :param name: Name of the widget.
-        :return: Rendered html
+        :return: Rendered html.
 
         """
         if self.js_var_format is not None:

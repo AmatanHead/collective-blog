@@ -1,5 +1,4 @@
-"""
-Markdown data type.
+"""Markdown data type
 
 This is the datatype that is stored in the markdown field.
 
@@ -11,9 +10,7 @@ from django.utils import encoding
 class Markdown(object):
     # TODO tests
     def __init__(self, renderer, source, html=None):
-        """
-        Markdown data type contains source markdown data and cached
-        html.
+        """Markdown data type contains source markdown data and cached html
 
         :param source: Source markdown data.
         :param html: Generated html. State is considered to be `clean` if the
@@ -34,7 +31,8 @@ class Markdown(object):
 
     @property
     def source(self):
-        """
+        """Source accessor
+
         :return: The source markdown string.
 
         """
@@ -42,8 +40,7 @@ class Markdown(object):
 
     @source.setter
     def source(self, value):
-        """
-        Set the source markdown string and mark the object state as `dirty`.
+        """Set the source markdown string and mark the object state as `dirty`
 
         Setting source string does not cause any compilation process.
         That is, markdown compilation is done in a lazy way.
@@ -56,7 +53,8 @@ class Markdown(object):
 
     @property
     def html(self):
-        """
+        """Html accessor
+
         :return: The html value.
 
         If the state of the object is `dirty`,
@@ -67,7 +65,8 @@ class Markdown(object):
 
     @property
     def is_dirty(self):
-        """
+        """State accessor
+
         :return: Object state.
 
         For dirty objects, html is not guaranteed to match the source data.
@@ -77,7 +76,8 @@ class Markdown(object):
 
     @property
     def html_force(self):
-        """
+        """Clean html accessor
+
         :return: The html value.
 
         Accessing this property forces the html updating process.
@@ -87,8 +87,7 @@ class Markdown(object):
         return self._html
 
     def compile(self, force=False):
-        """
-        Updates the html value by compiling source data.
+        """Update the html value by compiling source data
 
         The compilation process is not invoked on clean classes unless
         `force` is set to `True`.
@@ -101,9 +100,9 @@ class Markdown(object):
             self._is_dirty = False
 
     def deconstruct(self):
-        """
-        Deconstruct this field for further serialization
-        (used in migrations)
+        """Deconstruct this field for further serialization
+
+        Used in migrations.
 
         :return: Standard deconstruction result.
 

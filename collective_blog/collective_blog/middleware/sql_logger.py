@@ -1,10 +1,17 @@
+"""Middleware that prints all database queries
+
+Use for fast database inspections.
+Taken from https://djangosnippets.org/snippets/264/
+
+"""
+
 from django.db import connection
 
 
-# From https://djangosnippets.org/snippets/264/
 class TerminalLogging:
     @staticmethod
     def process_response(request, response):
+        """Reads the query data and prints it"""
         from sys import stdout
         if stdout.isatty():
             for query in connection.queries:

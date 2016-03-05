@@ -1,6 +1,4 @@
 from django.contrib import admin
-
-from django.contrib import admin
 from .models import Blog
 
 from dj_markdown.widgets import CodeMirror
@@ -26,4 +24,3 @@ class ProfileAdmin(admin.ModelAdmin):
             )
         }
     }
-

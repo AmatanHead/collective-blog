@@ -1,5 +1,4 @@
-"""
-Adds fenced code block support.
+"""Adds fenced code block support
 
 Copied from
 https://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html
@@ -27,18 +26,22 @@ from django.utils.deconstruct import deconstructible
 
 @deconstructible
 class FencedCodeExtension(Extension):
-    """
-    Adds fenced code blocks, e.g.
+    """Adds fenced code blocks
 
-    ```lang
-    ...
+    E.g.:
+
+    ```python
+        class FencedCodeExtension(Extension):
+            pass
     ```
 
     """
 
     def extendMarkdown(self, md, md_globals):
-        """
-        Add FencedBlockPreprocessor to the Markdown instance.
+        """Add FencedBlockPreprocessor to the Markdown instance
+
+        :param md: Current markdown instance.
+        :param md_globals: Global markdown vars.
 
         """
         md.registerExtension(self)
@@ -62,10 +65,7 @@ class Formatter(HtmlFormatter):
 
 
 class FencedBlockPreprocessor(Preprocessor):
-    """
-    Main fenced code block renderer.
-
-    """
+    """Main fenced code block renderer"""
 
     block_re = re.compile(
         r'(?P<fence>^(?:`{3}))[ ]*'
@@ -74,8 +74,7 @@ class FencedBlockPreprocessor(Preprocessor):
         r'(?P=fence)[ ]*$', re.MULTILINE | re.DOTALL | re.VERBOSE)
 
     def run(self, lines):
-        """
-        Match and store Fenced Code Blocks in the HtmlStash.
+        """Match and store Fenced Code Blocks in the HtmlStash
 
         :param lines: Lines of code.
 

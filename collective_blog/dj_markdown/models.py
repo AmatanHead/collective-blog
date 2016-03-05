@@ -16,7 +16,7 @@ class HtmlCacheDescriptor(object):
     def __init__(self, destination_field):
         """
         This descriptor is used as a proxy between html cache and
-        markdown field.
+        markdown field
 
         We assume that the only code that have access to this field is
         the django orm system. So writing to and reading from this field
@@ -45,8 +45,7 @@ class HtmlCacheDescriptor(object):
         # self.state_name = self.destination_field.state_name
 
     def setup(self, instance, html=None):
-        """
-        Set up the state if it's empty.
+        """Set up the state if it's empty
 
         We can't do that when the model instance is created because we have
         no access to the initialization process. Thus, we set up the class
@@ -64,8 +63,8 @@ class HtmlCacheDescriptor(object):
 
     @staticmethod
     def hash(string):
-        """
-        Calculates and returns the hash of the source markdown data.
+        """Calculate and returns the hash of the source markdown data
+
         It is used to check that the cached data is up-to-date.
 
         :param string: A string that needs to be cached.
@@ -79,8 +78,7 @@ class HtmlCacheDescriptor(object):
 
     @classmethod
     def split(cls, html):
-        """
-        Extract hash from the passed html.
+        """Extract hash from the passed html
 
         :param html: Html string to check.
         :return: Pair `(hash, html)`. `hash` may be empty.
@@ -120,8 +118,7 @@ class HtmlCacheDescriptor(object):
 
 class HtmlCacheField(TextField):
     def __init__(self, markdown_field, *args, **kwargs):
-        """
-        Database field for caching rendered html.
+        """Database field for caching rendered html
 
         On save, this field enforces html rendering, than saves the result.
 
@@ -150,10 +147,7 @@ class HtmlCacheField(TextField):
         super(HtmlCacheField, self).__init__(*args, **kwargs)
 
     def deconstruct(self):
-        """
-        Returns enough information to recreate the field.
-
-        """
+        """Returns enough information to recreate the field"""
         name, path, args, kwargs = super(HtmlCacheField, self).deconstruct()
 
         if self.markdown_field is not None:
@@ -162,8 +156,7 @@ class HtmlCacheField(TextField):
         return name, path, args, kwargs
 
     def contribute_to_class(self, cls, name, virtual_only=False):
-        """
-        Register the field and add ancillary attributes.
+        """Register the field and add ancillary attributes
 
         :param cls: Model instance.
         :param name: Field name.
@@ -199,8 +192,7 @@ class MarkdownDescriptor(object):
         # self.state_name = self.destination_field.state_name
 
     def setup(self, instance, value=''):
-        """
-        Set up the state if it's empty.
+        """Set up the state if it's empty
 
         We can't do that when the model instance is created because we have
         no access to the initialization process. Thus, we set up the class
@@ -234,8 +226,7 @@ class MarkdownDescriptor(object):
 
 class MarkdownField(TextField):
     def __init__(self, *args, **kwargs):
-        """
-        Database field for storing `Markdown` objects.
+        """Database field for storing `Markdown` objects
 
         This field forces the html update process while preparing for query.
         Therefore it is guaranteed that html stored in a database
@@ -312,10 +303,7 @@ class MarkdownField(TextField):
         self._html_field = None
 
     def deconstruct(self):
-        """
-        Returns enough information to recreate the field
-
-        """
+        """Returns enough information to recreate the field"""
         name, path, args, kwargs = super(MarkdownField, self).deconstruct()
 
         if self.source_validators:
@@ -335,8 +323,7 @@ class MarkdownField(TextField):
         return name, path, args, kwargs
 
     def run_validator(self, validator, args=None, kwargs=None):
-        """
-        Runs a single validator on a value.
+        """Runs a single validator on a value
 
         :param validator: A callable. The validator to run.
         :param args: Arguments for the validator
@@ -357,8 +344,7 @@ class MarkdownField(TextField):
             return e.error_list
 
     def run_validators(self, value):
-        """
-        Run validators on the given value.
+        """Run validators on the given value
 
         :param value: the `Markdown` class instance which needs validation.
         :return: None
@@ -380,8 +366,7 @@ class MarkdownField(TextField):
             raise exceptions.ValidationError(errors)
 
     def validate(self, value, model_instance):
-        """
-        Run all source, html, and common validators
+        """Run all source, html, and common validators
 
         :param model_instance: The model instance.
         :param value: `Markdown` class instance which needs to be validated.
@@ -395,8 +380,7 @@ class MarkdownField(TextField):
             raise exceptions.ValidationError(self.error_messages['blank'], code='blank')
 
     def get_prep_value(self, value):
-        """
-        From python to database.
+        """From python to database
 
         :param value: A `Markdown` class instance.
         :return: JSON serialized `Markdown` class.
@@ -408,8 +392,7 @@ class MarkdownField(TextField):
             return value.source
 
     def to_python(self, value):
-        """
-        From any to python (used in processing forms)
+        """From any to python (used in processing forms)
 
         :param value: Source string, `Markdown`, or None.
         :return: None or `Markdown`.
@@ -423,8 +406,7 @@ class MarkdownField(TextField):
             return self.markdown_cls(self.renderer, value)
 
     def get_db_prep_lookup(self, *args, **kwargs):
-        """
-        Prepare value for the lookup (e.g. `var__gt=...`)
+        """Prepare value for the lookup (e.g. `var__gt=...`)
 
         :param args:, :param kwargs: Unused.
 
@@ -432,8 +414,7 @@ class MarkdownField(TextField):
         raise NotImplementedError(self.get_db_prep_lookup)
 
     def formfield(self, **kwargs):
-        """
-        Returns a form field for this model field.
+        """Returns a form field for this model field
 
         :param kwargs: Arguments for the form field class.
         :return: A form field instance.
@@ -451,8 +432,7 @@ class MarkdownField(TextField):
         return super(MarkdownField, self).formfield(**defaults)
 
     def contribute_to_class(self, cls, name, virtual_only=False):
-        """
-        Register the field and add ancillary attributes.
+        """Register the field and add ancillary attributes
 
         :param cls: Model instance.
         :param name: Field name.

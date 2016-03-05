@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Adds automatic link insertion.
+"""Adds automatic link insertion
 
 Copied from https://github.com/google/py-gfm/
 
@@ -47,6 +46,7 @@ class AutolinkExtension(markdown.Extension):
     * GitHub accepts FTP-protocol URLs.
     * GitHub only accepts URLs with protocols or "www.", whereas Gruber's regex
       accepts things like "foo.com/bar".
+
     """
 
     def extendMarkdown(self, md, md_globals):

@@ -5,10 +5,7 @@ from voting.models import AbstractVote
 
 
 class Karma(AbstractVote):
-    """
-    Votes for user (karma)
-
-    """
+    """Votes for user (karma)"""
 
     object = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='karma')

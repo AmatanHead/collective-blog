@@ -1,5 +1,4 @@
-"""
-Adds github-like lists syntax.
+"""Adds github-like lists syntax
 
 Copied from https://github.com/google/py-gfm/
 
@@ -34,6 +33,7 @@ class SemiSaneListExtension(markdown.Extension):
     is currently not supported by this extension, since the Python parser has a
     deeply-ingrained belief that blocks are always separated by multiple
     newlines.
+
     """
 
     def extendMarkdown(self, md, md_globals):

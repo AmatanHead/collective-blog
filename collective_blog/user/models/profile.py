@@ -16,7 +16,7 @@ from dj_markdown.extensions import (FencedCodeExtension,
 
 
 class Profile(models.Model):
-    """Additional model which holds profile data for each user.
+    """Additional model which holds profile data for each user
 
     You should not select users by this model's primary key or by
     `User` model's primary key.
@@ -65,35 +65,31 @@ class Profile(models.Model):
 
     # To go: liked tags
 
-    @classmethod
-    def can_edit_profile(cls, user, profile):
+    def can_be_edited_by(self, user):
         has_perms = user.is_active and user.is_staff and (
             user.has_perm('user.change_profile') or
             user.has_perm('auth.change_user'))
 
-        return user.is_active and (user.pk == profile.user.pk or has_perms)
+        return user.is_active and (user.pk == self.user.pk or has_perms)
 
-    @classmethod
-    def can_see_email(cls, user, profile):
+    def email_can_be_seen_by(self, user):
         has_perms = user.is_active and user.is_staff and (
             user.has_perm('user.change_profile') or
             user.has_perm('auth.change_user'))
 
-        return profile.email_is_public or user.pk == profile.user.pk or has_perms
+        return self.email_is_public or user.pk == self.user.pk or has_perms
 
-    @classmethod
-    def visible_email(cls, user, profile):
-        if not profile.user.email:
+    def email_as_seen_by(self, user):
+        if not self.user.email:
             return ''
-        if cls.can_see_email(user, profile) and not profile.email_is_public:
-            return profile.user.email + ' (' + __('Only you can see the email') + ')'
-        elif profile.email_is_public:
-            return profile.user.email
+        if self.email_can_be_seen_by(user) and not self.email_is_public:
+            return self.user.email + ' (' + __('Only you can see the email') + ')'
+        elif self.email_is_public:
+            return self.user.email
         return ''
 
-    @classmethod
-    def can_vote(cls, user, profile):
-        return user.is_active and user.pk != profile.user.pk
+    def can_be_voted_by(self, user):
+        return user.is_active and user.pk != self.user.pk
 
     def delete(self, using=None, keep_parents=False):
         self.user.delete()

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Common settings that are used in development, travis, and production builds.
+"""Common settings that are used in development, travis, and production builds
 
 These variables may be extended or overwritten in the build-specific files.
 

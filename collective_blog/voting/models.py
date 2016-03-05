@@ -1,3 +1,5 @@
+"""Abstract base for implementing voting subsystems"""
+
 from django.db import models
 from django.db.models import Sum, Count, QuerySet, ObjectDoesNotExist
 
@@ -5,17 +7,16 @@ from collective_blog import settings
 
 
 class VotesQuerySet(QuerySet):
-    """
-    Queryset of votes.
+    """Queryset of votes
 
     Allows for routine operations like getting overall rating etc.
 
     """
     def score(self):
-        """
-        Sum all votes.
+        """Sum all votes
 
         :return: A dictionary containing `score` and `num_votes` keys.
+
         """
         result = self.aggregate(
             score=Sum('vote'),
@@ -29,19 +30,14 @@ class VotesQuerySet(QuerySet):
 
 
 class VoteManager(models.Manager):
-    """
-    Wrap objects to the `VotesQuerySet`.
+    """Wrap objects to the `VotesQuerySet`"""
 
-    """
     def get_queryset(self):
         return VotesQuerySet(self.model)
 
 
 class AbstractVote(models.Model):
-    """
-    A vote on an object by a User.
-
-    """
+    """A vote on an object by a User"""
 
     SCORES = (
         (+1, '+1'),
@@ -64,8 +60,7 @@ class AbstractVote(models.Model):
 
     @classmethod
     def vote_for(cls, user, obj, vote):
-        """
-        Create or update a vote.
+        """Create or update a vote
 
         :param user: Who votes.
         :param obj: For what votes.

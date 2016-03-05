@@ -1,5 +1,4 @@
-"""
-Adds strikethrough syntax support.
+"""Adds strikethrough syntax support
 
 Copied from https://github.com/google/py-gfm/
 
@@ -17,8 +16,10 @@ STRIKE_RE = r'(~{2})(.+?)(~{2})'  # ~~strike~~
 
 @deconstructible
 class StrikethroughExtension(markdown.Extension):
-    """An extension that supports PHP-Markdown style strikethrough.
+    """An extension that supports PHP-Markdown style strikethrough
+
     For example: ``~~strike~~``.
+
     """
 
     def extendMarkdown(self, md, md_globals):

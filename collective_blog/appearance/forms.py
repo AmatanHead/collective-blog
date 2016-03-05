@@ -1,7 +1,4 @@
-"""
-Base form classes for rendering light-compatible html.
-
-"""
+"""Base form classes for rendering light-compatible html"""
 
 from django.forms.forms import BaseForm
 from django.utils.html import conditional_escape
@@ -15,7 +12,8 @@ class BaseFormRenderer(BaseForm):
     """Mixin that provides functions for rendering light-compatible html"""
 
     def _render_group(self, group):
-        """Render several fields at the same line.
+        """Render several fields at the same line
+
         Responsive grid is used.
 
         """
@@ -110,7 +108,7 @@ class BaseFormRenderer(BaseForm):
                 })
 
     def as_section(self):
-        """Returns this form rendered as HTML <section>s.
+        """Returns this form rendered as HTML <section>s
 
         Uou can set up `renderer` array in your class.
         This array should contain a list of field names.

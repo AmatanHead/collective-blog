@@ -17,15 +17,17 @@ class UserForm(ModelForm, BaseFormRenderer):
     ]
 
     def __init__(self, *args, **kwargs):
+        """User editing form
+
+        Usually works with `ProfileForm`
+        (e.g. both forms are placed into the same `<form>` tag).
+
+        """
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['email'].required = True
 
     def clean_email(self):
-        """
-        Validate that the supplied email address is unique for the
-        site.
-
-        """
+        """Validate that the supplied email address is unique for the site"""
         email_match = User.objects.filter(email__iexact=self.cleaned_data['email']).first()
         if email_match and email_match.pk != self.instance.pk:
             raise ValidationError(_('This email is already used'))
@@ -37,6 +39,13 @@ class UserForm(ModelForm, BaseFormRenderer):
 
 
 class ProfileForm(ModelForm, BaseFormRenderer):
+    """Profile editing form
+
+    Usually works with `UserForm`
+    (e.g. both forms are placed into the same `<form>` tag).
+
+    """
+
     renderer = [
         ('location', 'birthday'),
         'about',

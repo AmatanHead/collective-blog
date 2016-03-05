@@ -1,3 +1,9 @@
+"""Profile views
+
+Note that for auth process, default views are used. See `urls.py`.
+
+"""
+
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -40,9 +46,9 @@ def view_profile(request, username=None):
     return render(request, 'profile/view_profile.html', {
         'user': user,
         'self_profile': is_self_profile,
-        'editable': Profile.can_edit_profile(request.user, user.profile),
-        'show_email': Profile.can_see_email(request.user, user.profile),
-        'visible_email': Profile.visible_email(request.user, user.profile),
+        'editable': user.profile.can_be_edited_by(request.user),
+        'show_email': user.profile.email_can_be_seen_by(request.user),
+        'visible_email': user.profile.email_as_seen_by(request.user),
         'karma': karma,
         'self_vote': self_vote,
         'karma_color': color,
@@ -58,7 +64,7 @@ def edit_profile(request, username=None):
     user = get_object_or_404(User.objects.select_related('profile'),
                              username__iexact=username)
 
-    if Profile.can_edit_profile(request.user, user.profile):
+    if user.profile.can_be_edited_by(request.user):
 
         if request.POST:
             form = ProfileForm(request.POST, instance=user.profile)
@@ -105,7 +111,7 @@ def vote(request, username=None):
     if not request.user.is_active:
         HttpResponse(_("Your account is disabled"))
 
-    if Profile.can_vote(request.user, user.profile):
+    if user.profile.can_be_voted_by(request.user):
         Karma.vote_for(request.user, user, v)
         return HttpResponse(str(Karma.objects.filter(object=user).score()['score']))
     else:

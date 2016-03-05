@@ -1,5 +1,4 @@
-"""
-Development settings - unsuitable for production.
+"""Development settings - unsuitable for production
 
 See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 

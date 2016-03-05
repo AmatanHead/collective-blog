@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _, ugettext as __
+from django.utils.translation import ugettext_lazy as _
 
 from datetime import datetime
 
@@ -115,6 +115,8 @@ class Blog(models.Model):
 
 
 class Membership(models.Model):
+    """Members of blogs"""
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              models.CASCADE)
     blog = models.ForeignKey(Blog,
@@ -132,20 +134,20 @@ class Membership(models.Model):
 
     role = models.CharField(max_length=2, choices=ROLES, default='M')
 
-    can_change_settings = models.BooleanField(
+    can_change_settings_flag = models.BooleanField(
         default=False, verbose_name=_("Can change blog's settings"))
 
-    can_edit_posts = models.BooleanField(
+    can_edit_posts_flag = models.BooleanField(
         default=False, verbose_name=_("Can edit posts"))
-    can_delete_posts = models.BooleanField(
+    can_delete_posts_flag = models.BooleanField(
         default=False, verbose_name=_("Can delete posts"))
 
-    can_edit_comments = models.BooleanField(
+    can_edit_comments_flag = models.BooleanField(
         default=False, verbose_name=_("Can edit comments"))
-    can_delete_comments = models.BooleanField(
+    can_delete_comments_flag = models.BooleanField(
         default=False, verbose_name=_("Can delete comments"))
 
-    can_ban = models.BooleanField(
+    can_ban_flag = models.BooleanField(
         default=False, verbose_name=_("Can ban a member"))
 
     def can_be_banned(self):
@@ -176,35 +178,35 @@ class Membership(models.Model):
     def is_banned(self):
         return self.role != 'B' and self.ban_expiration < datetime.now()
 
-    def check_can_change_settings(self):
+    def can_change_settings(self):
         return (self.role in ['O', 'A'] and
                 not self.is_banned() and
-                self.check_can_change_settings)
+                self.can_change_settings_flag)
 
-    def check_can_edit_posts(self):
+    def can_edit_posts(self):
         return (self.role in ['O', 'A'] and
                 not self.is_banned() and
-                self.check_can_edit_posts)
+                self.can_edit_posts_flag)
 
-    def check_can_delete_posts(self):
+    def can_delete_posts(self):
         return (self.role in ['O', 'A'] and
                 not self.is_banned() and
-                self.check_can_delete_posts)
+                self.can_delete_posts_flag)
 
-    def check_can_edit_comments(self):
+    def can_edit_comments(self):
         return (self.role in ['O', 'A'] and
                 not self.is_banned() and
-                self.check_can_edit_comments)
+                self.can_edit_comments_flag)
 
-    def check_can_delete_comments(self):
+    def can_delete_comments(self):
         return (self.role in ['O', 'A'] and
                 not self.is_banned() and
-                self.check_can_delete_comments)
+                self.can_delete_comments_flag)
 
-    def check_can_ban(self):
+    def can_ban(self):
         return (self.role in ['O', 'A'] and
                 not self.is_banned() and
-                self.check_can_ban)
+                self.can_ban_flag)
 
     class Meta:
         unique_together = ('user', 'blog')

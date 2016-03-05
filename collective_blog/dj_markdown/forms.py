@@ -1,3 +1,10 @@
+"""Form field for the markdown field
+
+It is based on the `CharField`.
+Unlike `CharField`, it works with `Markdown` objects.
+
+"""
+
 from django import forms
 from django.core import exceptions
 
@@ -10,10 +17,7 @@ class MarkdownFormField(forms.fields.CharField):
     # TODO tests
 
     def __init__(self, *args, **kwargs):
-        """
-        Form field for editing markdown objects.
-
-        """
+        """Form field for editing markdown objects"""
         source_validators = kwargs.pop('source_validators', [])
         _source_validators = kwargs.pop('_source_validators', [])
         html_validators = kwargs.pop('html_validators', [])
@@ -34,8 +38,7 @@ class MarkdownFormField(forms.fields.CharField):
         super(MarkdownFormField, self).__init__(*args, **defaults)
 
     def run_validator(self, validator, *args, **kwargs):
-        """
-        Runs a single validator on a value.
+        """Runs a single validator on a value
 
         :param validator: A callable. The validator to run.
         :param args: Arguments for the validator
@@ -53,8 +56,7 @@ class MarkdownFormField(forms.fields.CharField):
                 return e.error_list
 
     def run_validators(self, value):
-        """
-        Run validators on the given value.
+        """Run validators on the given value
 
         :param value: the `Markdown` class instance which needs validation.
         :return: None
@@ -79,8 +81,7 @@ class MarkdownFormField(forms.fields.CharField):
             raise exceptions.ValidationError(errors)
 
     def validate(self, value):
-        """
-        Run all source, html, and common validators
+        """Run all source, html, and common validators
 
         :param value: `Markdown` class instance which needs to be validated.
 
@@ -89,8 +90,7 @@ class MarkdownFormField(forms.fields.CharField):
             raise exceptions.ValidationError(self.error_messages['required'], code='required')
 
     def to_python(self, value):
-        """
-        Text to python.
+        """Text to python
 
         :param value: Source string, `Markdown`, or None.
         :return: None or `Markdown`.
@@ -104,8 +104,7 @@ class MarkdownFormField(forms.fields.CharField):
             return self.markdown_cls(self.renderer, value)
 
     def prepare_value(self, value):
-        """
-        Python to text.
+        """Python to text
 
         :param value: A `Markdown` class instance.
         :return: Source text that will be displayed in a widget.

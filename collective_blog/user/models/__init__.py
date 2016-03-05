@@ -1,2 +1,2 @@
-from user.models.profile import *
-from .karma import *
+from .profile import Profile
+from .karma import Karma

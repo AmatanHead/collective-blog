@@ -1,3 +1,5 @@
+"""Index of various markdown extensions"""
+
 from .fenced_code import FencedCodeExtension
 from .semi_sane_lists import SemiSaneListExtension
 from .strikethrough import StrikethroughExtension

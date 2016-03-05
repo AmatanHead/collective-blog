@@ -1,5 +1,4 @@
-"""
-Forms that are used in built-in authentication and registration views.
+"""Forms that are used in built-in authentication and registration views
 
 For most of that forms we just mixin renderer.
 

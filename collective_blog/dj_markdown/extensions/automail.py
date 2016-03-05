@@ -1,5 +1,4 @@
-"""
-Adds automatic mail linkification.
+"""Adds automatic mail linkification
 
 Copied from https://github.com/google/py-gfm/
 

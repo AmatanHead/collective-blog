@@ -1,3 +1,11 @@
+"""Tests for markdown system
+
+Well, they are not ready yed;
+only markdown rendering is covered properly
+as it is the only thing that denormalizes the database.
+
+"""
+
 from django.test import TransactionTestCase
 from django.core import validators
 from django.core import exceptions
@@ -10,6 +18,12 @@ from .renderer import BaseRenderer
 
 
 def md_validator(markdown):
+    """Test markdown validator
+
+    No doubt it works as expected.
+
+    """
+
     if '!' in markdown.source:
         raise exceptions.ValidationError('=(')
 
@@ -22,10 +36,7 @@ class MarkdownDerived(Markdown):
 
 
 class TestModel(FakeModel):
-    """
-    A model for test app.
-
-    """
+    """A model for test app"""
 
     raw = MarkdownField()
     raw2 = MarkdownField()
@@ -47,10 +58,7 @@ class TestModel(FakeModel):
 @TestModel.fake_me
 class MarkdownModelFieldTest(TransactionTestCase):
     def test_class_creation(self):
-        """
-        Test that what is created is a `Markdown` class instance.
-
-        """
+        """Test that what is created is a `Markdown` class instance"""
 
         test = TestModel.objects.create(raw='Source')
 
@@ -78,11 +86,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertNotIsInstance(test.raw, MarkdownDerived)
 
     def test_blank(self):
-        """
-        Test that `blank=True` raises in error when and only when
-        the field is blank.
-
-        """
+        """Test that `blank=True` raises error correctly"""
         test = TestModel()
         with self.assertRaises(exceptions.ValidationError) as result:
             test.clean_fields()
@@ -96,10 +100,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertIn('raw2', result.exception.error_dict)
 
     def test_validators(self):
-        """
-        Test that validators applied correctly.
-
-        """
+        """Test that validators applied correctly"""
         test = TestModel(raw='Source', raw2='Source2')
 
         test.html_validated.source = '!'
@@ -132,10 +133,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertIn('validated', result.exception.error_dict)
 
     def test_plain_var_access(self):
-        """
-        Test that `MarkdownDescriptor` works correctly.
-
-        """
+        """Test that `MarkdownDescriptor` works correctly"""
         test = TestModel(raw='Source', raw2='Source2')
 
         self.assertIsInstance(test.raw, Markdown)
@@ -163,10 +161,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertEqual(test.cached.source, '{}')
 
     def test_cached(self):
-        """
-        Test that cached values accessed correctly.
-
-        """
+        """Test that cached values accessed correctly"""
         test = TestModel(raw='Source', raw2='Source2', cached='text')
 
         self.assertIsInstance(test.cached, Markdown)
@@ -207,11 +202,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertFalse(test.cached.is_dirty)
 
     def test_raw_cache_access(self):
-        """
-        Test that `HtmlCacheDescriptor` works correctly with broken
-        cache values.
-
-        """
+        """Test that `HtmlCacheDescriptor` works correctly with broken cache"""
         markdown = MarkdownDerived(BaseRenderer(), 'String')
         source = markdown.source
 
@@ -232,10 +223,7 @@ class MarkdownModelFieldTest(TransactionTestCase):
         self.assertFalse(test.cached.is_dirty)
 
     def test_cache_hash(self):
-        """
-        Test that hashing and splitting function works correctly.
-
-        """
+        """Test that hashing and splitting function works correctly"""
         source1 = 'string 1'
         source2 = 'string 2'
 
