@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title %}{% trans "You have no access to this post" %}{% endblock %}
+
+
+{% block content %}
+
+    <div class="primary container">
+        <h1>{% trans "You have no access to this post" %}</h1>
+        <p>
+            {% blocktrans trimmed with blog as blog %}
+                Your account is banned in the "{{ blog }}" blog
+                so you can't see this post.
+            {% endblocktrans %}
+        </p>
+    </div>
+
+{% endblock %}

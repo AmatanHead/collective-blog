@@ -1,0 +1,8 @@
+<span class="badge-group">
+    <span class="{{ current_color }} badge {{ prefix }}-color">{{ name }}</span><span class="{{ current_color }} badge outline {{ prefix }}-color" id="{{ prefix }}-score">{{ current_score }}</span>
+</span>
+&nbsp;
+<span class="gray badge {% if self_vote != 1 %}{{ pressed_class }}{% endif %}" id="{{ prefix }}-upvote-button"><span class="arrow-up center icon"></span></span>
+<span class="gray badge {% if self_vote != -1 %}{{ pressed_class }}{% endif %}" id="{{ prefix }}-downvote-button"><span class="arrow-down center icon"></span></span>
+&nbsp;
+<span id="{{ prefix }}-error" class="gray badge outline" style="opacity: 0"></span>

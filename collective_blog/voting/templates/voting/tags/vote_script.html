@@ -1,0 +1,15 @@
+(function() {return new Voting(
+        '#{{ prefix }}-upvote-button',
+        '#{{ prefix }}-downvote-button',
+        '#{{ prefix }}-error',
+        '#{{ prefix }}-score',
+        '{{ pressed_class }}',
+        '{{ url }}',
+        '{% if use_colors %}.{{ prefix }}-color{% endif %}',
+        parseInt('{{ bad_color_threshold }}') || 0,
+        'orange',
+        parseInt('{{ good_color_threshold }}') || 0,
+        'green',
+        'gray'
+    )
+})()

@@ -56,6 +56,7 @@ def view_profile(request, username=None):
         'karma': karma,
         'self_vote': self_vote,
         'karma_color': color,
+        'color_threshold': [-10, 10],
     })
 
 

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
+{% load vote %}
 
 {% block title %}{% blocktrans trimmed with username=user|capfirst %}{{ username }}'s profile{% endblocktrans %}{% endblock %}
-
 
 {% block content %}
     <div class="primary container">
@@ -12,14 +13,9 @@
         </h1>
 
         <span style="font-size: 1.1em">
-            <span class="badge-group">
-                <span class="{{ karma_color }} badge karma-color">{% trans "Karma" %}</span><span class="{{ karma_color }} badge outline karma-color" id="karma-score">{{ karma.score }}</span>
-            </span>
-            &nbsp;
-            <span class="gray badge {% if self_vote.vote != 1 %}outline{% endif %}" id="karma-upvote-button"><span class="arrow-up center icon"></span></span>
-            <span class="gray badge {% if self_vote.vote != -1 %}outline{% endif %}" id="karma-downvote-button"><span class="arrow-down center icon"></span></span>
-            &nbsp;
-            <span id="karma-error" class="gray badge outline" style="opacity: 0"></span>
+            {% url "vote_user" username=user.username as karma_url %}
+            {% trans "Karma" as name %}
+            {% vote name=name prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=self_vote.vote bad_color_threshold=-10 good_color_threshold=10 %}
         </span>
 
         {% if user.first_name or user.last_name %}
@@ -71,57 +67,16 @@
     </div>
 {% endblock %}
 
+{% block scripts %}
+    <script src="{% static "voting/ajax_voting.js" %}"></script>
+{% endblock %}
 {% block extra_scripts %}
+
     <script>
-
-        function vote(vote) {
-            d3.text('{% url "vote_user" username=user.username %}?vote=' + vote)
-                .header('X-Requested-With', 'XMLHttpRequest')
-                .header('X-CSRFToken', Cookies.get('csrftoken'))
-                .post(
-                    function (error, data) {
-                        if (error) {
-                            error = error.statusText;
-                        }
-
-                        var score = parseInt(data);
-
-                        if (isFinite(score)) {
-                            d3.select('#karma-score').text(score);
-                            d3.select('#karma-upvote-button')
-                                    .classed('outline', vote != 1);
-                            d3.select('#karma-downvote-button')
-                                    .classed('outline', vote != -1);
-                            d3.selectAll('.karma-color')
-                                    .classed('gray', score < 10 && score > -10)
-                                    .classed('green', score >= 10)
-                                    .classed('orange', score <= -10);
-                        } else {
-                            d3.select('#karma-error').text(error || data)
-                                    .interrupt()
-                                    .classed('orange', error)
-                                    .style('opacity', 1)
-                                    .transition()
-                                    .duration(3000)
-                                    .style('opacity', 0);
-                        }
-                    }
-                )
-        }
-
-        d3.select('#karma-upvote-button').on('click', function (e) {
-            if (d3.select('#karma-upvote-button').classed('outline')) {
-                vote(1);
-            } else {
-                vote(0);
-            }
-        });
-        d3.select('#karma-downvote-button').on('click', function (e) {
-            if (d3.select('#karma-downvote-button').classed('outline')) {
-                vote(-1);
-            } else {
-                vote(0);
-            }
-        });
+        {% url "vote_user" username=user.username as karma_url %}
+        {% trans "Karma" as name %}
+        {% vote_script name=name prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=self_vote.vote bad_color_threshold=color_threshold.0 good_color_threshold=color_threshold.1 %}
     </script>
+
+
 {% endblock %}

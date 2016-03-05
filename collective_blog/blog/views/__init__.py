@@ -1,1 +1,1 @@
-from .main_feed import feed
+from .main_feed import feed, post

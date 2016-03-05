@@ -1,2 +1,2 @@
 from .blog import Blog, Membership
-from .post import Post
+from .post import Post, PostVote

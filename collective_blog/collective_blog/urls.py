@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^messages/', include('messages_extends.urls')),
 
+    url(r'^b/', include('blog.urls')),
+
     url(r'^(?P<page>[0-9]+)/$', feed, name='homepage'),
     url(r'^$', feed, name='homepage')
 ]

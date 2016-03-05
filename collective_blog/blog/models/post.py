@@ -55,6 +55,8 @@ class Post(models.Model):
 
     created = models.DateTimeField(blank=True, editable=False)
 
+    updated = models.DateTimeField(blank=True, editable=False, auto_now=True)
+
     _content_html = HtmlCacheField(content)
 
     blog = models.ForeignKey(Blog, models.CASCADE,
@@ -74,6 +76,11 @@ class Post(models.Model):
         if not self.pk:
             self.created = datetime.now()
         super(Post, self).save(force_insert, force_update, using, update_fields)
+
+    def can_be_seen_by_user(self, user, membership):
+        return (user.pk == self.author.pk or
+                self.blog.type == 'O' or
+                (membership and not self.blog.is_banned(membership)))
 
     class Meta:
         verbose_name = _("Post")

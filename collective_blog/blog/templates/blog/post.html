@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title %}{{ post.heading }}{% endblock %}
+
+
+{% block content %}
+
+    <div class="primary container">
+        <h1 class="title">{{ post.heading }}</h1>
+        <p>
+            {% trans "Author:" %}
+            <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username }}</a>,
+            {{ post.created }}
+        </p>
+        {% if post.blog %}
+            <p>
+                <span class="badge">
+                    {% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}
+                    {{ post.blog.name }}
+                </span>
+            </p>
+        {% endif %}
+
+        <hr>
+
+        {{ post.content.html_force|safe }}
+
+        <hr>
+
+        <p>
+            <span style="font-size: 1.1em">
+                <span class="badge-group">
+                    <span class="gray badge">{% trans "Rating" %}</span><span class="gray badge outline">{{ rating.score }}</span>
+                </span>
+                &nbsp;
+                <span class="gray badge {% if self_vote.vote != 1 %}outline{% endif %}" id="upvote-button"><span class="arrow-up center icon"></span></span>
+                <span class="gray badge {% if self_vote.vote != -1 %}outline{% endif %}" id="downvote-button"><span class="arrow-down center icon"></span></span>
+                &nbsp;
+                <span id="rating-error" class="gray badge outline" style="opacity: 0"></span>
+            </span>
+        </p>
+
+    </div>
+
+{% endblock %}

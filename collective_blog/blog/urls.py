@@ -1,10 +1,9 @@
 """Auth system routing"""
 
-import django.contrib.auth.views as v
-from django.conf.urls import include, url
+from django.conf.urls import url
 
-from .views import feed
+from .views import post
 
 urlpatterns = [
-
+    url(r'^p/(?P<post_id>[0-9]+)/$', post, name='view_post')
 ]

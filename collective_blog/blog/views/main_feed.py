@@ -3,7 +3,9 @@ from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404
 
-from ..models import Blog, Post
+from django.shortcuts import get_object_or_404
+
+from ..models import Post, PostVote
 
 
 def feed(request, page=1):
@@ -44,3 +46,32 @@ def feed(request, page=1):
         'interesting_blogs': {},
         'interesting_tags': {},
     })
+
+def post(request, post_id=None):
+    post = get_object_or_404(Post.objects.select_related('author', 'blog'),
+                             pk=post_id)
+
+    membership = post.blog.check_membership(request.user)
+
+    if post.can_be_seen_by_user(request.user, membership):
+        rating = PostVote.objects.filter(object=post).score()
+
+        if request.user.is_anonymous():
+            self_vote = None
+        else:
+            self_vote = PostVote.objects.filter(object=post, user=request.user).first()
+
+        return render(request, 'blog/post.html', {
+            'post': post,
+            'rating': rating,
+            'self_vote': self_vote,
+        })
+    elif post.is_draft:
+        return render(request, 'blog/draft_message.html',
+                      status=404)
+    elif membership is None:
+        return render(request, 'blog/no_access_message.html',
+                      status=403)
+    else:
+        raise Http404()
+
