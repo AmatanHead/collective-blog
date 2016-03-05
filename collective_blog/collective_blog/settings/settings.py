@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'appearance',
     'dj_markdown',
     'voting',
+    'blog',
 
     'registration',
     'captcha',

@@ -63,7 +63,7 @@ class Profile(models.Model):
     email_is_public = models.BooleanField(verbose_name=_('Show email'),
                                           default=False)
 
-    # To go: karma, votes, liked tags
+    # To go: liked tags
 
     @classmethod
     def can_edit_profile(cls, user, profile):

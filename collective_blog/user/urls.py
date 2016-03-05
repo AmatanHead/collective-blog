@@ -1,9 +1,8 @@
 import django.contrib.auth.views as v
 from django.conf.urls import include, url
 
-from user.views import self_profile, view_profile, edit_profile, vote
-
-from user.forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm
+from .views import self_profile, view_profile, edit_profile, vote
+from .forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm
 
 urlpatterns = [
     url(r'^a/login/$', v.login,

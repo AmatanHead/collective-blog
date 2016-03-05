@@ -17,8 +17,9 @@ def view_profile(request, username=None):
     if username is None:
         user = request.user
     else:
+        # TODO do we really need iexact here?
         user = get_object_or_404(User.objects.select_related('profile'),
-                                 username=username)
+                                 username__iexact=username)
 
     is_self_profile = username is None or user.pk == request.user.pk
 
@@ -31,6 +32,11 @@ def view_profile(request, username=None):
     else:
         color = 'gray'
 
+    if request.user.is_anonymous():
+        self_vote = None
+    else:
+        self_vote = Karma.objects.filter(object=user, user=request.user).first()
+
     return render(request, 'profile/view_profile.html', {
         'user': user,
         'self_profile': is_self_profile,
@@ -38,7 +44,7 @@ def view_profile(request, username=None):
         'show_email': Profile.can_see_email(request.user, user.profile),
         'visible_email': Profile.visible_email(request.user, user.profile),
         'karma': karma,
-        'self_vote': Karma.objects.filter(object=user, user=request.user).first(),
+        'self_vote': self_vote,
         'karma_color': color,
     })
 
@@ -82,7 +88,6 @@ def edit_profile(request, username=None):
 
 
 @csrf_protect
-@login_required()
 def vote(request, username=None):
     user = get_object_or_404(User.objects.select_related('profile'),
                              username__iexact=username)
@@ -93,6 +98,12 @@ def vote(request, username=None):
         assert v in [0, 1, -1]
     except Exception:
         return HttpResponse(_('Wrong vote'))
+
+    if request.user.is_anonymous():
+        HttpResponse(_("You should be logged in"))
+
+    if not request.user.is_active:
+        HttpResponse(_("Your account is disabled"))
 
     if Profile.can_vote(request.user, user.profile):
         Karma.vote_for(request.user, user, v)
