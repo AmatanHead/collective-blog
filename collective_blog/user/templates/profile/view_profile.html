@@ -75,8 +75,15 @@
     <script>
 
         function vote(vote) {
-            d3.text('{% url "vote_user" username=user.username %}?vote=' + vote,
+            d3.text('{% url "vote_user" username=user.username %}?vote=' + vote)
+                .header('X-Requested-With', 'XMLHttpRequest')
+                .header('X-CSRFToken', Cookies.get('csrftoken'))
+                .post(
                     function (error, data) {
+                        if (error) {
+                            error = error.statusText;
+                        }
+
                         var score = parseInt(data);
 
                         if (isFinite(score)) {
@@ -90,15 +97,16 @@
                                     .classed('green', score >= 10)
                                     .classed('orange', score <= -10);
                         } else {
-                            d3.select('#karma-error').text(data)
+                            d3.select('#karma-error').text(error || data)
                                     .interrupt()
+                                    .classed('orange', error)
                                     .style('opacity', 1)
                                     .transition()
                                     .duration(3000)
                                     .style('opacity', 0);
                         }
                     }
-            )
+                )
         }
 
         d3.select('#karma-upvote-button').on('click', function (e) {

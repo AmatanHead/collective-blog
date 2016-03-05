@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 
     'registration',
     'captcha',
+    'messages_extends',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -104,6 +105,11 @@ NOCAPTCHA = True
 RECAPTCHA_USE_SSL = True
 
 INCLUDE_AUTH_URLS = False
+
+# Messages
+# https://docs.djangoproject.com/en/1.9/ref/contrib/messages/
+
+MESSAGE_STORAGE = 'messages_extends.storages.FallbackStorage'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

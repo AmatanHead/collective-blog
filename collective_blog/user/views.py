@@ -5,6 +5,7 @@ Note that for auth process, default views are used. See `urls.py`.
 """
 
 from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import (HttpResponseRedirect,
@@ -13,7 +14,10 @@ from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.utils.translation import ugettext as _
 
-from .models import Profile, Karma
+# from messages_extends import constants as constants_messages
+# from messages_extends.models import Message
+
+from .models import Karma
 from .forms import ProfileForm, UserForm
 
 User = get_user_model()
@@ -72,6 +76,17 @@ def edit_profile(request, username=None):
             if form.is_valid() and user_form.is_valid():
                 form.save()
                 user_form.save()
+
+                messages.success(
+                    request,
+                    _("%(username)s's profile was saved")
+                    % dict(username=user.username))
+
+                # Message.objects.create(
+                #     user=request.user,
+                #     level=constants_messages.SUCCESS_PERSISTENT,
+                #     message=_("%(username)s's profile was saved") % dict(username=user.username))
+
                 return HttpResponseRedirect(
                     reverse('view_profile',
                             kwargs=dict(username=user.username))
