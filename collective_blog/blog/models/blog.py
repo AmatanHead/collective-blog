@@ -49,9 +49,7 @@ class Blog(models.Model):
                                   CommentExtension(),
                               ]
                           ),
-                          verbose_name=_('About'),
-                          help_text=_('Tell us about yourself '
-                                      '(use the markdown, Luke!)'))
+                          verbose_name=_('About this blog'))
 
     _about_html = HtmlCacheField(about)
 

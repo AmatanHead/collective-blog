@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 16:20+0300\n"
+"POT-Creation-Date: 2016-03-05 20:31+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,31 +17,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: user/apps.py:9
+msgid "Profiles and users"
+msgstr ""
+
+#: user/forms/profile_form.py:33
+msgid "This email is already used"
+msgstr ""
+
 #: user/models/profile.py:33
 msgid "Location"
 msgstr ""
 
-#: user/models/profile.py:36
+#: user/models/profile.py:37
 msgid "Birthday"
 msgstr ""
 
-#: user/models/profile.py:56
+#: user/models/profile.py:57
 msgid "About"
 msgstr ""
 
-#: user/models/profile.py:57
-msgid "Tell us about yourself"
+#: user/models/profile.py:58
+msgid "Tell us about yourself (use the markdown, Luke!)"
 msgstr ""
 
-#: user/models/profile.py:61
+#: user/models/profile.py:63
 msgid "Show email"
 msgstr ""
 
-#: user/models/profile.py:97
+#: user/models/profile.py:99
 msgid "Profile"
 msgstr ""
 
-#: user/models/profile.py:98
+#: user/models/profile.py:100
 msgid "Profiles"
 msgstr ""
 
@@ -86,26 +94,30 @@ msgstr ""
 msgid "user profile"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:23
+#: user/templates/profile/view_profile.html:16
+msgid "Karma"
+msgstr ""
+
+#: user/templates/profile/view_profile.html:34
 #, python-format
 msgid "From %(location)s"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:27
+#: user/templates/profile/view_profile.html:38
 #, python-format
 msgid "Birthday at %(birthday)s"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:43
+#: user/templates/profile/view_profile.html:54
 msgid "Edit profile"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:49
+#: user/templates/profile/view_profile.html:60
 #: user/templates/registration/password_change_form.html:4
 msgid "Change password"
 msgstr ""
 
-#: user/templates/profile/view_profile.html:56
+#: user/templates/profile/view_profile.html:67
 msgid "No membership"
 msgstr ""
 
@@ -307,4 +319,25 @@ msgstr ""
 #: user/templates/registration/registration_form.html:4
 #: user/templates/registration/registration_form.html:8
 msgid "Register for an account"
+msgstr ""
+
+#: user/views.py:82
+#, python-format
+msgid "%(username)s's profile was saved"
+msgstr ""
+
+#: user/views.py:121
+msgid "Wrong vote"
+msgstr ""
+
+#: user/views.py:124
+msgid "You should be logged in"
+msgstr ""
+
+#: user/views.py:127
+msgid "Your account is disabled"
+msgstr ""
+
+#: user/views.py:133
+msgid "You can't vote for this user"
 msgstr ""
