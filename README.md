@@ -27,7 +27,7 @@ Each user has its rating (karma). Users can vote up and down for any other users
 
 * Python 2.7 || >= 3.4
 * [Django](https://www.djangoproject.com) along with plugins for registration, captcha, markdown, and voting.
-* [Misaka](https://github.com/FSX/misaka) for markdown support.
+* [Markdown](github.com/waylan/Python-Markdown).
 * [Codemirror](https://eloquentjavascript.net) for editing markdown.
 * [Light](https://github.com/AmatanHead/light) css framework.
 
@@ -37,9 +37,9 @@ And **no** WYSIWYG! ('cause it's evil!)
 ## Development status
 
 * <s>User auth</s> — done
-* Markdown system
-* Votes system
-* User profiles
+* <s>Markdown system</s> — done
+* <s>Votes system</s> — done
+* <s>User profiles</s> — done
 * Blogs
 * Posts
 * Comments
@@ -51,4 +51,5 @@ And **no** WYSIWYG! ('cause it's evil!)
   * `collective_blog` — root app; Holds config, root url dispatcher, common css, scripts, and templates.
   * `user` — auth and user profile stuff, everything behind `/u/`; Holds auth logic and user profiles.
   * `appearance` — styles and form renderer.
-  * `markdown` — standalone reusable app for markdown support.
+  * `dj_markdown` — standalone reusable app for markdown support.
+  * `voting` — models for voting support.
