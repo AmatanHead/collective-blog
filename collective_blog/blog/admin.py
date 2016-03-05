@@ -9,6 +9,7 @@ from dj_markdown.admin import MarkdownAdmin
 class ProfileAdmin(MarkdownAdmin):
     pass
 
+
 @admin.register(Post)
 class ProfileAdmin(MarkdownAdmin):
     pass
