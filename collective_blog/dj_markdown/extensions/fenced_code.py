@@ -96,8 +96,10 @@ class FencedBlockPreprocessor(Preprocessor):
                 except ClassNotFound:
                     code = escape(m.group('code'))
                     if lang:
-                        code = ''.join(map(lambda x: '<li>%s</li>' % x,
-                                           code.split('\n')))
+                        code = code.split('\n')
+                        while code and not code[-1].strip():
+                            code.pop()
+                        code = ''.join(map(lambda x: '<li>%s</li>' % x, code))
                         code = '<ol>%s</ol>' % code
                     code = '<pre>%s</pre>' % code
 

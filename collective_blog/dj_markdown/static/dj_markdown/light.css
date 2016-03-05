@@ -4,23 +4,27 @@
     height: auto;
     font-family: "PT Mono", monospace;
     font-size: .9em;
-    padding: 2rem 2rem 4rem;
+    padding: 2rem;
     border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: .2em;
 }
 .cm-s-light .CodeMirror-gutters {
-    border-right: 1px solid #dadada;
+    border-right: none;
     background: #f8f8f8;
-    width: 2.10em;
+    width: 2.10em !important;
     color: #c8c8c8;
 }
-.cm-s-light .CodeMirror-sizer {
-    margin-left: 3.10em !important;
-}
+.cm-s-light .CodeMirror-hscrollbar { overflow: hidden; }
+.cm-s-light .CodeMirror-sizer { margin-left: 3.10em !important; }
 .cm-s-light .CodeMirror-guttermarker { color: #c8c8c8; }
 .cm-s-light .CodeMirror-guttermarker-subtle { color: #c8c8c8; }
 .cm-s-light .CodeMirror-linenumber {
     color: #c8c8c8;
+    background: #f8f8f8;
     margin-left: -0.4em;
+    padding-right: 0.6em;
+    border-right: 1px solid #dadada;
 }
 .cm-s-light .CodeMirror-cursor { border-left: 1px solid #444444; }
 
