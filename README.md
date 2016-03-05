@@ -2,6 +2,38 @@
 
 A project for HSE programming technologies course. See [wiki.cs.hse.ru](http://wiki.cs.hse.ru/Проектная_работа_2_курс_(2016)#.D0.9F.D1.80.D0.BE.D0.B5.D0.BA.D1.82:_.D0.9A.D0.BE.D0.BB.D0.BB.D0.B5.D0.BA.D1.82.D0.B8.D0.B2.D0.BD.D1.8B.D0.B9_.D0.B1.D0.BB.D0.BE.D0.B3_.28.D0.94..D0.91.D1.83.D1.80.D0.BC.D0.B8.D1.81.D1.82.D1.80.D0.BE.D0.B2.29) for more information.
 
+## Dev installation
+
+Clone the repo and create a virtualenv, if you need one.
+
+Install the requirements:
+
+```
+$ pip install -r requirements.txt
+```
+
+Migrate your database:
+
+```
+$ cd collective-blog/
+$ python manage.py makemigrations
+$ python manage.py migrate
+```
+
+By default, SQLite is used. Be aware that SQLite can't perform iexact queries.
+
+Launch the dev server:
+
+```
+$ python manage.py runserver 0.0.0.0:8000
+```
+
+Or tests (well, they are not ready yed; only markdown rendering is covered properly as it is the only thing that denormalizes the database):
+
+```
+$ python manage.py test
+```
+
 ## Functionality planned
 
 Each user can create a new blog. No limit for blogs per user. Once a new blog is created, it can be filled with content.
