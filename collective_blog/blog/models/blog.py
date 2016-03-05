@@ -5,6 +5,8 @@ from datetime import datetime
 
 from collective_blog import settings
 
+from user.models import Karma
+
 from dj_markdown.models import MarkdownField, HtmlCacheField
 from dj_markdown.datatype import Markdown
 from dj_markdown.renderer import BaseRenderer
@@ -15,6 +17,10 @@ from dj_markdown.extensions import (FencedCodeExtension,
                                     AutomailExtension,
                                     AutolinkExtension,
                                     CommentExtension)
+
+
+class CantJoinException(Exception):
+    pass
 
 
 class Blog(models.Model):
@@ -93,7 +99,8 @@ class Blog(models.Model):
 
     comment_condition = models.CharField(max_length=2, default='A',
                                          choices=COMMENT_CONDITIONS,
-                                         verbose_name=_('Who can comment in the blog'))
+                                         verbose_name=_(
+                                             'Who can comment in the blog'))
 
     comment_membership_required = models.BooleanField(
         default=False, verbose_name=_('Require membership to write comments'))
@@ -104,6 +111,100 @@ class Blog(models.Model):
     members = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                      through='Membership',
                                      editable=False)
+
+    def check_membership(self, user):
+        return Membership.objects.filter(blog=self, user=user).first()
+
+    def is_banned(self, membership):
+        if membership is not None:
+            return membership.is_banned()
+        else:
+            return False
+
+    def check_can_change_settings(self, membership):
+        if membership is not None:
+            return membership.can_change_settings()
+        else:
+            return False
+
+    def check_can_edit_posts(self, membership):
+        if membership is not None:
+            return membership.can_edit_posts()
+        else:
+            return False
+
+    def check_can_delete_posts(self, membership):
+        if membership is not None:
+            return membership.can_delete_posts()
+        else:
+            return False
+
+    def check_can_edit_comments(self, membership):
+        if membership is not None:
+            return membership.can_edit_comments()
+        else:
+            return False
+
+    def check_can_delete_comments(self, membership):
+        if membership is not None:
+            return membership.can_delete_comments()
+        else:
+            return False
+
+    def check_can_ban(self, membership):
+        if membership is not None:
+            return membership.can_ban()
+        else:
+            return False
+
+    def check_can_join(self, user):
+        """Checks if the user can join the blog
+
+        Note that joining process should go through the special method.
+        Makes database queries: `check_membership` and karma calculation.
+
+        """
+        if not user.is_active or user.is_anonymous():
+            return False
+
+        membership = self.check_membership(user)
+
+        if membership is not None:
+            return False  # Already joined
+
+        if self.join_condition == 'A':
+            return True
+        elif self.join_condition == 'K':
+            return (Karma.objects.filter(object=user).score()['score'] >=
+                    self.join_karma_threshold)
+        elif self.join_condition == 'I':
+            return True  # Can send a request
+        else:
+            return False
+
+    def join(self, user):
+        """Add the user to the blog's membership
+
+        :param user: User which wants to be a member.
+        :return: Message
+        :raises CantJoinException: If the user can't join the blog.
+
+        """
+        if self.check_can_join(user):
+            if self.join_condition == 'I':
+                Membership.objects.create(user=user, blog=self, role='W')
+                return _("A request has been sent"), 1
+            else:
+                Membership.objects.create(user=user, blog=self, role='M')
+                return _("Success"), 1
+        else:
+            raise CantJoinException(_("You can't join this blog"))
+
+    def approve(self, membership, new_role='M', save=True):
+        if membership.role == 'W':
+            membership.role = new_role
+            if save:
+                membership.save()
 
     class Meta:
         verbose_name = _("Blog")
@@ -126,7 +227,8 @@ class Membership(models.Model):
         ('O', _('Owner')),
         ('M', _('Member')),
         ('B', _('Banned')),
-        ('A', _('Administrator'))
+        ('A', _('Administrator')),
+        ('W', _('Waiting for approval'))
     )
 
     ban_expiration = models.DateTimeField(auto_now_add=True,
@@ -178,35 +280,35 @@ class Membership(models.Model):
     def is_banned(self):
         return self.role != 'B' and self.ban_expiration < datetime.now()
 
+    def _common_check(self, flag):
+        """Check that the user can perform an action
+
+        Here to reduce code duplication.
+
+        """
+        has_perms = self.user.is_active and self.is_staff and (
+            self.user.has_perm('blog.change_membership') or
+            self.user.has_perm('blog.change_blog'))
+        return has_perms or (self.role in ['O', 'A'] and
+                             not self.is_banned() and flag)
+
     def can_change_settings(self):
-        return (self.role in ['O', 'A'] and
-                not self.is_banned() and
-                self.can_change_settings_flag)
+        return self._common_check(self.can_change_settings_flag)
 
     def can_edit_posts(self):
-        return (self.role in ['O', 'A'] and
-                not self.is_banned() and
-                self.can_edit_posts_flag)
+        return self._common_check(self.can_edit_posts_flag)
 
     def can_delete_posts(self):
-        return (self.role in ['O', 'A'] and
-                not self.is_banned() and
-                self.can_delete_posts_flag)
+        return self._common_check(self.can_delete_posts_flag)
 
     def can_edit_comments(self):
-        return (self.role in ['O', 'A'] and
-                not self.is_banned() and
-                self.can_edit_comments_flag)
+        return self._common_check(self.can_edit_comments_flag)
 
     def can_delete_comments(self):
-        return (self.role in ['O', 'A'] and
-                not self.is_banned() and
-                self.can_delete_comments_flag)
+        return self._common_check(self.can_delete_comments_flag)
 
     def can_ban(self):
-        return (self.role in ['O', 'A'] and
-                not self.is_banned() and
-                self.can_ban_flag)
+        return self._common_check(self.can_ban_flag)
 
     class Meta:
         unique_together = ('user', 'blog')
