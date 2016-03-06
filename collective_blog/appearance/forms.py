@@ -69,9 +69,8 @@ class BaseFormRenderer(BaseForm):
 
         classes = field.css_classes().split()
 
-        if (field.field.required and
-                not getattr(self, 'ignore_required_style', None)):
-            classes.append('required')
+        if hasattr(self, 'additional_section_classes'):
+            classes.extend(getattr(self, 'additional_section_classes'))
 
         if classes:
             css_classes = ' class="%s"' % ' '.join(classes)

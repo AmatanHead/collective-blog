@@ -32,14 +32,30 @@ h1.title
   @extend %header
   +header-size($h1-title-size, $h1-title-lineheight)
 
+.h1-title-like
+  margin-top: $h1-title-size * .8
+  line-height: $h1-title-lineheight * $h1-title-size
+
 h1
   @extend %header
   +header-size($h1-size, $h1-lineheight)
+
+.h1-like
+  margin-top: $h1-size * .8
+  line-height: $h1-lineheight * $h1-size
 
 h2
   @extend %header
   +header-size($h2-size, $h2-lineheight)
 
+.h2-like
+  margin-top: $h2-size * .8
+  line-height: $h2-lineheight * $h2-size
+
 h3, h4, h5, h6
   @extend %header
   +header-size($h3-size, $h3-lineheight)
+
+.h3-like
+  margin-top: $h3-size * .8
+  line-height: $h3-lineheight * $h3-size

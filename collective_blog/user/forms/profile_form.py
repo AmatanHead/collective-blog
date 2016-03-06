@@ -11,6 +11,8 @@ User = get_user_model()
 
 
 class UserForm(ModelForm, BaseFormRenderer):
+    required_css_class = 'required'
+
     renderer = [
         'email',
         ('first_name', 'last_name'),
@@ -45,6 +47,7 @@ class ProfileForm(ModelForm, BaseFormRenderer):
     (e.g. both forms are placed into the same `<form>` tag).
 
     """
+    required_css_class = 'required'
 
     renderer = [
         ('location', 'birthday'),

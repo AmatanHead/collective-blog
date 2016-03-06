@@ -20,7 +20,25 @@
     <div class="block">
         {% block nav %}
             <div class="primary container">
-                <h2><a href="/">{{ global_site_name }}</a></h2>
+                <div class="separate">
+                    {% if user.is_anonymous %}
+                        <div class="h2-like right">
+                            {# Translators: action #}
+                            <a href="{% url "login" %}">{% trans "Login" %}</a>
+                            &bull;
+                            {# Translators: action #}
+                            <a href="{% url "registration_register" %}">{% trans "Register" %}</a>
+                        </div>
+                    {% else %}
+                        <div class="h2-like right">
+                            <a href="{% url "view_self_profile" %}">{{ user.username|capfirst }}</a>
+                            &bull;
+                            <a href="{% url "logout" %}">{% trans "Logout" %}</a>
+                        </div>
+                    {% endif %}
+
+                    <h2><a href="/">{{ global_site_name }}</a></h2>
+                </div>
             </div>
         {% endblock %}
 
@@ -41,6 +59,7 @@
                                 {% endif %}
                                 &nbsp;
                                 {{ message }}
+                                &nbsp;
                                 <span class="dashed-border outline badge" id="msg-{{ message.pk }}-close-button"><span class="circle-with-cross center icon"></span></span>
                             </span>
                         </div>

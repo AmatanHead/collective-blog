@@ -16,19 +16,19 @@ from collective_blog.settings import DEBUG
 
 
 class AuthenticationForm(_AuthenticationForm, BaseFormRenderer):
-    ignore_required_style = True
+    required_css_class = ''
 
 
 class PasswordResetForm(_PasswordResetForm, BaseFormRenderer):
-    ignore_required_style = True
+    required_css_class = ''
 
 
 class PasswordChangeForm(_PasswordChangeForm, BaseFormRenderer):
-    ignore_required_style = True
+    required_css_class = ''
 
 
 class RegistrationFormCaptcha(RegistrationFormUniqueEmail, BaseFormRenderer):
-    ignore_required_style = True
+    required_css_class = ''
 
     if DEBUG:
         def __init__(self, *args, **kwargs):

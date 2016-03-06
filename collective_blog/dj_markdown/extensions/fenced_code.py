@@ -94,12 +94,14 @@ class FencedBlockPreprocessor(Preprocessor):
                     code = highlight(m.group('code'), lexer, formatter)
                 except ClassNotFound:
                     code = escape(m.group('code'))
+                    code = code.split('\n')
+                    while code and not code[-1].strip():
+                        code.pop()
                     if lang:
-                        code = code.split('\n')
-                        while code and not code[-1].strip():
-                            code.pop()
                         code = ''.join(map(lambda x: '<li>%s</li>' % x, code))
                         code = '<ol>%s</ol>' % code
+                    else:
+                        code = '\n'.join(code)
                     code = '<pre>%s</pre>' % code
 
                 placeholder = self.markdown.htmlStash.store(code, safe=True)

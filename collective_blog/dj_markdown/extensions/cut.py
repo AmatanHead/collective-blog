@@ -26,9 +26,14 @@ class CutExtension(Extension):
         """
         md.registerExtension(self)
 
-        md.preprocessors.add('cut',
-                             CutPreprocessor(md),
-                             ">normalize_whitespace")
+        if 'fenced_code_block' in md.preprocessors:
+            md.preprocessors.add('cut',
+                                 CutPreprocessor(md),
+                                 ">fenced_code_block")
+        else:
+            md.preprocessors.add('cut',
+                                 CutPreprocessor(md),
+                                 ">normalize_whitespace")
 
 
 class CutPreprocessor(Preprocessor):
