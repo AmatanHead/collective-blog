@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 {% load post %}
+{% load vote %}
 
 {% block title %}{{ post.heading }}{% endblock %}
 
@@ -31,17 +33,26 @@
 
         <p>
             <span style="font-size: 1.1em">
-                <span class="badge-group">
-                    <span class="gray badge">{% trans "Rating" %}</span><span class="gray badge outline">{{ rating.score }}</span>
-                </span>
-                &nbsp;
-                <span class="gray badge {% if self_vote.vote != 1 %}outline{% endif %}" id="upvote-button"><span class="arrow-up center icon"></span></span>
-                <span class="gray badge {% if self_vote.vote != -1 %}outline{% endif %}" id="downvote-button"><span class="arrow-down center icon"></span></span>
-                &nbsp;
-                <span id="rating-error" class="gray badge outline" style="opacity: 0"></span>
+                {% url "vote_post" post_id=post.pk as post_url %}
+                {% trans "Post" as name %}
+                {% vote name=name prefix="post" url=post_url current_score=rating.score self_vote=self_vote.vote use_colors=False current_color="gray" %}
             </span>
         </p>
 
     </div>
 
 {% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script src="{% static "voting/ajax_voting.js" %}"></script>
+{% endblock %}
+{% block extra_scripts %}
+    {{ block.super }}
+    <script>
+        {% url "vote_post" post_id=post.pk as post_url %}
+        {% trans "Post" as name %}
+        {% vote_script name=name prefix="post" url=post_url current_score=rating.score self_vote=self_vote.vote use_colors=False current_color="gray" %}
+    </script>
+{% endblock %}
+

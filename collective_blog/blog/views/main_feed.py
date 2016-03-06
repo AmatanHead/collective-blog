@@ -1,9 +1,12 @@
 from django.db.models import Q, Sum
 from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
+from django.http import Http404, HttpResponse
 
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_protect
+
+from django.utils.translation import ugettext_lazy as _
 
 from ..models import Post, PostVote
 
@@ -79,3 +82,31 @@ def post(request, post_id=None):
     else:
         raise Http404()
 
+
+@csrf_protect
+def vote(request, post_id=None):
+    post = get_object_or_404(Post.objects.select_related('author'), pk=post_id)
+
+    # noinspection PyBroadException
+    try:
+        v = int(request.GET['vote'])
+        assert v in [0, 1, -1]
+    except Exception:
+        return HttpResponse(_('Wrong vote'))
+
+    if request.user.is_anonymous():
+        return HttpResponse(_("You should be logged in"))
+
+    if not request.user.is_active:
+        return HttpResponse(_("Your account is disabled"))
+
+    if request.user.pk == post.author.pk:
+        return HttpResponse(_("You can't vote for your own post"))
+
+    membership = post.blog.check_membership(request.user)
+
+    if post.can_be_voted_by(request.user, membership):
+        PostVote.vote_for(request.user, post, v)
+        return HttpResponse(str(PostVote.objects.filter(object=post).score()['score']))
+    else:
+        return HttpResponse(_("You can't vote for this post"))
