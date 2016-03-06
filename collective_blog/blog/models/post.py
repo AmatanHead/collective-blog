@@ -18,7 +18,8 @@ from dj_markdown.extensions import (FencedCodeExtension,
                                     SemiSaneListExtension,
                                     StrikethroughExtension,
                                     AutomailExtension,
-                                    AutolinkExtension)
+                                    AutolinkExtension,
+                                    CutExtension)
 
 from voting.models import AbstractVote
 
@@ -49,11 +50,24 @@ class Post(models.Model):
                                     StrikethroughExtension(),
                                     AutolinkExtension(),
                                     AutomailExtension(),
+                                    CutExtension(),
                                 ]
                             ),
                             verbose_name=_('Content'))
 
     created = models.DateTimeField(blank=True, editable=False)
+
+    cut_pattern = '<!-- cut here -->'
+
+    def content_before_cut(self):
+        idx = self.content.html_force.find(self.cut_pattern)
+
+        print(idx)
+
+        if idx == -1:
+            return self.content.html_force
+        else:
+            return self.content.html_force[:idx]
 
     updated = models.DateTimeField(blank=True, editable=False, auto_now=True)
 
@@ -81,6 +95,11 @@ class Post(models.Model):
         return (user.pk == self.author.pk or
                 self.blog.type == 'O' or
                 (membership and not self.blog.is_banned(membership)))
+
+    def can_be_voted_by(self, user, membership):
+        if user.pk == self.author.pk:
+            return False
+        return user.is_active and not user.is_anonymous() and self.can_be_seen_by_user(user, membership)
 
     class Meta:
         verbose_name = _("Post")

@@ -7,3 +7,4 @@ from .automail import AutomailExtension
 from .autolink import AutolinkExtension
 from .comment import CommentExtension
 from .escape import EscapeHtmlExtension
+from .cut import CutExtension

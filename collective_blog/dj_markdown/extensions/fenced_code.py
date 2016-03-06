@@ -108,4 +108,5 @@ class FencedBlockPreprocessor(Preprocessor):
                                        text[m.end():])
             else:
                 break
+
         return text.split("\n")
