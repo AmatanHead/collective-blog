@@ -219,48 +219,112 @@ class Blog(models.Model):
                                      through='Membership',
                                      editable=False)
 
+    # Common methods
+    # --------------
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+
+        self.slug = uuslug(self.name,
+                           instance=self,
+                           max_length=100,
+                           start_no=2,
+                           word_boundary=True,
+                           save_order=True)
+
+        self.slug = self.slug.lower()
+
+        super(Blog, self).save(force_insert, force_update, using, update_fields)
+
+    class Meta:
+        verbose_name = _("Blog")
+        verbose_name_plural = _("Blogs")
+        ordering = ("name",)
+
+    def __str__(self):
+        return str(self.name)
+
+    # Permissions control
+    # -------------------
+
     def check_membership(self, user):
+        """Check if the given user is a member of the blog"""
         if user.is_anonymous():
             return None
         return Membership.objects.filter(blog=self, user=user).first()
 
     def is_banned(self, membership):
+        """Check if the given user is banned in this blog
+
+        No-members (membership==None) considered to be not banned.
+
+        """
         if membership is not None:
             return membership.is_banned()
         else:
             return False
 
     def check_can_change_settings(self, membership):
+        """Check if the given user has permissions to change settings
+
+        No-members (membership==None) considered to have no rights.
+
+        """
         if membership is not None:
             return membership.can_change_settings()
         else:
             return False
 
     def check_can_edit_posts(self, membership):
+        """Check if the given user has permissions edit posts in the blog
+
+        No-members (membership==None) considered to have no rights.
+
+        """
         if membership is not None:
             return membership.can_edit_posts()
         else:
             return False
 
     def check_can_delete_posts(self, membership):
+        """Check if the given user has permissions delete posts in the blog
+
+        No-members (membership==None) considered to have no rights.
+
+        """
         if membership is not None:
             return membership.can_delete_posts()
         else:
             return False
 
     def check_can_edit_comments(self, membership):
+        """Check if the given user has permissions edit comments in the blog
+
+        No-members (membership==None) considered to have no rights.
+
+        """
         if membership is not None:
             return membership.can_edit_comments()
         else:
             return False
 
     def check_can_delete_comments(self, membership):
+        """Check if the given user has permissions delete comments in the blog
+
+        No-members (membership==None) considered to have no rights.
+
+        """
         if membership is not None:
             return membership.can_delete_comments()
         else:
             return False
 
     def check_can_ban(self, membership):
+        """Check if the given user has permissions to ban members of the blog
+
+        No-members (membership==None) considered to have no rights.
+
+        """
         if membership is not None:
             return membership.can_ban()
         else:
@@ -270,6 +334,9 @@ class Blog(models.Model):
         """Checks if the user can join the blog
 
         Note that joining process should go through the special method.
+        Note also that this method returns `True` for bolgs with manual
+        approval required.
+
         Makes database queries: `check_membership` and karma calculation.
 
         """
@@ -315,27 +382,6 @@ class Blog(models.Model):
             if save:
                 membership.save()
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-
-        self.slug = uuslug(self.name,
-                           instance=self,
-                           max_length=100,
-                           start_no=2,
-                           word_boundary=True,
-                           save_order=True,
-                           separator='_')
-
-        super(Blog, self).save(force_insert, force_update, using, update_fields)
-
-    class Meta:
-        verbose_name = _("Blog")
-        verbose_name_plural = _("Blogs")
-        ordering = ("name",)
-
-    def __str__(self):
-        return str(self.name)
-
 
 class Membership(models.Model):
     """Members of blogs"""
@@ -373,6 +419,15 @@ class Membership(models.Model):
 
     can_ban_flag = models.BooleanField(
         default=False, verbose_name=_("Can ban a member"))
+
+    # Common methods
+    # --------------
+
+    class Meta:
+        unique_together = ('user', 'blog')
+
+    # Permissions control
+    # -------------------
 
     def can_be_banned(self):
         return self.role not in ['O', 'A']
@@ -431,6 +486,3 @@ class Membership(models.Model):
 
     def can_ban(self):
         return self._common_check(self.can_ban_flag)
-
-    class Meta:
-        unique_together = ('user', 'blog')

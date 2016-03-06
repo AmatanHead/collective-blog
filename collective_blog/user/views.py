@@ -27,9 +27,9 @@ def view_profile(request, username=None):
     if username is None:
         user = request.user
     else:
-        # TODO do we really need iexact here?
+        # TODO check iexact here
         user = get_object_or_404(User.objects.select_related('profile'),
-                                 username__iexact=username)
+                                 username=username)
 
     is_self_profile = username is None or user.pk == request.user.pk
 
@@ -72,8 +72,9 @@ def self_profile(request):
 
 
 def edit_profile(request, username=None):
+    # TODO check iexact here
     user = get_object_or_404(User.objects.select_related('profile'),
-                             username__iexact=username)
+                             username=username)
 
     if user.profile.can_be_edited_by(request.user):
         if request.POST:
@@ -117,8 +118,9 @@ def edit_profile(request, username=None):
 
 @csrf_protect
 def vote(request, username=None):
+    # TODO check iexact here
     user = get_object_or_404(User.objects.select_related('profile'),
-                             username__iexact=username)
+                             username=username)
 
     # noinspection PyBroadException
     try:
@@ -145,12 +147,25 @@ def vote(request, username=None):
 
 @csrf_protect
 def switch_active(request, username=None):
+    # TODO check iexact here
     user = get_object_or_404(User.objects.select_related('profile'),
-                             username__iexact=username)
+                             username=username)
 
     if user.profile.can_be_moderated_by(request.user):
         user.is_active = not user.is_active
         user.save()
+
+        if user.is_active:
+            messages.success(
+                request,
+                _("%(username)s's account activated")
+                % dict(username=user.username))
+        else:
+            messages.success(
+                request,
+                _("%(username)s's account deactivated")
+                % dict(username=user.username))
+
         return HttpResponseRedirect(
             reverse('view_profile', kwargs=dict(username=user.username)))
     else:

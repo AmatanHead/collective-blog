@@ -95,8 +95,9 @@ class Post(models.Model):
                            max_length=100,
                            start_no=2,
                            word_boundary=True,
-                           save_order=True,
-                           separator='_')
+                           save_order=True)
+
+        self.slug = self.slug.lower()
 
         super(Post, self).save(force_insert, force_update, using, update_fields)
 

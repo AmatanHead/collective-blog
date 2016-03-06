@@ -1,7 +1,8 @@
+from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
 from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect
 
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
@@ -52,6 +53,10 @@ def feed(request, page=1):
 
 
 def post(request, post_slug=None):
+    if post_slug != post_slug.lower():
+        return HttpResponsePermanentRedirect(
+            reverse('view_post', kwargs=dict(post_slug=post_slug.lower())))
+
     post = get_object_or_404(Post.objects.select_related('author', 'blog'),
                              slug=post_slug)
 
@@ -85,6 +90,10 @@ def post(request, post_slug=None):
 
 @csrf_protect
 def vote(request, post_slug=None):
+    if post_slug != post_slug.lower():
+        return HttpResponsePermanentRedirect(
+            reverse('view_post', kwargs=dict(post_slug=post_slug.lower())))
+
     post = get_object_or_404(Post.objects.select_related('author'),
                              slug=post_slug)
 
