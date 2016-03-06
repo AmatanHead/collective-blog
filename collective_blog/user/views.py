@@ -47,7 +47,7 @@ def view_profile(request, username=None):
     else:
         self_vote = Karma.objects.filter(object=user, user=request.user).first()
 
-    return render(request, 'profile/view_profile.html', {
+    return render(request, 'profile/profile.html', {
         'user': user,
         'self_profile': is_self_profile,
         'editable': user.profile.can_be_edited_by(request.user),

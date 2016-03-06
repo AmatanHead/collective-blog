@@ -1,1 +1,1 @@
-from .main_feed import feed, post, vote
+from .feed import feed, post, vote
