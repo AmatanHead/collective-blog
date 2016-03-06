@@ -46,12 +46,13 @@
 
     {% else %}
         <div class="primary container">
-            <h1>{% trans "Nothing to show" %}</h1>
+            <h1 class="title">{% trans "Nothing to show" %}</h1>
             <p>
                 {% blocktrans trimmed %}
                     Sorry, but we have no entries to show you.
                     Maybe you'd like to write one?
                 {% endblocktrans %}
+                <!-- TODO link to the post creation form -->
             </p>
         </div>
     {% endif %}

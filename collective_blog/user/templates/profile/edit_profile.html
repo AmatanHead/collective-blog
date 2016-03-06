@@ -4,13 +4,14 @@
 {% block title %}{% blocktrans trimmed with username=user|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 {% block extra_head %}
+    {{ block.super }}
     {{ user_form.media }}
     {{ form.media }}
 {% endblock %}
 
 {% block content %}
     <form class="primary container" method="post">
-        <h1>
+        <h1 class="title">
             {{ user|capfirst }}
             <small>{% if self_profile %}{% trans "edit your profile" %}{% else %}{% trans "edit user profile" %}{% endif %}</small>
         </h1>
@@ -19,7 +20,7 @@
         {{ form.as_section }}
         <section class="inline separate">
             <button type="submit" class="primary">{% trans "Save" %}</button>
-            <a class="plain button" href="{% url 'view_profile' username=user.username %}">{% trans "Cancel" %}</a>
+            <a class="secondary button" href="{% url 'view_profile' username=user.username %}">{% trans "Cancel" %}</a>
         </section>
     </form>
 {% endblock %}
