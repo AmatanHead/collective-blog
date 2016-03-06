@@ -122,10 +122,13 @@ def vote(request, username=None):
         return HttpResponse(_('Wrong vote'))
 
     if request.user.is_anonymous():
-        HttpResponse(_("You should be logged in"))
+        return HttpResponse(_("You should be logged in"))
 
     if not request.user.is_active:
-        HttpResponse(_("Your account is disabled"))
+        return HttpResponse(_("Your account is disabled"))
+
+    if user.pk == request.user.pk:
+        return HttpResponse(_("You can't vote for yourself"))
 
     if user.profile.can_be_voted_by(request.user):
         Karma.vote_for(request.user, user, v)
