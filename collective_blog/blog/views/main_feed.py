@@ -47,6 +47,7 @@ def feed(request, page=1):
         'interesting_tags': {},
     })
 
+
 def post(request, post_id=None):
     post = get_object_or_404(Post.objects.select_related('author', 'blog'),
                              pk=post_id)
@@ -67,10 +68,13 @@ def post(request, post_id=None):
             'self_vote': self_vote,
         })
     elif post.is_draft:
-        return render(request, 'blog/draft_message.html',
+        return render(request, 'blog/message_draft.html',
                       status=404)
     elif membership is None:
-        return render(request, 'blog/no_access_message.html',
+        return render(request, 'blog/message_no_access.html',
+                      status=403)
+    elif membership.is_banned():
+        return render(request, 'blog/message_banned.html',
                       status=403)
     else:
         raise Http404()
