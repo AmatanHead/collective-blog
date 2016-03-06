@@ -11,7 +11,7 @@
         <h1 class="title">{{ post.heading }}</h1>
         <p>
             {% trans "Author:" %}
-            <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username }}</a>,
+            <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username|capfirst }}</a>,
             {{ post.created }}
         </p>
         {% if post.blog %}
