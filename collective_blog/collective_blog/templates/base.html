@@ -13,10 +13,6 @@
     {% endblock %}
     {% block extra_style %}
     {% endblock %}
-    {% block scripts_top %}
-        <script src="{% static "d3.min.js" %}"></script>
-        <script src="{% static "cookie.js" %}"></script>
-    {% endblock %}
     {% block extra_head %}
     {% endblock %}
 </head>
@@ -24,69 +20,28 @@
     <div class="block">
         {% block nav %}
             <div class="primary container">
-                <h3><a href="/">{{ global_site_name }}</a></h3>
+                <h2><a href="/">{{ global_site_name }}</a></h2>
             </div>
         {% endblock %}
 
         {% block messages %}
-            <script>
-                function message_remove_button_animation(id) {
-                    d3.select('#msg-' + id)
-                            .transition()
-                            .style('opacity', 0)
-                            .remove();
-
-                    console.log(d3.selectAll('.message').size());
-
-                    if (d3.selectAll('.message').size() <= 1) {
-                        d3.select('#messages-container')
-                                .transition()
-                                .style('opacity', 0)
-                                .remove();
-                    }
-                }
-
-                function message_remove_button(id, url) {
-                    function callback(err) {
-                        if (!err) { message_remove_button_animation(id); }
-                    }
-
-                    d3.select('#msg-' + id + '-close-button').on('click', function () {
-                        d3.text(url)
-                                .header('X-Requested-With', 'XMLHttpRequest')
-                                .header('X-CSRFToken', Cookies.get('csrftoken'))
-                                .post(callback)
-                    });
-                }
-
-                function message_remove_button_norequest(id) {
-                    d3.select('#msg-' + id + '-close-button').on('click', function () {
-                        message_remove_button_animation(id);
-                    });
-                }
-            </script>
             {% if messages %}
                 <div class="primary container" id="messages-container">
                     {% for message in messages %}
                         <div>
                             <span class="message" id="msg-{{ message.pk }}">
-                            {% if "success" in message.tags %}
-                                <span class="{{ message.tags }} ok badge"><span class="check icon"></span> success</span>
-                            {% elif "error" in message.tags %}
-                                <span class="{{ message.tags }} err badge"><span class="warning icon"></span> error</span>
-                            {% elif "warning" in message.tags %}
-                                <span class="{{ message.tags }} warn badge"><span class="warning icon"></span> warning</span>
-                            {% elif "info" in message.tags %}
-                                <span class="{{ message.tags }} badge"><span class="info-with-circle icon"></span> info</span>
-                            {% endif %}
-                            &nbsp;
-                            {{ message }}
-                            <span class="dashed-border outline badge" id="msg-{{ message.pk }}-close-button"><span class="circle-with-cross center icon"></span></span>
-                            {% if "persistent" in message.tags or "sticky" in message.tags %}
-                                <script>message_remove_button('{{ message.pk }}', '{% url "message_mark_read" message.pk %}');</script>
-                            {% else %}
-                                <script>message_remove_button_norequest('{{ message.pk }}');</script>
-                            {% endif %}
+                                {% if "success" in message.tags %}
+                                    <span class="{{ message.tags }} ok badge"><span class="check icon"></span> success</span>
+                                {% elif "error" in message.tags %}
+                                    <span class="{{ message.tags }} err badge"><span class="warning icon"></span> error</span>
+                                {% elif "warning" in message.tags %}
+                                    <span class="{{ message.tags }} warn badge"><span class="warning icon"></span> warning</span>
+                                {% elif "info" in message.tags %}
+                                    <span class="{{ message.tags }} badge"><span class="info-with-circle icon"></span> info</span>
+                                {% endif %}
+                                &nbsp;
+                                {{ message }}
+                                <span class="dashed-border outline badge" id="msg-{{ message.pk }}-close-button"><span class="circle-with-cross center icon"></span></span>
                             </span>
                         </div>
                     {% endfor %}
@@ -103,8 +58,70 @@
     </div>
 
     {% block scripts %}
+        <script src="{% static "d3.min.js" %}"></script>
+        <script src="{% static "cookie.js" %}"></script>
     {% endblock %}
     {% block extra_scripts %}
+        <script>
+            /**
+             * Fade out the message with the given id.
+             * @param id
+             */
+            function message_remove_button_animation(id) {
+                d3.select('#msg-' + id)
+                        .transition()
+                        .style('opacity', 0)
+                        .remove();
+
+                console.log(d3.selectAll('.message').size());
+
+                if (d3.selectAll('.message').size() <= 1) {
+                    d3.select('#messages-container')
+                            .transition()
+                            .style('opacity', 0)
+                            .remove();
+                }
+            }
+
+            /**
+             * Bind the removal action to the button with the given id.
+             * On click, request the server to remove the message.
+             * Fade it out on success.
+             * @param id
+             * @param url
+             */
+            function message_remove_button(id, url) {
+                function callback(err) {
+                    if (!err) { message_remove_button_animation(id); }
+                }
+
+                d3.select('#msg-' + id + '-close-button').on('click', function () {
+                    d3.text(url)
+                            .header('X-Requested-With', 'XMLHttpRequest')
+                            .header('X-CSRFToken', Cookies.get('csrftoken'))
+                            .post(callback)
+                });
+            }
+
+            /**
+             * Bind the removal action to the button with the given id.
+             * On click, fade out the message. No server requests are made.
+             * @param id
+             */
+            function message_remove_button_norequest(id) {
+                d3.select('#msg-' + id + '-close-button').on('click', function () {
+                    message_remove_button_animation(id);
+                });
+            }
+        </script>
+
+        {% for message in messages %}
+                {% if "persistent" in message.tags or "sticky" in message.tags %}
+                    <script>message_remove_button('{{ message.pk }}', '{% url "message_mark_read" message.pk %}');</script>
+                {% else %}
+                    <script>message_remove_button_norequest('{{ message.pk }}');</script>
+                {% endif %}
+        {% endfor %}
     {% endblock %}
 
 </body>
