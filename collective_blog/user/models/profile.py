@@ -65,31 +65,8 @@ class Profile(models.Model):
 
     # To go: liked tags
 
-    def can_be_edited_by(self, user):
-        has_perms = user.is_active and user.is_staff and (
-            user.has_perm('user.change_profile') or
-            user.has_perm('auth.change_user'))
-
-        return user.is_active and (user.pk == self.user.pk or has_perms)
-
-    def email_can_be_seen_by(self, user):
-        has_perms = user.is_active and user.is_staff and (
-            user.has_perm('user.change_profile') or
-            user.has_perm('auth.change_user'))
-
-        return self.email_is_public or user.pk == self.user.pk or has_perms
-
-    def email_as_seen_by(self, user):
-        if not self.user.email:
-            return ''
-        if self.email_can_be_seen_by(user) and not self.email_is_public:
-            return self.user.email + ' (' + __('Only you can see the email') + ')'
-        elif self.email_is_public:
-            return self.user.email
-        return ''
-
-    def can_be_voted_by(self, user):
-        return user.is_active and user.pk != self.user.pk
+    # Common methods
+    # --------------
 
     def delete(self, using=None, keep_parents=False):
         self.user.delete()
@@ -102,3 +79,50 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+    # Permissions control
+    # -------------------
+
+    @staticmethod
+    def can_be_moderated_by(user):
+        """Check if the user is a moderator with profile editing rights"""
+        return user.is_active and user.is_staff and (
+            user.has_perm('user.change_profile') or
+            user.has_perm('auth.change_user'))
+
+    def can_be_edited_by(self, user):
+        """Check if this profile can be edited by the user
+
+        Only moderators and the owner of the profile can edit it.
+
+        """
+        return user.is_active and (user.pk == self.user.pk or
+                                   self.can_be_moderated_by(user))
+
+    def email_can_be_seen_by(self, user):
+        """Check if the email field can be seen by the user
+
+        Only moderators and the owner of the profile
+        can see the email if it is private.
+
+        """
+        return (self.email_is_public or user.pk == self.user.pk or
+                self.can_be_moderated_by(user))
+
+    def email_as_seen_by(self, user):
+        """Returns the email with a little annotation for private emails
+
+        E.g. `a.b@c.d (Only you can see the email)`.
+
+        """
+        if not self.user.email:
+            return ''
+        if self.email_can_be_seen_by(user) and not self.email_is_public:
+            return self.user.email + ' (' + __('Only you can see the email') + ')'
+        elif self.email_is_public:
+            return self.user.email
+        return ''
+
+    def can_be_voted_by(self, user):
+        """Check if this profile can bo voted by the user passed"""
+        return user.is_active and user.pk != self.user.pk and self.user.is_active

@@ -403,7 +403,7 @@ class Membership(models.Model):
         return self.role != 'B' and self.ban_expiration < datetime.now()
 
     def _common_check(self, flag):
-        """Check that the user can perform an action
+        """Check that the member can perform an action
 
         Here to reduce code duplication.
 

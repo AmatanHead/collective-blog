@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% blocktrans trimmed with username=user|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans trimmed with username=user_display.username|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 
 {% block content %}
     <div class="primary container">
         <h1 class="title">
-            {{ user|capfirst }}
-            <small>{% if self_profile %}{% trans "edit your profile" %}{% else %}{% trans "edit user profile" %}{% endif %}</small>
+            {{ user_display|capfirst }}
+            <small>{% trans "edit profile" %}</small>
         </h1>
 
         <p>

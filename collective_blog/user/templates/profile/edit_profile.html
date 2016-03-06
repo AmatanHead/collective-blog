@@ -1,26 +1,36 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% blocktrans trimmed with username=user|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans trimmed with username=user_display|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 {% block extra_head %}
     {{ block.super }}
-    {{ user_form.media }}
+    {{ form_user.media }}
     {{ form.media }}
 {% endblock %}
 
 {% block content %}
     <form class="primary container" method="post">
         <h1 class="title">
-            {{ user|capfirst }}
-            <small>{% if self_profile %}{% trans "edit your profile" %}{% else %}{% trans "edit user profile" %}{% endif %}</small>
+            {{ user_display|capfirst }}
+            <small>{% trans "edit profile" %}</small>
         </h1>
+        {% if not is_self_profile %}
+            <hr>
+            <section class="errorlist">
+                {% blocktrans trimmed %}
+                    Warning: you are about to change other's user profile.
+                    You have permission to do so, but don't mess it up!
+                {% endblocktrans %}
+            </section>
+            <hr>
+        {% endif %}
         {% csrf_token %}
-        {{ user_form.as_section }}
+        {{ form_user.as_section }}
         {{ form.as_section }}
         <section class="inline separate">
             <button type="submit" class="primary">{% trans "Save" %}</button>
-            <a class="secondary button" href="{% url 'view_profile' username=user.username %}">{% trans "Cancel" %}</a>
+            <a class="secondary button" href="{% url 'view_profile' username=user_display.username %}">{% trans "Cancel" %}</a>
         </section>
     </form>
 {% endblock %}

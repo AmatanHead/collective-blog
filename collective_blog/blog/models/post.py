@@ -77,6 +77,7 @@ class Post(models.Model):
                              blank=True)
 
     def clean(self):
+        """Check that published articles have blog set"""
         super(Post, self).clean()
         if not self.is_draft and not self.blog:
             raise ValidationError(_('You must choose a blog '
@@ -84,6 +85,7 @@ class Post(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
+        """Pre-save routine like updating the slug field etc."""
 
         if not self.pk:
             self.created = datetime.now()
@@ -103,6 +105,7 @@ class Post(models.Model):
                              r' -->')
 
     def content_before_cut(self):
+        """Returns html before cut"""
         m = self.cut_pattern.search(self.content.html_force)
 
         if m is None:
@@ -111,6 +114,13 @@ class Post(models.Model):
             return self.content.html_force[:m.start()]
 
     def cut_caption(self):
+        """Returns cut caption, if specified, or the default one.
+
+        From `---- cut {{ Let's rock! }} ----` will return `Let's rock!`.
+
+        We trust that markdown engine sanitizes its content.
+
+        """
         m = self.cut_pattern.search(self.content.html_force)
 
         if m is None or 'caption' not in m.groupdict():
@@ -119,14 +129,24 @@ class Post(models.Model):
             return m.groupdict()['caption']
 
     def can_be_seen_by_user(self, user, membership):
-        return (user.pk == self.author.pk or
-                self.blog.type == 'O' or
-                (membership and not self.blog.is_banned(membership)))
+        """Check if this post can be seen by the user passed"""
+        if (user.is_active and user.is_staff and
+                user.has_perm('blog.change_post')):
+            return True
+        elif user.pk == self.author.pk:
+            return True
+        elif self.is_draft:
+            return False
+        else:
+            return (self.blog.type == 'O' or
+                    (membership and not self.blog.is_banned(membership)))
 
     def can_be_voted_by(self, user, membership):
+        """Check if this post can be voted by the user passed"""
         if user.pk == self.author.pk:
             return False
-        return user.is_active and not user.is_anonymous() and self.can_be_seen_by_user(user, membership)
+        return (user.is_active and not user.is_anonymous() and
+                self.can_be_seen_by_user(user, membership))
 
     class Meta:
         verbose_name = _("Post")

@@ -48,15 +48,21 @@ def view_profile(request, username=None):
         self_vote = Karma.objects.filter(object=user, user=request.user).first()
 
     return render(request, 'profile/profile.html', {
-        'user': user,
-        'self_profile': is_self_profile,
+        'user_display': user,
+
+        # Access
+        'is_self_profile': is_self_profile,
         'editable': user.profile.can_be_edited_by(request.user),
-        'show_email': user.profile.email_can_be_seen_by(request.user),
+        'is_moderator': user.profile.can_be_moderated_by(request.user),
+
+        # Private data
         'visible_email': user.profile.email_as_seen_by(request.user),
+
+        # Karma buttons
         'karma': karma,
-        'self_vote': self_vote,
+        'karma_vote': self_vote,
         'karma_color': color,
-        'color_threshold': [-10, 10],
+        'karma_color_threshold': [-10, 10],
     })
 
 
@@ -70,7 +76,6 @@ def edit_profile(request, username=None):
                              username__iexact=username)
 
     if user.profile.can_be_edited_by(request.user):
-
         if request.POST:
             form = ProfileForm(request.POST, instance=user.profile)
             user_form = UserForm(request.POST, instance=user)
@@ -97,15 +102,16 @@ def edit_profile(request, username=None):
             user_form = UserForm(instance=user)
 
         return render(request, 'profile/edit_profile.html', {
-            'user': user,
+            'user_display': user,
             'form': form,
-            'user_form': user_form,
-            'self_profile': username is None or user.pk == request.user.pk,
+            'form_user': user_form,
+            'is_self_profile': username is None or user.pk == request.user.pk,
+            'is_moderator': user.profile.can_be_moderated_by(request.user),
         })
 
     else:
         return render(request, 'profile/edit_profile_fail.html', {
-            'user': user
+            'user_display': user
         }, status=403)
 
 
@@ -135,3 +141,19 @@ def vote(request, username=None):
         return HttpResponse(str(Karma.objects.filter(object=user).score()['score']))
     else:
         return HttpResponse(_("You can't vote for this user"))
+
+
+@csrf_protect
+def switch_active(request, username=None):
+    user = get_object_or_404(User.objects.select_related('profile'),
+                             username__iexact=username)
+
+    if user.profile.can_be_moderated_by(request.user):
+        user.is_active = not user.is_active
+        user.save()
+        return HttpResponseRedirect(
+            reverse('view_profile', kwargs=dict(username=user.username)))
+    else:
+        return render(request, 'profile/edit_profile_fail.html', {
+            'user_display': user
+        }, status=403)

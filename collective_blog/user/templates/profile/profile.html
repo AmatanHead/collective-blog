@@ -3,56 +3,63 @@
 {% load i18n %}
 {% load vote %}
 
-{% block title %}{% blocktrans trimmed with username=user|capfirst %}{{ username }}'s profile{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans trimmed with username=user_display|capfirst %}{{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 {% block content %}
     <div class="primary container">
         <h1 class="title">
-            {{ user|capfirst }}
-            <small>{% if self_profile %}{% trans "your profile" %}{% else %}{% trans "user profile" %}{% endif %}</small>
+            {{ user_display|capfirst }}
+            {% if not user_display.is_active %}
+                {# Translators: here, disabled == unable to login, deleted #}
+                <small>{% trans "disabled" %}</small>
+            {% endif %}
         </h1>
 
         <span style="font-size: 1.1em">
-            {% url "vote_user" username=user.username as karma_url %}
-            {% trans "Karma" as name %}
-            {% vote name=name prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=self_vote.vote bad_color_threshold=-10 good_color_threshold=10 %}
+            {% url "vote_user" username=user_display.username as karma_url %}
+            {% trans "Karma" as karma_caprion %}
+            {% vote name=karma_caprion prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=-10 good_color_threshold=10 %}
         </span>
 
-        {% if user.first_name or user.last_name %}
-            <p>{{ user.first_name }} {{ user.last_name }}</p>
+        {% if user_display.first_name or user_display.last_name %}
+            <p>{{ user_display.first_name }} {{ user_display.last_name }}</p>
         {% endif %}
 
-        {% if show_email and visible_email %}
+        {% if visible_email %}
             <p>{{ visible_email }}</p>
         {% endif %}
 
-        {% if user.profile.location %}
-            <p>{% blocktrans trimmed with location=user.profile.location %}From {{ location }}{% endblocktrans %}</p>
+        {% if user_display.profile.location %}
+            <p>{% blocktrans trimmed with location=user_display.profile.location %}From {{ location }}{% endblocktrans %}</p>
         {% endif %}
 
-        {% if user.profile.birthday %}
-            <p>{% blocktrans trimmed with birthday=user.profile.birthday %}Birthday at {{ birthday }}{% endblocktrans %}</p>
+        {% if user_display.profile.birthday %}
+            <p>{% blocktrans trimmed with birthday=user_display.profile.birthday %}Birthday at {{ birthday }}{% endblocktrans %}</p>
         {% endif %}
 
-        {% if user.profile.about.html_force %}
-            {% if user.first_name or user.last_name or user.profile.location or user.profile.birthday %}
+        {% if user_display.profile.about.html_force %}
+            {% if user_display.first_name or user_display.last_name or user_display.profile.location or user_display.profile.birthday %}
                 <hr>
             {% endif %}
-            {{ user.profile.about.html_force|safe }}
-            {% if editable or self_profile %}
+            {{ user_display.profile.about.html_force|safe }}
+            {% if editable %}
                 <hr>
             {% endif %}
         {% endif %}
 
-        {% if editable or self_profile %}
+        {% if editable %}
             <p>
-                {% if editable %}
-                    <a href="{% url 'edit_profile' username=user.username %}">{% trans "Edit profile" %}</a>
-                {% endif %}
-                {% if editable and self_profile %}
+                <a href="{% url 'edit_profile' username=user_display.username %}">{% trans "Edit profile" %}</a>
+                {% if is_moderator %}
                     &bull;
+                    {% if user_display.is_active %}
+                        <a href="{% url 'switch_active' username=user_display.username %}">{% trans "Disable account" %}</a>
+                    {% else %}
+                        <a href="{% url 'switch_active' username=user_display.username %}">{% trans "Enable account" %}</a>
+                    {% endif %}
                 {% endif %}
-                {% if self_profile %}
+                {% if is_self_profile %}
+                    &bull;
                     <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>
                 {% endif %}
             </p>
@@ -75,8 +82,8 @@
 {% block extra_scripts %}
     {{ block.super }}
     <script>
-        {% url "vote_user" username=user.username as karma_url %}
-        {% trans "Karma" as name %}
-        {% vote_script name=name prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=self_vote.vote bad_color_threshold=color_threshold.0 good_color_threshold=color_threshold.1 %}
+        {% url "vote_user" username=user_display.username as karma_url %}
+        {% trans "Karma" as karma_caprion %}
+        {% vote_script name=karma_caprion prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=karma_color_threshold.0 good_color_threshold=karma_color_threshold.1 %}
     </script>
 {% endblock %}
