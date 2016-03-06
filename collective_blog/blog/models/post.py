@@ -21,6 +21,8 @@ from dj_markdown.extensions import (FencedCodeExtension,
                                     AutolinkExtension,
                                     CutExtension)
 
+from uuslug import uuslug
+
 from voting.models import AbstractVote
 
 import re
@@ -33,6 +35,12 @@ class Post(models.Model):
 
     heading = models.CharField(max_length=100,
                                verbose_name=_('Caption'))
+
+    slug = models.SlugField(max_length=100,
+                            db_index=True,
+                            unique=True,
+                            blank=True,
+                            editable=False)
 
     is_draft = models.BooleanField(default=True,
                                    verbose_name=_('Is draft'))
@@ -59,26 +67,6 @@ class Post(models.Model):
 
     created = models.DateTimeField(blank=True, editable=False)
 
-    cut_pattern = re.compile(r'<!-- cut here '
-                             r'(\{\{(?P<caption>[^\}]+)\}\})?'
-                             r' -->')
-
-    def content_before_cut(self):
-        m = self.cut_pattern.search(self.content.html_force)
-
-        if m is None:
-            return self.content.html_force
-        else:
-            return self.content.html_force[:m.start()]
-
-    def cut_caption(self):
-        m = self.cut_pattern.search(self.content.html_force)
-
-        if m is None or 'caption' not in m.groupdict():
-            return _('Read more ->')
-        else:
-            return m.groupdict()['caption']
-
     updated = models.DateTimeField(blank=True, editable=False, auto_now=True)
 
     _content_html = HtmlCacheField(content)
@@ -99,7 +87,36 @@ class Post(models.Model):
 
         if not self.pk:
             self.created = datetime.now()
+
+        self.slug = uuslug(self.heading,
+                           instance=self,
+                           max_length=100,
+                           start_no=2,
+                           word_boundary=True,
+                           save_order=True,
+                           separator='_')
+
         super(Post, self).save(force_insert, force_update, using, update_fields)
+
+    cut_pattern = re.compile(r'<!-- cut here '
+                             r'(\{\{(?P<caption>[^\}]+)\}\})?'
+                             r' -->')
+
+    def content_before_cut(self):
+        m = self.cut_pattern.search(self.content.html_force)
+
+        if m is None:
+            return self.content.html_force
+        else:
+            return self.content.html_force[:m.start()]
+
+    def cut_caption(self):
+        m = self.cut_pattern.search(self.content.html_force)
+
+        if m is None or 'caption' not in m.groupdict():
+            return _('Read more ->')
+        else:
+            return m.groupdict()['caption']
 
     def can_be_seen_by_user(self, user, membership):
         return (user.pk == self.author.pk or

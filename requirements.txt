@@ -6,3 +6,4 @@ django-fake-model==0.1.4
 Pygments==2.1.2
 Markdown==2.6.5
 django-messages-extends==0.5
+django-uuslug==1.1.7

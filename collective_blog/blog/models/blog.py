@@ -18,6 +18,8 @@ from dj_markdown.extensions import (FencedCodeExtension,
                                     AutolinkExtension,
                                     CommentExtension)
 
+from uuslug import uuslug
+
 
 class CantJoinException(Exception):
     pass
@@ -27,9 +29,12 @@ class Blog(models.Model):
     name = models.CharField(max_length=100,
                             verbose_name=_('Name'),
                             unique=True)
+
     slug = models.SlugField(max_length=100,
-                            verbose_name=_("Blog's url"),
-                            unique=True)
+                            db_index=True,
+                            unique=True,
+                            blank=True,
+                            editable=False)
 
     about = MarkdownField(blank=True,
                           markdown=Markdown,
@@ -309,6 +314,19 @@ class Blog(models.Model):
             membership.role = new_role
             if save:
                 membership.save()
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+
+        self.slug = uuslug(self.name,
+                           instance=self,
+                           max_length=100,
+                           start_no=2,
+                           word_boundary=True,
+                           save_order=True,
+                           separator='_')
+
+        super(Blog, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         verbose_name = _("Blog")
