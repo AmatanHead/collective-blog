@@ -36,7 +36,7 @@
     {{ post.content_before_cut|safe }}
 
     <p class="inline">
-        <a class="info outline badge" href="{% url "view_post" post_id=post.pk %}">{% trans "Read more ->" %}</a>
+        <a class="info outline badge" href="{% url "view_post" post_id=post.pk %}#cut">{{ post.cut_caption|safe }}</a>
     </p>
 
     <hr>

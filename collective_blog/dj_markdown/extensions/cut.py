@@ -7,15 +7,19 @@ from markdown.preprocessors import Preprocessor
 import re
 
 from django.utils.deconstruct import deconstructible
+from django.utils.html import escape
 
 
 @deconstructible
 class CutExtension(Extension):
-    """Adds habracut
+    def __init__(self, *args, **kwargs):
+        """Adds habracut
 
-    E.g. `----cut----`
+        E.g. `----cut----`
 
-    """
+        """
+        self.anchor = kwargs.pop('anchor', '')
+        super(CutExtension, self).__init__(*args, **kwargs)
 
     def extendMarkdown(self, md, md_globals):
         """Add FencedBlockPreprocessor to the Markdown instance
@@ -28,19 +32,25 @@ class CutExtension(Extension):
 
         if 'fenced_code_block' in md.preprocessors:
             md.preprocessors.add('cut',
-                                 CutPreprocessor(md),
+                                 CutPreprocessor(md, anchor=self.anchor),
                                  ">fenced_code_block")
         else:
             md.preprocessors.add('cut',
-                                 CutPreprocessor(md),
+                                 CutPreprocessor(md, anchor=self.anchor),
                                  ">normalize_whitespace")
 
 
 class CutPreprocessor(Preprocessor):
-    """Main fenced code block renderer"""
+    def __init__(self, *args, **kwargs):
+        """Main fenced code block renderer"""
+        self.anchor = kwargs.pop('anchor', '')
+        super(CutPreprocessor, self).__init__(*args, **kwargs)
 
     block_re = re.compile(
-        r'-{4,}[ ]*cut[ ]*(here)?[ ]*-{4,}', re.MULTILINE | re.DOTALL | re.VERBOSE | re.IGNORECASE)
+        r'-{4,}[ ]*'
+        r'cut[ ]*(here)?[ ]*'
+        r'(\{\{(?P<caption>[^\}]+)\}\})?'
+        r'[ ]*-{4,}', re.MULTILINE | re.DOTALL | re.VERBOSE | re.IGNORECASE)
 
     def run(self, lines):
         """Match cut tags and store them in the htmlStash
@@ -54,7 +64,15 @@ class CutPreprocessor(Preprocessor):
         m = self.block_re.search(text)
 
         if m is not None:
-            placeholder = self.markdown.htmlStash.store('<!-- cut here -->',
+            if 'caption' in m.groupdict():
+                html = '<!-- cut here {{ %s }} -->' % escape(m.groupdict()['caption'])
+            else:
+                html = '<!-- cut here -->'
+
+            if self.anchor:
+                html += '<a name="%s"></a>' % escape(self.anchor)
+
+            placeholder = self.markdown.htmlStash.store(html,
                                                         safe=True)
 
             text = '%s\n%s\n%s' % (text[:m.start()],

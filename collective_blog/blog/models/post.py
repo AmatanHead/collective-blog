@@ -23,6 +23,8 @@ from dj_markdown.extensions import (FencedCodeExtension,
 
 from voting.models import AbstractVote
 
+import re
+
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -50,24 +52,32 @@ class Post(models.Model):
                                     StrikethroughExtension(),
                                     AutolinkExtension(),
                                     AutomailExtension(),
-                                    CutExtension(),
+                                    CutExtension(anchor='cut'),
                                 ]
                             ),
                             verbose_name=_('Content'))
 
     created = models.DateTimeField(blank=True, editable=False)
 
-    cut_pattern = '<!-- cut here -->'
+    cut_pattern = re.compile(r'<!-- cut here '
+                             r'(\{\{(?P<caption>[^\}]+)\}\})?'
+                             r' -->')
 
     def content_before_cut(self):
-        idx = self.content.html_force.find(self.cut_pattern)
+        m = self.cut_pattern.search(self.content.html_force)
 
-        print(idx)
-
-        if idx == -1:
+        if m is None:
             return self.content.html_force
         else:
-            return self.content.html_force[:idx]
+            return self.content.html_force[:m.start()]
+
+    def cut_caption(self):
+        m = self.cut_pattern.search(self.content.html_force)
+
+        if m is None or 'caption' not in m.groupdict():
+            return _('Read more ->')
+        else:
+            return m.groupdict()['caption']
 
     updated = models.DateTimeField(blank=True, editable=False, auto_now=True)
 
