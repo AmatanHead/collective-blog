@@ -215,6 +215,8 @@ class Blog(models.Model):
                                      editable=False)
 
     def check_membership(self, user):
+        if user.is_anonymous():
+            return None
         return Membership.objects.filter(blog=self, user=user).first()
 
     def is_banned(self, membership):
