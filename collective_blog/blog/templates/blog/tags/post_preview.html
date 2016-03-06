@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% if post.rating <= -20 %}
-    <h1 class="title"><a href="{% url "view_post" post_id=post.pk %}">{{ post.heading }}</a></h1>
+    <h1 class="title"><a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a></h1>
     <p>
         {% trans "Author:" %}
         <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username|capfirst }}</a>,
@@ -16,7 +16,7 @@
 
 {% else %}
 
-    <h1 class="title"><a href="{% url "view_post" post_id=post.pk %}">{{ post.heading }}</a></h1>
+    <h1 class="title"><a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a></h1>
     <p>
         {% trans "Author:" %}
         <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username|capfirst }}</a>,
@@ -36,7 +36,7 @@
     {{ post.content_before_cut|safe }}
 
     <p class="inline">
-        <a class="info outline badge" href="{% url "view_post" post_id=post.pk %}#cut">{{ post.cut_caption|safe }}</a>
+        <a class="info outline badge" href="{% url "view_post" post_slug=post.slug %}#cut">{{ post.cut_caption|safe }}</a>
     </p>
 
     <hr>

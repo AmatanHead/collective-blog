@@ -51,9 +51,9 @@ def feed(request, page=1):
     })
 
 
-def post(request, post_id=None):
+def post(request, post_slug=None):
     post = get_object_or_404(Post.objects.select_related('author', 'blog'),
-                             pk=post_id)
+                             slug=post_slug)
 
     membership = post.blog.check_membership(request.user)
 
@@ -84,8 +84,9 @@ def post(request, post_id=None):
 
 
 @csrf_protect
-def vote(request, post_id=None):
-    post = get_object_or_404(Post.objects.select_related('author'), pk=post_id)
+def vote(request, post_slug=None):
+    post = get_object_or_404(Post.objects.select_related('author'),
+                             slug=post_slug)
 
     # noinspection PyBroadException
     try:
