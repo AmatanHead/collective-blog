@@ -3,8 +3,8 @@ from django.forms import ModelForm, ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from ..models import Profile
-from dj_markdown.widgets import CodeMirror
-from appearance.forms import BaseFormRenderer
+from s_markdown.widgets import CodeMirror
+from s_appearance.forms import BaseFormRenderer
 
 
 User = get_user_model()
@@ -62,7 +62,7 @@ class ProfileForm(ModelForm, BaseFormRenderer):
                 mode='gfm',
                 addons=['mode/overlay'],
                 theme='light',
-                theme_path='dj_markdown/light.css',
+                theme_path='s_markdown/light.css',
                 options={
                     'lineNumbers': True,
                     'matchBrackets': True,

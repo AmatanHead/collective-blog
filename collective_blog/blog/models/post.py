@@ -10,20 +10,20 @@ from collective_blog import settings
 
 from .blog import Blog
 
-from dj_markdown.models import MarkdownField, HtmlCacheField
-from dj_markdown.datatype import Markdown
-from dj_markdown.renderer import BaseRenderer
-from dj_markdown.extensions import (FencedCodeExtension,
-                                    EscapeHtmlExtension,
-                                    SemiSaneListExtension,
-                                    StrikethroughExtension,
-                                    AutomailExtension,
-                                    AutolinkExtension,
-                                    CutExtension)
+from s_markdown.models import MarkdownField, HtmlCacheField
+from s_markdown.datatype import Markdown
+from s_markdown.renderer import BaseRenderer
+from s_markdown.extensions import (FencedCodeExtension,
+                                   EscapeHtmlExtension,
+                                   SemiSaneListExtension,
+                                   StrikethroughExtension,
+                                   AutomailExtension,
+                                   AutolinkExtension,
+                                   CutExtension)
 
 from uuslug import uuslug
 
-from voting.models import AbstractVote
+from s_voting.models import AbstractVote
 
 import re
 

@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class AppearanceConfig(AppConfig):
-    name = 'appearance'
-    label = 'appearance'
+    name = 's_appearance'
+    label = 's_appearance'

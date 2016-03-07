@@ -7,16 +7,16 @@ from collective_blog import settings
 
 from user.models import Karma
 
-from dj_markdown.models import MarkdownField, HtmlCacheField
-from dj_markdown.datatype import Markdown
-from dj_markdown.renderer import BaseRenderer
-from dj_markdown.extensions import (FencedCodeExtension,
-                                    EscapeHtmlExtension,
-                                    SemiSaneListExtension,
-                                    StrikethroughExtension,
-                                    AutomailExtension,
-                                    AutolinkExtension,
-                                    CommentExtension)
+from s_markdown.models import MarkdownField, HtmlCacheField
+from s_markdown.datatype import Markdown
+from s_markdown.renderer import BaseRenderer
+from s_markdown.extensions import (FencedCodeExtension,
+                                   EscapeHtmlExtension,
+                                   SemiSaneListExtension,
+                                   StrikethroughExtension,
+                                   AutomailExtension,
+                                   AutolinkExtension,
+                                   CommentExtension)
 
 from uuslug import uuslug
 

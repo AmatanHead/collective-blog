@@ -25,9 +25,9 @@ if SECRET_KEY == 'TEST_SECRET_KEY':
 INSTALLED_APPS = [
     'collective_blog',
     'user',
-    'appearance',
-    'dj_markdown',
-    'voting',
+    's_appearance',
+    's_markdown',
+    's_voting',
     'blog',
 
     'registration',

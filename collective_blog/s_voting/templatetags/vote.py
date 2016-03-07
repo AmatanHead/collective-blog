@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag('voting/tags/vote.html')
+@register.inclusion_tag('s_voting/tags/vote.html')
 def vote(name, prefix, url, pressed_class='outline',
          current_score=0,
          current_color='',
@@ -26,7 +26,7 @@ def vote(name, prefix, url, pressed_class='outline',
     }
 
 
-@register.inclusion_tag('voting/tags/vote_script.html')
+@register.inclusion_tag('s_voting/tags/vote_script.html')
 def vote_script(name, prefix, url, pressed_class='outline',
                 current_score=0,
                 current_color='',
@@ -36,7 +36,7 @@ def vote_script(name, prefix, url, pressed_class='outline',
                 good_color_threshold=10):
     """Make ajax script for voting
 
-    Note that `voting/ajax_voting.js` should be loaded manually.
+    Note that `s_voting/ajax_voting.js` should be loaded manually.
 
     Usage:
 

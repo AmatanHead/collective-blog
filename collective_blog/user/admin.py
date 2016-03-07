@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Profile
 
-from dj_markdown.admin import MarkdownAdmin
+from s_markdown.admin import MarkdownAdmin
 
 
 @admin.register(Profile)

@@ -11,7 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm as _AuthenticationForm
 from django.contrib.auth.forms import PasswordResetForm as _PasswordResetForm
 from django.contrib.auth.forms import PasswordChangeForm as _PasswordChangeForm
 
-from appearance.forms import BaseFormRenderer
+from s_appearance.forms import BaseFormRenderer
 from collective_blog.settings import DEBUG
 
 

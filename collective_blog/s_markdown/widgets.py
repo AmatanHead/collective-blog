@@ -23,7 +23,7 @@ class CodeMirror(MarkdownTextarea):
           to the addon, without `.js` extension. Example: `mode/overlay`)
         :param theme: Theme name.
         :param theme_path: Path to the theme file.
-          Default is `dj_markdown/codemirror/theme/<theme>.css`
+          Default is `s_markdown/codemirror/theme/<theme>.css`
         :param keymap: A keymap name.
         :param options: A dict of options that will be passed
           to the codemirror editor.
@@ -35,7 +35,7 @@ class CodeMirror(MarkdownTextarea):
         self.mode = kwargs.pop('mode', 'markdown')
         self.addons = kwargs.pop('addons', [])
         self.theme = kwargs.pop('theme', 'default')
-        self.theme_path = kwargs.pop('theme_path', 'dj_markdown/codemirror/theme/%s.css' % self.theme)
+        self.theme_path = kwargs.pop('theme_path', 's_markdown/codemirror/theme/%s.css' % self.theme)
         self.keymap = kwargs.pop('keymap', None)
         self.options = kwargs.pop('options', {})
         self.additional_modes = kwargs.pop('additional_modes', [])
@@ -53,17 +53,17 @@ class CodeMirror(MarkdownTextarea):
 
         :return: `forms.Media` instance.
         """
-        css = ['dj_markdown/codemirror/lib/codemirror.css']
+        css = ['s_markdown/codemirror/lib/codemirror.css']
         if self.theme:
             css.append(self.theme_path)
-        js = ['dj_markdown/codemirror/lib/codemirror.js']
-        js.extend('dj_markdown/codemirror/addon/%s.js' % a for a in self.addons)
+        js = ['s_markdown/codemirror/lib/codemirror.js']
+        js.extend('s_markdown/codemirror/addon/%s.js' % a for a in self.addons)
         if self.keymap:
-            js.append('dj_markdown/codemirror/keymap/%s.js' % self.keymap)
+            js.append('s_markdown/codemirror/keymap/%s.js' % self.keymap)
         if self.mode:
-            js.append('dj_markdown/codemirror/mode/%s/%s.js' % (self.mode, self.mode))
+            js.append('s_markdown/codemirror/mode/%s/%s.js' % (self.mode, self.mode))
         for mode in self.additional_modes:
-            js.append('dj_markdown/codemirror/mode/%s/%s.js' % (mode, mode))
+            js.append('s_markdown/codemirror/mode/%s/%s.js' % (mode, mode))
         return forms.Media(
             css=dict(all=css),
             js=js,

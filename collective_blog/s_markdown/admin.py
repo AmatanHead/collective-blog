@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from dj_markdown.models import MarkdownField
-from dj_markdown.widgets import CodeMirror
+from s_markdown.models import MarkdownField
+from s_markdown.widgets import CodeMirror
 
 
 class MarkdownAdmin(admin.ModelAdmin):
@@ -11,7 +11,7 @@ class MarkdownAdmin(admin.ModelAdmin):
                 mode='gfm',
                 addons=['mode/overlay'],
                 theme='light',
-                theme_path='dj_markdown/light.css',
+                theme_path='s_markdown/light.css',
                 options={
                     'lineNumbers': True,
                     'matchBrackets': True,

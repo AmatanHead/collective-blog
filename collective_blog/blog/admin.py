@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Blog, Post
 
 
-from dj_markdown.admin import MarkdownAdmin
+from s_markdown.admin import MarkdownAdmin
 
 
 @admin.register(Blog)

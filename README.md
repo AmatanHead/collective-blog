@@ -81,7 +81,8 @@ And **no** WYSIWYG! ('cause it's evil!)
 
 * `collective_blog` — django project
   * `collective_blog` — root app; Holds config, root url dispatcher, common css, scripts, and templates.
+  * `blog` — blogs and posts and main feed; core functionality.
   * `user` — auth and user profile stuff, everything behind `/u/`; Holds auth logic and user profiles.
-  * `appearance` — styles and form renderer.
-  * `dj_markdown` — standalone reusable app for markdown support.
-  * `voting` — models for voting support.
+  * `s_appearance` — styles and form renderer.
+  * `s_markdown` — standalone reusable app for markdown support.
+  * `s_voting` — models for voting support.

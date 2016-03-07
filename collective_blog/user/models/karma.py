@@ -1,7 +1,7 @@
 from django.db import models
 
 from collective_blog import settings
-from voting.models import AbstractVote
+from s_voting.models import AbstractVote
 
 
 class Karma(AbstractVote):
