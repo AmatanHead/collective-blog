@@ -60,7 +60,9 @@
                                 &nbsp;
                                 {{ message }}
                                 &nbsp;
-                                <span class="dashed-border outline badge" id="msg-{{ message.pk }}-close-button"><span class="circle-with-cross center icon"></span></span>
+                                {% if message.pk %}
+                                    <span class="dashed-border outline badge" id="msg-{{ message.pk }}-close-button"><span class="circle-with-cross center icon"></span></span>
+                                {% endif %}
                             </span>
                         </div>
                     {% endfor %}

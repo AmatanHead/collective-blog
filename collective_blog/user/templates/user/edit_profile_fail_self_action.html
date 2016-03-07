@@ -13,8 +13,15 @@
 
         <p>
             {% blocktrans trimmed %}
-                Sorry, you have no permission to edit this profile.
+                You can't use this action on yourself.
             {% endblocktrans %}
+        </p>
+        <p>
+            <a href="{% url 'view_profile' username=user_display.username %}">
+                {% blocktrans trimmed with username=user_display.username %}
+                    Back to the {{ username }}'s profile.
+                {% endblocktrans %}
+            </a>
         </p>
 
     </div>

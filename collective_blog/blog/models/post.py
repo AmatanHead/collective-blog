@@ -119,7 +119,7 @@ class Post(models.Model):
 
         From `---- cut {{ Let's rock! }} ----` will return `Let's rock!`.
 
-        We trust that markdown engine sanitizes its content.
+        Trust that markdown engine sanitizes its content.
 
         """
         m = self.cut_pattern.search(self.content.html_force)

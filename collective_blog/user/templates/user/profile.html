@@ -18,7 +18,7 @@
         <span style="font-size: 1.1em">
             {% url "vote_user" username=user_display.username as karma_url %}
             {% trans "Karma" as karma_caprion %}
-            {% vote name=karma_caprion prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=-10 good_color_threshold=10 %}
+            {% vote name=karma_caprion prefix="karma" url=karma_url current_score=karma current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=karma_color_threshold.0 good_color_threshold=karma_color_threshold.1 %}
         </span>
 
         {% if user_display.first_name or user_display.last_name %}
@@ -84,6 +84,6 @@
     <script>
         {% url "vote_user" username=user_display.username as karma_url %}
         {% trans "Karma" as karma_caprion %}
-        {% vote_script name=karma_caprion prefix="karma" url=karma_url current_score=karma.score current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=karma_color_threshold.0 good_color_threshold=karma_color_threshold.1 %}
+        {% vote_script name=karma_caprion prefix="karma" url=karma_url current_score=karma current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=karma_color_threshold.0 good_color_threshold=karma_color_threshold.1 %}
     </script>
 {% endblock %}
