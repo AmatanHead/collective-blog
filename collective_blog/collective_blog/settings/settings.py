@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     's_appearance',
     's_markdown',
     's_voting',
-    'blog',
 
     'registration',
     'captcha',

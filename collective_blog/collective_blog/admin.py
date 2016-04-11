@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Blog, Post
 
-
+from collective_blog.models import Blog, Post
 from s_markdown.admin import MarkdownAdmin
 
 

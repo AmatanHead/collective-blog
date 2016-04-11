@@ -1,15 +1,13 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
-from django.shortcuts import render
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect
-
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 
-from django.utils.translation import ugettext_lazy as _
-
-from ..models import Post, PostVote
+from collective_blog.models import Post, PostVote
 
 
 def feed(request, page=1):
