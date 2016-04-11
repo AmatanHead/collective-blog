@@ -1,9 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import Profile
 
-from s_markdown.admin import MarkdownAdmin
+class ProfileInline(admin.StackedInline):
+    model = Profile
 
-
-@admin.register(Profile)
-class ProfileAdmin(MarkdownAdmin):
-    pass
+UserAdmin.inlines += (ProfileInline, )

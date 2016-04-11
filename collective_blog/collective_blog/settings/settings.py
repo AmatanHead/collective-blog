@@ -23,12 +23,6 @@ if SECRET_KEY == 'TEST_SECRET_KEY':
 
 # This list may be extended in build-specific configs
 INSTALLED_APPS = [
-    'collective_blog',
-    'user',
-    's_appearance',
-    's_markdown',
-    's_voting',
-
     'registration',
     'captcha',
     'messages_extends',
@@ -40,6 +34,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
+    'collective_blog',
+    'user',
+    's_appearance',
+    's_markdown',
+    's_voting',
 ]
 
 # This list may be extended in build-specific configs
