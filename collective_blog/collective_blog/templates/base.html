@@ -23,21 +23,19 @@
                 <div class="separate">
                     {% if user.is_anonymous %}
                         <div class="h2-like right">
-                            {# Translators: action #}
-                            <a href="{% url "login" %}">{% trans "Login" %}</a>
+                            <a href="{% url "login" %}">{% trans "Log in" %}</a>
                             &bull;
-                            {# Translators: action #}
                             <a href="{% url "registration_register" %}">{% trans "Register" %}</a>
                         </div>
                     {% else %}
                         <div class="h2-like right">
                             <a href="{% url "view_self_profile" %}">{{ user.username|capfirst }}</a>
                             &bull;
-                            <a href="{% url "logout" %}">{% trans "Logout" %}</a>
+                            <a href="{% url "logout" %}">{% trans "Log out" %}</a>
                         </div>
                     {% endif %}
 
-                    <h2><a href="/">{{ global_site_name }}</a></h2>
+                    <h2><a href="{% url "homepage" %}">{{ global_site_name }}</a></h2>
                 </div>
             </div>
         {% endblock %}

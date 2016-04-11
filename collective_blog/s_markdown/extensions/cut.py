@@ -64,7 +64,7 @@ class CutPreprocessor(Preprocessor):
         m = self.block_re.search(text)
 
         if m is not None:
-            if 'caption' in m.groupdict():
+            if 'caption' in m.groupdict() and m.groupdict()['caption'] is not None:
                 html = '<!-- cut here {{ %s }} -->' % escape(m.groupdict()['caption'])
             else:
                 html = '<!-- cut here -->'

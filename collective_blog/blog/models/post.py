@@ -102,8 +102,8 @@ class Post(models.Model):
         super(Post, self).save(force_insert, force_update, using, update_fields)
 
     cut_pattern = re.compile(r'<!-- cut here '
-                             r'(\{\{(?P<caption>[^\}]+)\}\})?'
-                             r' -->')
+                             r'(\{\{(?P<caption>[^\}]+)\}\} )?'
+                             r'-->')
 
     def content_before_cut(self):
         """Returns html before cut"""
@@ -124,7 +124,10 @@ class Post(models.Model):
         """
         m = self.cut_pattern.search(self.content.html_force)
 
-        if m is None or 'caption' not in m.groupdict():
+        print(m)
+
+        if (m is None or 'caption' not in m.groupdict() or
+                m.groupdict()['caption'] is None):
             return _('Read more ->')
         else:
             return m.groupdict()['caption']
