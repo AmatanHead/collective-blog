@@ -1,10 +1,13 @@
 {# Display current rating and voting buttons #}
 
-<span class="badge-group">
-    <span class="{{ current_color }} badge {{ prefix }}-color">{{ name }}</span><span class="{{ current_color }} badge outline {{ prefix }}-color" id="{{ prefix }}-score">{{ current_score }}</span>
+
+<span class="voting" id="{{ prefix }}-voting" data-url="{{ url }}" data-prefix="{{ prefix }}" data-meta="{{ data.meta }}">
+    <span class="badge-group">
+        <span class="badge {{ prefix }}-color">{{ name }}</span><span class="badge outline {{ prefix }}-color" id="{{ prefix }}-score">{{ data.score }}</span>
+    </span>
+    &nbsp;
+    <span class="gray badge" id="{{ prefix }}-upvote-button"><span class="arrow-up center icon"></span></span>
+    <span class="gray badge" id="{{ prefix }}-downvote-button"><span class="arrow-down center icon"></span></span>
+    &nbsp;
+    <span class="gray badge outline" id="{{ prefix }}-error" style="opacity: 0"></span>
 </span>
-&nbsp;
-<span class="gray badge {% if self_vote != 1 %}{{ pressed_class }}{% endif %}" id="{{ prefix }}-upvote-button"><span class="arrow-up center icon"></span></span>
-<span class="gray badge {% if self_vote != -1 %}{{ pressed_class }}{% endif %}" id="{{ prefix }}-downvote-button"><span class="arrow-down center icon"></span></span>
-&nbsp;
-<span id="{{ prefix }}-error" class="gray badge outline" style="opacity: 0"></span>

@@ -23,10 +23,6 @@ if SECRET_KEY == 'TEST_SECRET_KEY':
 
 # This list may be extended in build-specific configs
 INSTALLED_APPS = [
-    'registration',
-    'captcha',
-    'messages_extends',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,6 +30,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
+    'registration',
+    'captcha',
+    'messages_extends',
 
     'collective_blog',
     'user',
@@ -59,6 +59,10 @@ MIDDLEWARE_CLASSES = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'collective_blog/templates'),
+            os.path.join(BASE_DIR, 'user/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

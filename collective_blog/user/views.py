@@ -14,8 +14,10 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import DetailView, RedirectView, View
 from django.views.generic.base import TemplateResponseMixin
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as __
 
+from collective_blog.utils.errors import PermissionCheckFailed
+from s_voting.views import VoteView
 from .models import Karma
 from .forms import ProfileForm, UserForm
 
@@ -35,45 +37,22 @@ class ProfileView(DetailView):
         context = {}  # No need to call super. There's nothing interesting
 
         user = kwargs['object']
-        karma = self.get_karma(user)
 
         context['user_display'] = user
-        context['karma'] = karma
-        context['karma_color'] = self.get_color(karma)
-        context['karma_vote'] = self.get_self_vote(user)
-        context['karma_color_threshold'] = self.get_color_threshold()
+        context['karma'] = {
+            'model': Karma,
+            'user': self.request.user,
+            'obj': user,
+            'disabled': self.request.user.is_anonymous(),
+            # 'color_threshold': [0, 0],
+            # 'use_colors': False,
+        }
         context['visible_email'] = user.profile.email_as_seen_by(self.request.user)
         context['is_moderator'] = user.profile.can_be_moderated_by(self.request.user)
         context['is_self_profile'] = user.pk == self.request.user.pk
         context['editable'] = user.profile.can_be_edited_by(self.request.user)
 
         return context
-
-    def get_karma(self, user):
-        return Karma.objects.filter(object=user).score()['score']
-
-    def get_color_threshold(self):
-        """Returns a range in which a color of the karma box becomes gray"""
-        return getattr(self, 'color_threshold', [-10, 10])
-
-    def get_color(self, karma):
-        """Returns the current color tag of the karma box"""
-        color_threshold = self.get_color_threshold()
-
-        if karma >= color_threshold[1]:
-            return 'green'
-        elif karma <= color_threshold[0]:
-            return 'orange'
-        else:
-            return 'gray'
-
-    def get_self_vote(self, user):
-        """Returns the vote object, if the user has already made his voice"""
-        if self.request.user.is_anonymous():
-            return None
-        else:
-            return Karma.objects.filter(
-                object=user, user=self.request.user).first()
 
 
 @method_decorator(login_required, name='dispatch')
@@ -130,11 +109,11 @@ class EditProfileView(View, TemplateResponseMixin):
         })
 
     def success(self, request, form, user_form):
-        """Dave and redirect"""
+        """Save and redirect"""
         form.save()
         user_form.save()
 
-        message = _("%(username)s's profile was saved") % dict(username=self.user.username)
+        message = __("%(username)s's profile was saved") % dict(username=self.user.username)
         messages.success(request, message)
 
         return HttpResponseRedirect(
@@ -151,88 +130,44 @@ class EditProfileView(View, TemplateResponseMixin):
 
 
 @method_decorator(csrf_protect, 'dispatch')
-class VoteProfileView(View):
-    def dispatch(self, request, *args, **kwargs):
-        self.user = get_object_or_404(
+class VoteProfileView(VoteView):
+    model = Karma
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(
             User.objects.select_related('profile'),
             username=kwargs.pop('username'))
-
-        return super(VoteProfileView, self).dispatch(request, *args, **kwargs)
-
-    def post(self, request):
-        if not request.is_ajax():
-            return HttpResponse('This page is ajax-only', status=418)
-
-        # noinspection PyBroadException
-        try:
-            v = int(request.GET['vote'])
-            assert v in [0, 1, -1]
-        except Exception:
-            return HttpResponse(_('Wrong vote'))
-
-        if request.user.is_anonymous():
-            return HttpResponse(_("You should be logged in"))
-
-        if not request.user.is_active:
-            return HttpResponse(_("Your account is disabled"))
-
-        if self.user.pk == request.user.pk:
-            return HttpResponse(_("You can't vote for yourself"))
-
-        if self.user.profile.can_be_voted_by(request.user):
-            Karma.vote_for(request.user, self.user, v)
-            return HttpResponse(
-                str(Karma.objects.filter(object=self.user).score()['score']))
-        else:
-            return HttpResponse(_("You can't vote for this user"))
 
 
 @method_decorator(csrf_protect, 'dispatch')
-class SwitchActiveProfileView(View, TemplateResponseMixin):
+class SwitchIsActiveView(View, TemplateResponseMixin):
     def dispatch(self, request, *args, **kwargs):
         self.user = get_object_or_404(
             User.objects.select_related('profile'),
             username=kwargs.pop('username'))
 
-        return super(SwitchActiveProfileView, self).dispatch(request, *args, **kwargs)
+        return super(SwitchIsActiveView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        if self.user.pk == request.user.pk:
-            return self.denied_self()
-        elif self.user.profile.can_be_moderated_by(request.user):
-            return self.process()
-        else:
-            return self.denied()
-
-    def process(self):
-        """Process the request and switch user state"""
-        self.user.is_active = not self.user.is_active
-        self.user.save()
+        try:
+            self.user.profile.switch_is_active(request.user)
+        except PermissionCheckFailed as e:
+            self.template_name = 'user/edit_profile_fail.html'
+            return self.render_to_response({
+                'user_display': self.user,
+                'note': e.note
+            }, status=403)
 
         if self.user.is_active:
             messages.success(
                 self.request,
-                _("%(username)s's account activated")
+                __("%(username)s's account activated")
                 % dict(username=self.user.username))
         else:
             messages.success(
                 self.request,
-                _("%(username)s's account deactivated")
+                __("%(username)s's account deactivated")
                 % dict(username=self.user.username))
 
         return HttpResponseRedirect(
             reverse('view_profile', kwargs=dict(username=self.user.username)))
-
-    def denied(self):
-        """Render the `denied` message"""
-        self.template_name = 'user/edit_profile_fail.html'
-        return self.render_to_response({
-            'user_display': self.user
-        }, status=403)
-
-    def denied_self(self):
-        """Render the `denied` message"""
-        self.template_name = 'user/edit_profile_fail_self_action.html'
-        return self.render_to_response({
-            'user_display': self.user
-        }, status=403)

@@ -2,8 +2,10 @@
 
 from django.db import models
 from django.db.models import Sum, Count, QuerySet, ObjectDoesNotExist
+from django.utils.translation import ugettext as __
 
 from collective_blog import settings
+from collective_blog.utils.errors import PermissionCheckFailed
 
 
 class VotesQuerySet(QuerySet):
@@ -12,12 +14,8 @@ class VotesQuerySet(QuerySet):
     Allows for routine operations like getting overall rating etc.
 
     """
-    def score(self):
-        """Sum all votes
-
-        :return: A dictionary containing `score` and `num_votes` keys.
-
-        """
+    def score_query(self):
+        """Aggregate score and num_votes"""
         result = self.aggregate(
             score=Sum('vote'),
             num_votes=Count('vote')
@@ -27,6 +25,14 @@ class VotesQuerySet(QuerySet):
             result['score'] = 0
 
         return result
+
+    def score(self):
+        """Sum all votes"""
+        return self.score_query()['score']
+
+    def num_votes(self):
+        """Count all votes"""
+        return self.score_query()['num_votes']
 
 
 class VoteManager(models.Manager):
@@ -47,7 +53,7 @@ class AbstractVote(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              related_name='votes_for_%(app_label)s_%(class)s')
     vote = models.SmallIntegerField(choices=SCORES)
-    object = None  # Should be overloaded
+    object = None  # Should be overwritten
 
     objects = VoteManager()
 
@@ -67,7 +73,14 @@ class AbstractVote(models.Model):
         :param vote: +1, 0, or -1.
 
         """
-        assert vote in [-1, 0, 1]
+        if vote not in [-1, 0, 1]:
+            raise PermissionCheckFailed(__("Wrong vote"))
+
+        if user.is_anonymous():
+            raise PermissionCheckFailed(__("You should be logged in"))
+
+        if not user.is_active:
+            raise PermissionCheckFailed(__("Your account is disabled"))
 
         if vote == 0:
             cls.objects.filter(user=user, object=obj).delete()

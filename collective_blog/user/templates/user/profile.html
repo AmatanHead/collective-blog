@@ -18,7 +18,7 @@
         <span style="font-size: 1.1em">
             {% url "vote_user" username=user_display.username as karma_url %}
             {% trans "Karma" as karma_caprion %}
-            {% vote name=karma_caprion prefix="karma" url=karma_url current_score=karma current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=karma_color_threshold.0 good_color_threshold=karma_color_threshold.1 %}
+            {% vote name=karma_caprion prefix="karma" url=karma_url data=karma %}
         </span>
 
         {% if user_display.first_name or user_display.last_name %}
@@ -26,7 +26,7 @@
         {% endif %}
 
         {% if visible_email %}
-            <p>{{ visible_email }}</p>
+            <p><a href="mailto:{{ user_display.email }}">{{ visible_email }}</a></p>
         {% endif %}
 
         {% if user_display.profile.location %}
@@ -82,8 +82,6 @@
 {% block extra_scripts %}
     {{ block.super }}
     <script>
-        {% url "vote_user" username=user_display.username as karma_url %}
-        {% trans "Karma" as karma_caprion %}
-        {% vote_script name=karma_caprion prefix="karma" url=karma_url current_score=karma current_color=karma_color self_vote=karma_vote.vote bad_color_threshold=karma_color_threshold.0 good_color_threshold=karma_color_threshold.1 %}
+        d3.selectAll('.voting').each(function () {new VoteGroup(this);});
     </script>
 {% endblock %}

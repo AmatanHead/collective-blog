@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _, ugettext as __
 
 from collective_blog import settings
+from collective_blog.utils.errors import PermissionCheckFailed
 
 from s_markdown.models import MarkdownField, HtmlCacheField
 from s_markdown.datatype import Markdown
@@ -118,7 +119,7 @@ class Profile(models.Model):
         if not self.user.email:
             return ''
         if self.email_can_be_seen_by(user) and not self.email_is_public:
-            return self.user.email + ' (' + __('Only you can see the email') + ')'
+            return self.user.email + ' (%s)' % __('Only you can see the email')
         elif self.email_is_public:
             return self.user.email
         return ''
@@ -126,3 +127,18 @@ class Profile(models.Model):
     def can_be_voted_by(self, user):
         """Check if this profile can bo voted by the user passed"""
         return user.is_active and user.pk != self.user.pk and self.user.is_active
+
+    # Actions
+    # -------
+
+    def switch_is_active(self, moderator):
+        """Block or unblock user if the moderator have proper permissions"""
+        if self.user.pk == moderator.pk:
+            raise PermissionCheckFailed(__("You can't use this action "
+                                           "on yourself."))
+        if not self.can_be_moderated_by(moderator):
+            raise PermissionCheckFailed(__("Sorry, you have no permissions "
+                                           "to edit this profile."))
+
+        self.user.is_active = not self.user.is_active
+        self.user.save()

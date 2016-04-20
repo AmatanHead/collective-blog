@@ -1,59 +1,101 @@
+import json
+
 from django import template
 
 register = template.Library()
 
 
+class VoteData(object):
+    def __init__(self, model, user, obj,
+                 use_colors=True, color_tags=None, color_threshold=None,
+                 disabled=False):
+        """Holds data about object rating and user's vote
+
+        Used in voting template tag.
+
+        :param model: Model which store votes (derived from `AbstractVote`)
+        :param user:
+        :param obj:
+        :param use_colors: If False, middle ('gray') color will be used
+        :param color_tags: CSS tags used in template tags
+          for coloring the rating box
+        :param color_threshold: A range in which a color of the rating box
+          becomes gray
+        :param disabled: render buttons as disabled
+
+        """
+        self.model = model
+        self.obj = obj
+        self.user = user
+        self.use_colors = use_colors
+        self.disabled = disabled
+
+        if color_tags is None:
+            self.color_tags = ['green', 'gray', 'orange']
+        else:
+            self.color_tags = color_tags
+
+        if color_threshold is None:
+            self.color_threshold = [-10, 10]
+        else:
+            self.color_threshold = color_threshold
+
+        query = self.model.objects.filter(object=obj).score_query()
+
+        self.num_votes = query['num_votes']
+        self.score = query['score']
+
+        self._color = None
+        self._self_vote = None
+
+    @property
+    def meta(self):
+        return json.dumps({
+            'use_colors': self.use_colors,
+            'color_tags': self.color_tags,
+            'color_threshold': self.color_threshold,
+            'disabled': self.disabled,
+            'state': self.self_vote,
+        })
+
+    @property
+    def self_vote(self):
+        """Returns vote, if the user has already made his voice"""
+        if self._self_vote is not None:
+            return self._self_vote
+
+        if self.user.is_anonymous():
+            self._self_vote = 0
+        else:
+            vote = self.model.objects.filter(
+                object=self.obj, user=self.user).first()
+            self._self_vote = 0 if vote is None else vote.vote
+
+        return self._self_vote
+
+
 @register.inclusion_tag('s_voting/tags/vote.html')
-def vote(name, prefix, url, pressed_class='outline',
-         current_score=0,
-         current_color='',
-         self_vote=0,
-         use_colors=True,
-         bad_color_threshold=-10,
-         good_color_threshold=10):
-    """Display voting buttons"""
-    return {
-        'name': name,
-        'prefix': prefix,
-        'url': url,
-        'pressed_class': pressed_class,
-        'current_score': current_score,
-        'self_vote': self_vote,
-        'use_colors': use_colors,
-        'current_color': current_color,
-        'bad_color_threshold': bad_color_threshold,
-        'good_color_threshold': good_color_threshold
-    }
+def vote(name, prefix, url, data):
+    """Display voting buttons
 
-
-@register.inclusion_tag('s_voting/tags/vote_script.html')
-def vote_script(name, prefix, url, pressed_class='outline',
-                current_score=0,
-                current_color='',
-                self_vote=0,
-                use_colors=True,
-                bad_color_threshold=-10,
-                good_color_threshold=10):
-    """Make ajax script for voting
-
-    Note that `s_voting/ajax_voting.js` should be loaded manually.
-
-    Usage:
-
-        <script>
-            var vote = {% vote_script ... %};
-        </script>
+    :param name: Localized parameter name (e.g. rating, karma)
+    :param prefix: Prefix for all html tag ids
+    :param url: Where to submit data
+    :param data: dict --
+      * model: Model which store votes (derived from `AbstractVote`)
+      * user: who votes
+      * obj: for what
+      * use_colors: If False, middle ('gray') color will be used
+      * color_tags: CSS tags used in template tags
+        for coloring the rating box
+      * color_threshold: A range in which a color of the rating box
+        becomes gray
+      * disabled: render buttons as disabled
 
     """
     return {
         'name': name,
         'prefix': prefix,
         'url': url,
-        'pressed_class': pressed_class,
-        'current_score': current_score,
-        'self_vote': self_vote,
-        'use_colors': use_colors,
-        'current_color': current_color,
-        'bad_color_threshold': bad_color_threshold,
-        'good_color_threshold': good_color_threshold
+        'data': VoteData(**data),
     }

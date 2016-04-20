@@ -2,11 +2,12 @@
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ugettext as __
 
 from datetime import datetime
 
 from collective_blog import settings
+from collective_blog.utils.errors import PermissionCheckFailed
 
 from .blog import Blog
 
@@ -164,3 +165,15 @@ class Post(models.Model):
 class PostVote(AbstractVote):
     object = models.ForeignKey(Post, on_delete=models.CASCADE,
                                related_name='votes')
+
+    @classmethod
+    def vote_for(cls, user, obj, vote):
+        if user.pk == obj.author.pk:
+            raise PermissionCheckFailed(__("You can't vote for your own post"))
+
+        membership = obj.blog.check_membership(user)
+
+        if obj.can_be_voted_by(user, membership):
+            super(PostVote, cls).vote_for(user, obj, vote)
+        else:
+            raise PermissionCheckFailed(__("You can't vote for this post"))

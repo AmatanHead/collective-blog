@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import datetime
 
 from collective_blog import settings
+from collective_blog.utils.errors import PermissionCheckFailed
 
 from user.models import Karma
 
@@ -20,10 +21,6 @@ from s_markdown.extensions import (FencedCodeExtension,
 from s_appearance.utils.icons import ICONS
 
 from uuslug import uuslug
-
-
-class CantJoinException(Exception):
-    pass
 
 
 class Blog(models.Model):
@@ -250,19 +247,22 @@ class Blog(models.Model):
         if self.join_condition == 'A':
             return True
         elif self.join_condition == 'K':
-            return (Karma.objects.filter(object=user).score()['score'] >=
+            return (Karma.objects.filter(object=user).score() >=
                     self.join_karma_threshold)
         elif self.join_condition == 'I':
             return True  # Can send a request
         else:
             return False
 
+    # Actions
+    # -------
+
     def join(self, user):
         """Add the user to the blog's membership
 
         :param user: User which wants to be a member.
         :return: Message
-        :raises CantJoinException: If the user can't join the blog.
+        :raises PermissionCheckFailed: If the user can't join the blog.
 
         """
         if self.check_can_join(user):
@@ -273,7 +273,7 @@ class Blog(models.Model):
                 Membership.objects.create(user=user, blog=self, role='M')
                 return _("Success"), 1
         else:
-            raise CantJoinException(_("You can't join this blog"))
+            raise PermissionCheckFailed(_("You can't join this blog"))
 
     def approve(self, membership, new_role='M', save=True):
         if membership.role == 'W':

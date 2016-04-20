@@ -12,9 +12,7 @@
         </h1>
 
         <p>
-            {% blocktrans trimmed %}
-                Sorry, you have no permission to edit this profile.
-            {% endblocktrans %}
+            {{ note }}
         </p>
         <p>
             <a href="{% url 'view_profile' username=user_display.username %}">

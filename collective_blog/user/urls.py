@@ -3,7 +3,7 @@
 import django.contrib.auth.views as v
 from django.conf.urls import include, url
 
-from .views import ProfileView, SelfProfileView, EditProfileView, VoteProfileView, SwitchActiveProfileView
+from .views import ProfileView, SelfProfileView, EditProfileView, VoteProfileView, SwitchIsActiveView
 from .forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm, SetPasswordForm
 
 urlpatterns = [
@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^a/', include('registration.backends.default.urls')),
 
     url(r'^a/e/(?P<username>[a-zA-Z0-9@.+-_]+)/$', EditProfileView.as_view(), name='edit_profile'),
-    url(r'^a/ac/(?P<username>[a-zA-Z0-9@.+-_]+)/$', SwitchActiveProfileView.as_view(), name='switch_active'),
+    url(r'^a/ac/(?P<username>[a-zA-Z0-9@.+-_]+)/$', SwitchIsActiveView.as_view(), name='switch_active'),
     url(r'^a/vt/(?P<username>[a-zA-Z0-9@.+-_]+)/$', VoteProfileView.as_view(), name='vote_user'),
 
     url(r'^(?P<username>[a-zA-Z0-9@.+-_]+)/$', ProfileView.as_view(), name='view_profile'),
