@@ -7,8 +7,8 @@
 
 {% block content %}
 
-    {% if posts %}
-        {% for post in posts %}
+    {% if post_list %}
+        {% for post in post_list %}
             <div class="primary container">
                 {% post_preview post %}
             </div>
@@ -18,8 +18,8 @@
 
             <p class="text-centered">
 
-                {% if posts.has_previous %}
-                    <a class="full-width-on-low button" href="{% url "homepage" page=posts.previous_page_number %}">&lt;&lt;&lt;</a>
+                {% if page_obj.has_previous %}
+                    <a class="full-width-on-low button" href="{% url "homepage" page=page_obj.previous_page_number %}">&lt;&lt;&lt;</a>
                 {% else %}
                     <span class="disabled full-width-on-low button">&lt;&lt;&lt;</span>
                 {% endif %}
@@ -27,7 +27,7 @@
                 &nbsp;&nbsp;
 
                 {% for page in pages %}
-                    {% if page == posts.number %}
+                    {% if page == page_obj.number %}
                         <span class="full-width-on-low button">{{ page }}</span>
                     {% else %}
                         <a class="full-width-on-low button" href="{% url "homepage" page=page %}">{{ page }}</a>
@@ -36,8 +36,8 @@
 
                 &nbsp;&nbsp;
 
-                {% if posts.has_next %}
-                    <a class="full-width-on-low button" href="{% url "homepage" page=posts.next_page_number %}">&gt;&gt;&gt;</a>
+                {% if page_obj.has_next %}
+                    <a class="full-width-on-low button" href="{% url "homepage" page=page_obj.next_page_number %}">&gt;&gt;&gt;</a>
                 {% else %}
                     <span class="disabled full-width-on-low button">&gt;&gt;&gt;</span>
                 {% endif %}

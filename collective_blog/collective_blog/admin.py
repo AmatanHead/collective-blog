@@ -5,10 +5,10 @@ from s_markdown.admin import MarkdownAdmin
 
 
 @admin.register(Blog)
-class ProfileAdmin(MarkdownAdmin):
+class ProfileAdmin(MarkdownAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Post)
-class ProfileAdmin(MarkdownAdmin):
+class ProfileAdmin(MarkdownAdmin, admin.ModelAdmin):
     pass

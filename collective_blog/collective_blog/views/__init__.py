@@ -1,1 +1,1 @@
-from .feed import feed, post, vote
+from .feed import FeedView, VotePostView, PostView

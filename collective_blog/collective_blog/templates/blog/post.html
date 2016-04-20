@@ -35,7 +35,6 @@
             <span style="font-size: 1.1em">
                 {% url "vote_post" post_slug=post.slug as post_url %}
                 {% trans "Post" as name %}
-                {% vote name=name prefix="post" url=post_url current_score=rating.score self_vote=self_vote.vote use_colors=False current_color="gray" %}
             </span>
         </p>
 
@@ -50,9 +49,5 @@
 {% block extra_scripts %}
     {{ block.super }}
     <script>
-        {% url "vote_post" post_slug=post.slug as post_url %}
-        {% trans "Post" as name %}
-        {% vote_script name=name prefix="post" url=post_url current_score=rating.score self_vote=self_vote.vote use_colors=False current_color="gray" %}
     </script>
 {% endblock %}
-

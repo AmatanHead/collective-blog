@@ -1,10 +1,9 @@
-from django.contrib import admin
-
 from s_markdown.models import MarkdownField
 from s_markdown.widgets import CodeMirror
 
 
-class MarkdownAdmin(admin.ModelAdmin):
+class MarkdownAdmin(object):
+    """Mixin that fixes markdown widgets"""
     formfield_overrides = {
         MarkdownField: {
             'widget': CodeMirror(

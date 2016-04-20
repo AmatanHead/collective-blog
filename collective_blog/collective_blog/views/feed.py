@@ -1,53 +1,64 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
-from django.http import Http404, HttpResponse, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from django.views.generic import ListView, DetailView
 
 from collective_blog.models import Post, PostVote
+from s_voting.views import VoteView
 
 
-def feed(request, page=1):
-    if 'per_page' in request.GET:
-        per_page = request.GET['per_page']
-    else:
-        per_page = 10
+class FeedView(ListView):
+    paginate_by = 1
+    template_name = 'blog/feed.html'
 
-    if request.user.is_anonymous():
-        all_posts = (Post.objects.prefetch_related('author', 'blog')
-                     .filter(blog__type='O', is_draft=False)
-                     .annotate(rating=Sum('votes__vote'))
-                     .all())
-    else:
-        all_posts = (Post.objects.prefetch_related('author', 'blog')
-                     .filter(Q(blog__type='O') | Q(blog__members=request.user), is_draft=False)
-                     .annotate(rating=Sum('votes__vote'))
-                     .all())
+    def get_queryset(self):
+        if self.request.user.is_anonymous():
+            return (Post.objects.prefetch_related('author', 'blog')
+                    .filter(blog__type='O', is_draft=False)
+                    .annotate(rating=Sum('votes__vote'))
+                    .all())
+        else:
+            return (Post.objects.prefetch_related('author', 'blog')
+                    .filter(
+                        Q(blog__type='O') | Q(blog__members=self.request.user),
+                        is_draft=False)
+                    .annotate(rating=Sum('votes__vote'))
+                    .all())
 
-    try:
-        page = int(page)
-        paginator = Paginator(all_posts, per_page)
-    except ValueError:
-        raise Http404()
+    def get_context_data(self, **kwargs):
+        context = super(FeedView, self).get_context_data(**kwargs)
+        page_obj = context['page_obj']
+        frm = max(1, page_obj.number - 5)
+        to = min(page_obj.number + 5, page_obj.paginator.num_pages) + 1
+        context['pages'] = range(frm, to)
+        return context
 
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        raise Http404()
-    except EmptyPage:
-        raise Http404()
 
-    pages = range(max(1, page - 10), min(page + 10, paginator.num_pages) + 1)
+class PostView(DetailView):
+    model = Post
+    template_name = 'blog/post.html'
 
-    return render(request, 'blog/feed.html', {
-        'pages': pages,
-        'posts': posts,
-        'interesting_blogs': {},
-        'interesting_tags': {},
-    })
+    def dispatch(self, request, *args, **kwargs):
+        self.post_slug = kwargs.pop('post_slug')
+
+        if self.post_slug != self.post_slug.lower():
+            return HttpResponsePermanentRedirect(
+                reverse('view_post',
+                        kwargs=dict(post_slug=self.post_slug.lower())))
+
+        return super(PostView, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(Post.objects.select_related('author'),
+                                 slug=self.post_slug)
+
+    def get_context_data(self, **kwargs):
+        context = super(PostView, self).get_context_data(**kwargs)
+        return context
 
 
 def post(request, post_slug=None):
@@ -66,7 +77,8 @@ def post(request, post_slug=None):
         if request.user.is_anonymous():
             self_vote = None
         else:
-            self_vote = PostVote.objects.filter(object=post, user=request.user).first()
+            self_vote = PostVote.objects.filter(object=post,
+                                                user=request.user).first()
 
         return render(request, 'blog/post.html', {
             'post': post,
@@ -86,35 +98,20 @@ def post(request, post_slug=None):
         raise Http404()
 
 
-@csrf_protect
-def vote(request, post_slug=None):
-    if post_slug != post_slug.lower():
-        return HttpResponsePermanentRedirect(
-            reverse('view_post', kwargs=dict(post_slug=post_slug.lower())))
+@method_decorator(csrf_protect, 'dispatch')
+class VotePostView(VoteView):
+    model = PostVote
 
-    post = get_object_or_404(Post.objects.select_related('author'),
-                             slug=post_slug)
+    def dispatch(self, request, *args, **kwargs):
+        self.post_slug = kwargs.pop('post_slug')
 
-    # noinspection PyBroadException
-    try:
-        v = int(request.GET['vote'])
-        assert v in [0, 1, -1]
-    except Exception:
-        return HttpResponse(_('Wrong vote'))
+        if self.post_slug != self.post_slug.lower():
+            return HttpResponsePermanentRedirect(
+                reverse('view_post',
+                        kwargs=dict(post_slug=self.post_slug.lower())))
 
-    if request.user.is_anonymous():
-        return HttpResponse(_("You should be logged in"))
+        return super(VotePostView, self).dispatch(request, *args, **kwargs)
 
-    if not request.user.is_active:
-        return HttpResponse(_("Your account is disabled"))
-
-    if request.user.pk == post.author.pk:
-        return HttpResponse(_("You can't vote for your own post"))
-
-    membership = post.blog.check_membership(request.user)
-
-    if post.can_be_voted_by(request.user, membership):
-        PostVote.vote_for(request.user, post, v)
-        return HttpResponse(str(PostVote.objects.filter(object=post).score()['score']))
-    else:
-        return HttpResponse(_("You can't vote for this post"))
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(Post.objects.select_related('author'),
+                                        slug=self.post_slug)
