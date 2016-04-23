@@ -24,10 +24,6 @@ class VoteView(View):
     # A method that will be used to serialize the response data
     serialize = staticmethod(json.dumps)
 
-    def dispatch(self, request, *args, **kwargs):
-        self.object = self.get_object(*args, **kwargs)
-        return super(VoteView, self).dispatch(request, *args, **kwargs)
-
     def get_object(self, *args, **kwargs):
         raise NotImplementedError()
 
@@ -41,6 +37,7 @@ class VoteView(View):
             except (ValueError, AssertionError, KeyError):
                 raise PermissionCheckFailed(__('Wrong vote'))
 
+            self.object = self.get_object(*args, **kwargs)
             self.model.vote_for(request.user, self.object, vote)
             data = self.model.objects.filter(object=self.object).score_query()
             data['state'] = vote

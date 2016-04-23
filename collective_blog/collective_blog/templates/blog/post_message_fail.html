@@ -8,11 +8,9 @@
 {% block content %}
 
     <div class="primary container">
-        <h1 class="title">{% trans "Post is hidden" %}</h1>
+        <h1 class="title">{% trans "You have no access to this post" %}</h1>
         <p>
-            {% blocktrans trimmed %}
-                The author has hidden this post.
-            {% endblocktrans %}
+            {{ note }}
         </p>
     </div>
 

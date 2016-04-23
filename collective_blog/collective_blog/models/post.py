@@ -120,7 +120,8 @@ class Post(models.Model):
 
         From `---- cut {{ Let's rock! }} ----` will return `Let's rock!`.
 
-        Trust that markdown engine sanitizes its content.
+        This method does not escape tags in the caption.
+        The markdown engine should sanitize it.
 
         """
         m = self.cut_pattern.search(self.content.html_force)
@@ -171,7 +172,10 @@ class PostVote(AbstractVote):
         if user.pk == obj.author.pk:
             raise PermissionCheckFailed(__("You can't vote for your own post"))
 
-        membership = obj.blog.check_membership(user)
+        if obj.blog is not None:
+            membership = obj.blog.check_membership(user)
+        else:
+            membership = None
 
         if obj.can_be_voted_by(user, membership):
             super(PostVote, cls).vote_for(user, obj, vote)
