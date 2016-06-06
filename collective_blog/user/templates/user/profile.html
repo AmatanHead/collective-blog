@@ -3,12 +3,12 @@
 {% load i18n %}
 {% load vote %}
 
-{% block title %}{% blocktrans trimmed with username=user_display|capfirst %}{{ username }}'s profile{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans trimmed with username=user_display %}{{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 {% block content %}
     <div class="primary container">
         <h1 class="title">
-            {{ user_display|capfirst }}
+            {{ user_display }}
             {% if not user_display.is_active %}
                 {# Translators: here, disabled == unable to login, deleted #}
                 <small>{% trans "disabled" %}</small>

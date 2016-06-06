@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load humanize %}
+
+<h1 class="title"><a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a></h1>
+<p>
+    {% trans "Author:" %}
+    <a href="{% url "view_profile" username=post.author %}">{{ post.author }}</a>,
+    {% if show_full_date %}
+        {{ post.created.date }}
+    {% else %}
+        {{ post.created|naturaltime }}
+    {% endif %}
+</p>
+{% if post.blog %}
+    <p>
+        <a href="{% url "view_blog" blog_slug=post.blog.slug %}">
+            <span class="badge">
+                {% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}
+                {{ post.blog.name }}
+            </span>
+        </a>
+        {# TODO normal cursor for tags and badges #}
+    </p>
+{% endif %}

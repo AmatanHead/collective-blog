@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% blocktrans trimmed with username=user_display|capfirst %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans trimmed with username=user_display %}Edit {{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 {% block extra_head %}
     {{ block.super }}
@@ -12,7 +12,7 @@
 {% block content %}
     <form class="primary container" method="post">
         <h1 class="title">
-            {{ user_display|capfirst }}
+            {{ user_display }}
             <small>{% trans "edit profile" %}</small>
         </h1>
         {% if not is_self_profile %}

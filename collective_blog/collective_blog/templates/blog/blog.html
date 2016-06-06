@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ blog.name }}{% endblock %}
+
+
+{% block content %}
+
+    <div class="primary container">
+        <h1>{% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}</h1>
+        {{ blog.about.html_force|safe }}
+    </div>
+
+{% endblock %}

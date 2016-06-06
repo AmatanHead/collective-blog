@@ -10,20 +10,7 @@
 {% block content %}
 
     <div class="primary container">
-        <h1 class="title">{{ post.heading }}</h1>
-        <p>
-            {% trans "Author:" %}
-            <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username|capfirst }}</a>,
-            {{ post.created }}
-        </p>
-        {% if post.blog %}
-            <p>
-                <span class="badge">
-                    {% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}
-                    {{ post.blog.name }}
-                </span>
-            </p>
-        {% endif %}
+        {% post_header post %}
 
         <hr>
 

@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
-from django.http import Http404, HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect

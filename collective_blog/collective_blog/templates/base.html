@@ -21,21 +21,18 @@
         {% block nav %}
             <div class="primary container">
                 <div class="separate">
-                    {% if user.is_anonymous %}
-                        <div class="h2-like right">
-                            <a href="{% url "login" %}">{% trans "Log in" %}</a>
-                            &bull;
-                            <a href="{% url "registration_register" %}">{% trans "Register" %}</a>
-                        </div>
-                    {% else %}
-                        <div class="h2-like right">
-                            <a href="{% url "view_self_profile" %}">{{ user.username|capfirst }}</a>
-                            &bull;
-                            <a href="{% url "logout" %}">{% trans "Log out" %}</a>
-                        </div>
-                    {% endif %}
-
-                    <h2><a href="{% url "homepage" %}">{{ global_site_name }}</a></h2>
+                    <h2 style="display: inline-block"><a href="{% url "homepage" %}">{{ global_site_name }}</a></h2>
+                    <span class="hor-separate">
+                        {% if user.is_anonymous %}
+                                <a href="{% url "login" %}">{% trans "Log in" %}</a>
+                                &bull;
+                                <a href="{% url "registration_register" %}">{% trans "Register" %}</a>
+                        {% else %}
+                                <a href="{% url "view_self_profile" %}">{{ user.username }}</a>
+                                &bull;
+                                <a href="{% url "logout" %}">{% trans "log out" %}</a>
+                        {% endif %}
+                    </span>
                 </div>
             </div>
         {% endblock %}

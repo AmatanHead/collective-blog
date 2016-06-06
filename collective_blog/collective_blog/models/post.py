@@ -3,8 +3,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, ugettext as __
-
-from datetime import datetime
+from django.utils import timezone
 
 from collective_blog import settings
 from collective_blog.utils.errors import PermissionCheckFailed
@@ -66,7 +65,7 @@ class Post(models.Model):
                             ),
                             verbose_name=_('Content'))
 
-    created = models.DateTimeField(blank=True, editable=False)
+    created = models.DateTimeField(blank=True, null=True, editable=False)
 
     updated = models.DateTimeField(blank=True, editable=False, auto_now=True)
 
@@ -88,8 +87,10 @@ class Post(models.Model):
              update_fields=None):
         """Pre-save routine like updating the slug field etc."""
 
-        if not self.pk:
-            self.created = datetime.now()
+        if self.is_draft:
+            self.created = None
+        elif self.created is None:
+            self.created = timezone.now()
 
         self.slug = uuslug(self.heading,
                            instance=self,
@@ -125,8 +126,6 @@ class Post(models.Model):
 
         """
         m = self.cut_pattern.search(self.content.html_force)
-
-        print(m)
 
         if (m is None or 'caption' not in m.groupdict() or
                 m.groupdict()['caption'] is None):
