@@ -1,12 +1,10 @@
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-
-from datetime import datetime
+from django.utils import timezone
 
 from collective_blog import settings
 from collective_blog.utils.errors import PermissionCheckFailed
-
-from user.models import Karma
 
 from s_markdown.models import MarkdownField, HtmlCacheField
 from s_markdown.datatype import Markdown
@@ -19,6 +17,9 @@ from s_markdown.extensions import (FencedCodeExtension,
                                    AutolinkExtension,
                                    CommentExtension)
 from s_appearance.utils.icons import ICONS
+from s_voting.models import VoteCacheField
+
+from .post import PostVote
 
 from uuslug import uuslug
 
@@ -247,8 +248,8 @@ class Blog(models.Model):
         if self.join_condition == 'A':
             return True
         elif self.join_condition == 'K':
-            return (Karma.objects.filter(object=user).score() >=
-                    self.join_karma_threshold)
+            # TODO test
+            return user.profile.karma >= self.join_karma_threshold
         elif self.join_condition == 'I':
             return True  # Can send a request
         else:
@@ -268,18 +269,33 @@ class Blog(models.Model):
         if self.check_can_join(user):
             if self.join_condition == 'I':
                 Membership.objects.create(user=user, blog=self, role='W')
-                return _("A request has been sent"), 1
+                return _("A request has been sent")
             else:
                 Membership.objects.create(user=user, blog=self, role='M')
-                return _("Success"), 1
+                return _("Success")
         else:
             raise PermissionCheckFailed(_("You can't join this blog"))
 
-    def approve(self, membership, new_role='M', save=True):
-        if membership.role == 'W':
+    def leave(self, user):
+        """Remove the user to the blog's membership
+
+        :param user: User which wants to leave.
+
+        """
+        membership = self.check_membership(user)
+        if membership is not None and membership.role not in ['B', 'O']:
+            membership.delete()
+
+    def approve(self, user, new_role='M', save=True):
+        membership = self.check_membership(user)
+        if membership is not None and membership.role == 'W':
             membership.role = new_role
             if save:
                 membership.save()
+
+
+def _overall_posts_rating_cache_query(v):
+    return Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.blog.pk)
 
 
 class Membership(models.Model):
@@ -290,6 +306,21 @@ class Membership(models.Model):
     blog = models.ForeignKey(Blog,
                              models.CASCADE)
 
+    COLORS = (
+        ('gray', _('Gray')),
+        ('black', _('Black')),
+        ('blue', _('Blue')),
+        ('orange', _('Orange')),
+        ('purple', _('Purple')),
+        ('marshy', _('Marshy')),
+        ('turquoise', _('Turquoise')),
+        ('red', _('Red')),
+        ('yellow', _('Yellow')),
+        ('green', _('Green')),
+    )
+
+    color = models.CharField(max_length=10, choices=COLORS, default='')
+
     ROLES = (
         ('O', _('Owner')),
         ('M', _('Member')),
@@ -298,10 +329,9 @@ class Membership(models.Model):
         ('W', _('Waiting for approval'))
     )
 
-    ban_expiration = models.DateTimeField(auto_now_add=True,
-                                          editable=False)
-
     role = models.CharField(max_length=2, choices=ROLES, default='M')
+
+    ban_expiration = models.DateTimeField(default=timezone.now)
 
     can_change_settings_flag = models.BooleanField(
         default=False, verbose_name=_("Can change blog's settings"))
@@ -319,69 +349,77 @@ class Membership(models.Model):
     can_ban_flag = models.BooleanField(
         default=False, verbose_name=_("Can ban a member"))
 
+    overall_posts_rating = VoteCacheField(PostVote, _overall_posts_rating_cache_query)
+
     # Common methods
     # --------------
 
     class Meta:
         unique_together = ('user', 'blog')
 
-    # # Permissions control
-    # # -------------------
-    #
-    # def can_be_banned(self):
-    #     return self.role not in ['O', 'A']
-    #
-    # @classmethod
-    # def ban_permanently(cls, blog, user):
-    #     membership = cls.objects.filter(user=user, blog=blog).first()
-    #
-    #     if membership is None:
-    #         membership = Membership(user=user, blog=blog)
-    #
-    #     if membership.can_be_banned():
-    #         membership.role = 'B'
-    #         membership.save()
-    #
-    # @classmethod
-    # def ban(cls, blog, user, timedelta):
-    #     membership = cls.objects.filter(user=user, blog=blog).first()
-    #
-    #     if membership is None:
-    #         membership = Membership(user=user, blog=blog)
-    #
-    #     if membership.can_be_banned():
-    #         membership.ban_expiration = datetime.now() + timedelta
-    #         membership.save()
-    #
-    # def is_banned(self):
-    #     return self.role != 'B' and self.ban_expiration < datetime.now()
-    #
-    # def _common_check(self, flag):
-    #     """Check that the member can perform an action
-    #
-    #     Here to reduce code duplication.
-    #
-    #     """
-    #     has_perms = self.user.is_active and self.is_staff and (
-    #         self.user.has_perm('blog.change_membership') or
-    #         self.user.has_perm('blog.change_blog'))
-    #     return has_perms or (self.role in ['O', 'A'] and
-    #                          not self.is_banned() and flag)
-    #
-    # def can_change_settings(self):
-    #     return self._common_check(self.can_change_settings_flag)
-    #
-    # def can_edit_posts(self):
-    #     return self._common_check(self.can_edit_posts_flag)
-    #
-    # def can_delete_posts(self):
-    #     return self._common_check(self.can_delete_posts_flag)
-    #
-    # def can_edit_comments(self):
-    #     return self._common_check(self.can_edit_comments_flag)
-    #
-    # def can_delete_comments(self):
-    #     return self._common_check(self.can_delete_comments_flag)
-    #
-    # def can_ban(self):
-    #     return self._common_check(self.can_ban_flag)
+    def __str__(self):
+        return str(self.user) + ' in ' + str(self.blog)
+
+    # Permissions control
+    # -------------------
+
+    def can_be_banned(self):
+        return self.role not in ['O', 'A']
+
+    @classmethod
+    def ban_permanently(cls, blog, user):
+        membership = cls.objects.filter(user=user, blog=blog).first()
+
+        if membership is None:
+            membership = Membership(user=user, blog=blog)
+
+        if membership.can_be_banned():
+            membership.role = 'B'
+            membership.save()
+
+    @classmethod
+    def ban(cls, blog, user, timedelta):
+        membership = cls.objects.filter(user=user, blog=blog).first()
+
+        if membership is None:
+            membership = Membership(user=user, blog=blog)
+
+        if membership.can_be_banned():
+            membership.ban_expiration = timezone.now() + timedelta
+            membership.save()
+
+    def is_banned(self):
+        return self.role == 'B' or self.ban_expiration >= timezone.now()
+
+    def ban_is_permanent(self):
+        return self.role == 'B'
+
+    def _common_check(self, flag):
+        """Check that the member can perform an action
+
+        Here to reduce code duplication.
+
+        """
+        has_perms = self.user.is_active and self.is_staff and (
+            self.user.has_perm('blog.change_membership') or
+            self.user.has_perm('blog.change_blog'))
+        return has_perms or (self.role in ['O', 'A'] and
+                             not self.is_banned() and flag)
+
+    def can_change_settings(self):
+        return self._common_check(self.can_change_settings_flag)
+
+    def can_edit_posts(self):
+        return self._common_check(self.can_edit_posts_flag)
+
+    def can_delete_posts(self):
+        return self._common_check(self.can_delete_posts_flag)
+
+    def can_edit_comments(self):
+        return self._common_check(self.can_edit_comments_flag)
+
+    def can_delete_comments(self):
+        return self._common_check(self.can_delete_comments_flag)
+
+    def can_ban(self):
+        return self._common_check(self.can_ban_flag)

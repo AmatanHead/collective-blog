@@ -1,2 +1,2 @@
 from .feed import FeedView, VotePostView, PostView
-from .blogs import BlogView
+from .blog import BlogView, JoinBlogView, LeaveBlogView, UpdateColorBlogView

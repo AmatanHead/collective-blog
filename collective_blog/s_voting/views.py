@@ -24,6 +24,10 @@ class VoteView(View):
     # A method that will be used to serialize the response data
     serialize = staticmethod(json.dumps)
 
+    def get_score(self):
+        """Reload this to use a cache field instead of dynamic lookup"""
+        return self.model.objects.filter(object=self.object).score()
+
     def get_object(self, *args, **kwargs):
         raise NotImplementedError()
 
@@ -39,8 +43,8 @@ class VoteView(View):
 
             self.object = self.get_object(*args, **kwargs)
             self.model.vote_for(request.user, self.object, vote)
-            data = self.model.objects.filter(object=self.object).score_query()
-            data['state'] = vote
+
+            data = {'score': self.get_score(), 'state': vote}
             return HttpResponse(self.serialize(data))
         except PermissionCheckFailed as e:
             return HttpResponse(e.note, status=400)

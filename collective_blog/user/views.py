@@ -8,7 +8,8 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models import Sum, Case, When, F
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
@@ -17,6 +18,7 @@ from django.views.generic.base import TemplateResponseMixin
 from django.utils.translation import ugettext as __
 
 from collective_blog.utils.errors import PermissionCheckFailed
+from collective_blog.models import Membership
 from s_voting.views import VoteView
 from .models import Karma
 from .forms import ProfileForm, UserForm
@@ -51,6 +53,17 @@ class ProfileView(DetailView):
         context['is_moderator'] = user.profile.can_be_moderated_by(self.request.user)
         context['is_self_profile'] = user.pk == self.request.user.pk
         context['editable'] = user.profile.can_be_edited_by(self.request.user)
+
+        membership = (
+            Membership.objects
+            .exclude(role__in=['W', 'B'])
+            .filter(user=user)
+            .select_related('blog')
+            .annotate(
+                rating=F('overall_posts_rating') * 10
+            ).order_by('-rating')
+        )
+        context['blogs'] = membership
 
         return context
 
@@ -132,6 +145,10 @@ class EditProfileView(View, TemplateResponseMixin):
 @method_decorator(csrf_protect, 'dispatch')
 class VoteProfileView(VoteView):
     model = Karma
+
+    def get_score(self):
+        self.object.profile.refresh_from_db()
+        return self.object.profile.karma
 
     def get_object(self, *args, **kwargs):
         return get_object_or_404(

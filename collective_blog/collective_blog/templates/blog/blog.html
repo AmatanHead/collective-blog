@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load humanize %}
+{% load post %}
 
 {% block title %}{{ blog.name }}{% endblock %}
 
@@ -9,7 +11,120 @@
 
     <div class="primary container">
         <h1>{% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}</h1>
+        {% blocktrans count counter=members %}
+            {{ members }} user{% plural %}{{ members }} users
+        {% endblocktrans %}
+        {% if blog.about.html_force %}<hr>{% endif %}
         {{ blog.about.html_force|safe }}
     </div>
 
+    <div class="primary container">
+        <h2>Blog membership</h2>
+        {% if membership %}
+            {% if membership.role == "W" %}<p>{% trans "Your request is being processed." %}</p>{% endif %}
+            {% if membership.role == "O" %}<p>{% trans "You are an owner of this blog." %}</p>{% endif %}
+            <form class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
+                {% csrf_token %}
+                <span class="select-arrow"><select id="color-select" name="color" class="small blue">
+                    {% for color in colors %}
+                        <option value="{{ color.0 }}" {% if color.0 == current_color %}selected="selected"{% endif %}>{{ color.1 }}</option>
+                    {% endfor %}
+                </select></span>
+                <button>{% trans "Update" %}</button>
+            </form>
+            &nbsp;&nbsp;
+            <form class="inline display-inline" method="post" action="{% url "leave_blog" blog_slug=blog.slug %}">
+                {% csrf_token %}
+                <button class="plain">{% trans "Leave the blog" %}</button>
+            </form>
+        {% else %}
+            {% if is_banned %}
+                {% blocktrans trimmed %}You are banned in this blog.{% endblocktrans %}
+                {% if not membership.ban_is_permanent %}
+                    {% blocktrans trimmed with expires=membership.ban_expiration|naturaltime %}Ban expires {{ expires }}.{% endblocktrans %}
+                {% endif %}
+            {% elif can_join %}
+                <form class="inline" method="post" action="{% url "join_blog" blog_slug=blog.slug %}">
+                    {% csrf_token %}
+                    <button>{% trans "Join the blog" %}</button>
+                </form>
+            {% elif user.is_anonymous %}
+                {% trans "You should login to join this blog." %}
+            {% else %}
+                {% trans "You can't join this blog." %}
+                {% if blog.join_condition == 'K' %}
+                    {% blocktrans trimmed with karma=blog.join_karma_threshold %}
+                        Your karma should be more than {{ karma }}.
+                    {% endblocktrans %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if post_list %}
+        <a name="posts"></a>
+        {% for post in post_list %}
+            <div class="primary container">
+                {% post_preview post interesting_blogs=interesting_blogs %}
+            </div>
+        {% endfor %}
+
+        <div class="inline primary container">
+
+            <p class="text-centered">
+
+                {% if page_obj.has_previous %}
+                    <a class="full-width-on-low button" href="{% url "view_blog" blog_slug=blog.slug page=page_obj.previous_page_number %}#posts">&lt;&lt;&lt;</a>
+                {% else %}
+                    <span class="disabled full-width-on-low button">&lt;&lt;&lt;</span>
+                {% endif %}
+
+                &nbsp;&nbsp;
+
+                {% for page in pages %}
+                    {% if page == page_obj.number %}
+                        <span class="full-width-on-low button">{{ page }}</span>
+                    {% else %}
+                        <a class="full-width-on-low button" href="{% url "view_blog" blog_slug=blog.slug page=page %}#posts">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                &nbsp;&nbsp;
+
+                {% if page_obj.has_next %}
+                    <a class="full-width-on-low button" href="{% url "view_blog" blog_slug=blog.slug page=page_obj.next_page_number %}#posts">&gt;&gt;&gt;</a>
+                {% else %}
+                    <span class="disabled full-width-on-low button">&gt;&gt;&gt;</span>
+                {% endif %}
+            </p>
+        </div>
+
+    {% else %}
+        <div class="primary container">
+            <h1 class="title">{% trans "Nothing to show" %}</h1>
+            <p>
+                {% blocktrans trimmed %}
+                    Sorry, but we have no entries to show.
+                {% endblocktrans %}
+                <!-- TODO link to the post creation form -->
+            </p>
+        </div>
+    {% endif %}
+
 {% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+<script>
+    (function () {
+        function color_update () {
+            d3.select('#color-select').attr('class', 'bg-' + d3.select('#color-select').node().value);
+        }
+
+        d3.select('#color-select').on('change', color_update);
+
+        color_update();
+    })()
+</script>
+{% endblock %}
+

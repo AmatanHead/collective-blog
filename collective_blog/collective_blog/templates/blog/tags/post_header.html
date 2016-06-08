@@ -14,7 +14,7 @@
 {% if post.blog %}
     <p>
         <a href="{% url "view_blog" blog_slug=post.blog.slug %}">
-            <span class="badge">
+            <span class="badge {{ color }}">
                 {% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}
                 {{ post.blog.name }}
             </span>

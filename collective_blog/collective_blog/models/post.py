@@ -8,8 +8,6 @@ from django.utils import timezone
 from collective_blog import settings
 from collective_blog.utils.errors import PermissionCheckFailed
 
-from .blog import Blog
-
 from s_markdown.models import MarkdownField, HtmlCacheField
 from s_markdown.datatype import Markdown
 from s_markdown.renderer import BaseRenderer
@@ -23,9 +21,29 @@ from s_markdown.extensions import (FencedCodeExtension,
 
 from uuslug import uuslug
 
-from s_voting.models import AbstractVote
+from s_voting.models import AbstractVote, VoteCacheField
 
 import re
+
+
+class PostVote(AbstractVote):
+    object = models.ForeignKey('Post', on_delete=models.CASCADE,
+                               related_name='votes')
+
+    @classmethod
+    def vote_for(cls, user, obj, vote):
+        if user.pk == obj.author.pk:
+            raise PermissionCheckFailed(__("You can't vote for your own post"))
+
+        if obj.blog is not None:
+            membership = obj.blog.check_membership(user)
+        else:
+            membership = None
+
+        if obj.can_be_voted_by(user, membership):
+            super(PostVote, cls).vote_for(user, obj, vote)
+        else:
+            raise PermissionCheckFailed(__("You can't vote for this post"))
 
 
 class Post(models.Model):
@@ -71,10 +89,12 @@ class Post(models.Model):
 
     _content_html = HtmlCacheField(content)
 
-    blog = models.ForeignKey(Blog, models.CASCADE,
+    blog = models.ForeignKey('Blog', models.CASCADE,
                              verbose_name=_('Blog'),
                              null=True,
                              blank=True)
+
+    rating = VoteCacheField(PostVote)
 
     def clean(self):
         """Check that published articles have blog set"""
@@ -160,23 +180,3 @@ class Post(models.Model):
 
     def __str__(self):
         return str(self.heading)
-
-
-class PostVote(AbstractVote):
-    object = models.ForeignKey(Post, on_delete=models.CASCADE,
-                               related_name='votes')
-
-    @classmethod
-    def vote_for(cls, user, obj, vote):
-        if user.pk == obj.author.pk:
-            raise PermissionCheckFailed(__("You can't vote for your own post"))
-
-        if obj.blog is not None:
-            membership = obj.blog.check_membership(user)
-        else:
-            membership = None
-
-        if obj.can_be_voted_by(user, membership):
-            super(PostVote, cls).vote_for(user, obj, vote)
-        else:
-            raise PermissionCheckFailed(__("You can't vote for this post"))

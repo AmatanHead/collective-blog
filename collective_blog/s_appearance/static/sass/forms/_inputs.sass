@@ -44,12 +44,27 @@ input, textarea, select, button, .button
     border-color: $input-border-color !important
 
 select
+  -webkit-appearance: none
+  -moz-appearance: none
+  appearance: none
   display: block
   background: inherit
-  height: $input-lineheight * $input-font-size + top($input-border-padding) + bottom($input-border-padding)
+
+  padding-right: 2rem
 
   &[multiple="multiple"]
     height: auto
+
+.select-arrow:after
+  position: absolute
+  margin-top: 1.25rem
+  margin-left: -1.4rem
+  width: 0
+  height: 0
+  border-top: 5px dashed
+  border-right: 5px solid transparent
+  border-left: 5px solid transparent
+  content: ""
 
 input[type="reset"],
 input[type="submit"],
@@ -119,9 +134,9 @@ label
   color: $input-label-color-error
 
 .inline
-  input, button, .button
+  input, button, .button, select
     display: inline-block
-    width: inherit
+    width: auto
     +no-clear
 
   input
@@ -136,6 +151,9 @@ label
   font-weight: bold
 
 button, .button
+  &:active
+    color: black
+
   &.primary
     color: $button-color-primary
     background: $button-bg-color-primary

@@ -22,7 +22,7 @@
             <span style="font-size: 1.1em">
                 {% url "vote_post" post_slug=post.slug as post_url %}
                 {% trans "Rating" as rating_caprion %}
-                {% vote name=rating_caprion prefix="rating" url=post_url data=rating %}
+                {% vote name=rating_caprion prefix="rating" url=post_url data=rating score=post.rating %}
             </span>
         </p>
 

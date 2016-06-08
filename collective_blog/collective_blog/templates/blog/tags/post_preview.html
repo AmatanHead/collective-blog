@@ -17,7 +17,7 @@
 
 {% else %}
 
-    {% post_header post %}
+    {% post_header post color=color %}
 
     <hr>
 
@@ -30,6 +30,7 @@
     <hr>
 
     <p>
+        {{ post.rating_cache }}
         <span class="badge-group">
             <span class="gray badge">{% trans "Rating" %}</span><span class="gray badge outline">{% if post.rating == None %}0{% else %}{{ post.rating }}{% endif %}</span>
         </span>

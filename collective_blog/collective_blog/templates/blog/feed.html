@@ -10,7 +10,7 @@
     {% if post_list %}
         {% for post in post_list %}
             <div class="primary container">
-                {% post_preview post %}
+                {% post_preview post interesting_blogs=interesting_blogs %}
             </div>
         {% endfor %}
 
@@ -49,7 +49,7 @@
             <h1 class="title">{% trans "Nothing to show" %}</h1>
             <p>
                 {% blocktrans trimmed %}
-                    Sorry, but we have no entries to show you.
+                    Sorry, but we have no entries to show.
                     Maybe you'd like to write one?
                 {% endblocktrans %}
                 <!-- TODO link to the post creation form -->

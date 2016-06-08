@@ -8,7 +8,8 @@ register = template.Library()
 class VoteData(object):
     def __init__(self, model, user, obj,
                  use_colors=True, color_tags=None, color_threshold=None,
-                 disabled=False):
+                 disabled=False,
+                 score=None):
         """Holds data about object rating and user's vote
 
         Used in voting template tag.
@@ -40,10 +41,10 @@ class VoteData(object):
         else:
             self.color_threshold = color_threshold
 
-        query = self.model.objects.filter(object=obj).score_query()
-
-        self.num_votes = query['num_votes']
-        self.score = query['score']
+        if score is not None:
+            self.score = score
+        else:
+            self.score = self.model.objects.filter(object=obj).score()
 
         self._color = None
         self._self_vote = None
@@ -60,7 +61,7 @@ class VoteData(object):
 
     @property
     def self_vote(self):
-        """Returns vote, if the user has already made his voice"""
+        """Returns vote, if the user has already made his choice"""
         if self._self_vote is not None:
             return self._self_vote
 
@@ -75,7 +76,7 @@ class VoteData(object):
 
 
 @register.inclusion_tag('s_voting/tags/vote.html')
-def vote(name, prefix, url, data):
+def vote(name, prefix, url, data, score=None):
     """Display voting buttons
 
     :param name: Localized parameter name (e.g. rating, karma)
@@ -91,11 +92,13 @@ def vote(name, prefix, url, data):
       * color_threshold: A range in which a color of the rating box
         becomes gray
       * disabled: render buttons as disabled
+    :param score: int -- current rating of an object. Pass in a cached value
+    to avoid dynamic lookups
 
     """
     return {
         'name': name,
         'prefix': prefix,
         'url': url,
-        'data': VoteData(**data),
+        'data': VoteData(score=score, **data),
     }

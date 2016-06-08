@@ -1,8 +1,12 @@
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _, ugettext as __
 
 from collective_blog import settings
 from collective_blog.utils.errors import PermissionCheckFailed
+
+from s_voting.models import VoteCacheField
+from .karma import Karma
 
 from s_markdown.models import MarkdownField, HtmlCacheField
 from s_markdown.datatype import Markdown
@@ -14,6 +18,10 @@ from s_markdown.extensions import (FencedCodeExtension,
                                    AutomailExtension,
                                    AutolinkExtension,
                                    CommentExtension)
+
+
+def _karma_cache_query(v):
+    return Q(pk=v.object.profile.pk)
 
 
 class Profile(models.Model):
@@ -65,6 +73,8 @@ class Profile(models.Model):
                                           default=False)
 
     # To go: liked tags
+
+    karma = VoteCacheField(Karma)
 
     # Common methods
     # --------------

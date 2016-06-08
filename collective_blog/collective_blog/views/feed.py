@@ -7,35 +7,49 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView
 from django.utils.translation import ugettext_lazy as _
 
-from collective_blog.models import Post, PostVote
+from collective_blog.models import Post, PostVote, Membership
 from s_voting.views import VoteView
 
 
-class FeedView(ListView):
+class GenericFeedView(ListView):
     paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericFeedView, self).get_context_data(**kwargs)
+
+        if self.paginate_by:
+            page_obj = context['page_obj']
+            frm = max(1, page_obj.number - 5)
+            to = min(page_obj.number + 5, page_obj.paginator.num_pages) + 1
+            context['pages'] = range(frm, to)
+
+        if self.request.user.is_anonymous():
+            context['interesting_blogs'] = []
+        else:
+            context['interesting_blogs'] = {
+                m.blog.id: m for m in Membership.objects.filter(user=self.request.user)
+            }
+
+        return context
+
+
+class FeedView(GenericFeedView):
     template_name = 'blog/feed.html'
 
     def get_queryset(self):
         if self.request.user.is_anonymous():
-            return (Post.objects.prefetch_related('author', 'blog')
+            return (Post.objects
+                    .select_related('author', 'blog')
+                    .prefetch_related('blog')
                     .filter(blog__type='O', is_draft=False)
-                    .annotate(rating=Sum('votes__vote'))
                     .all())
         else:
-            return (Post.objects.prefetch_related('author', 'blog')
+            return (Post.objects
+                    .select_related('author', 'blog')
                     .filter(
                         Q(blog__type='O') | Q(blog__members=self.request.user),
                         is_draft=False)
-                    .annotate(rating=Sum('votes__vote'))
                     .all())
-
-    def get_context_data(self, **kwargs):
-        context = super(FeedView, self).get_context_data(**kwargs)
-        page_obj = context['page_obj']
-        frm = max(1, page_obj.number - 5)
-        to = min(page_obj.number + 5, page_obj.paginator.num_pages) + 1
-        context['pages'] = range(frm, to)
-        return context
 
 
 class PostView(DetailView):
@@ -112,6 +126,10 @@ class VotePostView(VoteView):
                         kwargs=dict(post_slug=self.post_slug.lower())))
 
         return super(VotePostView, self).dispatch(request, *args, **kwargs)
+
+    def get_score(self):
+        self.object.refresh_from_db()
+        return self.object.rating
 
     def get_object(self, *args, **kwargs):
         return get_object_or_404(Post.objects.select_related('author'),
