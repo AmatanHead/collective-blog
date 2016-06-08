@@ -2,18 +2,20 @@ from operator import itemgetter
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.db.models import Sum, Q
+from django.db.models import Q
 from django.http import HttpResponsePermanentRedirect, HttpResponse, \
     HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import View, DetailView
+from django.views.generic import View, UpdateView
 
 from collective_blog.models import Blog, Membership, Post
 from collective_blog.utils.errors import PermissionCheckFailed
 
 from .feed import GenericFeedView
+from ..forms import BlogForm
 
 
 class GenericBlogView(View):
@@ -54,6 +56,7 @@ class BlogView(GenericBlogView, GenericFeedView):
             return (Post.objects
                     .select_related('author', 'blog')
                     .filter(blog=self.blog, blog__type='O', is_draft=False)
+                    .distinct()
                     .all())
         else:
             return (Post.objects
@@ -62,6 +65,7 @@ class BlogView(GenericBlogView, GenericFeedView):
                         Q(blog=self.blog) &
                         (Q(blog__type='O') | Q(blog__members=self.request.user)),
                         is_draft=False)
+                    .distinct()
                     .all())
 
 
@@ -114,3 +118,25 @@ class UpdateColorBlogView(GenericBlogView):
             reverse('view_blog',
                     kwargs=dict(blog_slug=self.blog_slug.lower()))
         )
+
+
+class EditBlogView(UpdateView):
+    form_class = BlogForm
+    template_name = 'blog/blog_update.html'
+    model = Blog
+    slug_url_kwarg = 'blog_slug'
+
+    def get_success_url(self, obj=None):
+        if obj is None:
+            obj = self.object
+        return reverse('view_blog',
+                       kwargs=dict(blog_slug=obj.slug))
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        membership = obj.check_membership(self.request.user)
+        if obj.check_can_change_settings(membership):
+            return super(EditBlogView, self).dispatch(request, *args, **kwargs)
+        else:
+            messages.error(self.request, _('You can\'t perform this action'))
+            return HttpResponseRedirect(self.get_success_url(obj))

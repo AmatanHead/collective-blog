@@ -1,5 +1,5 @@
 """Base form classes for rendering light-compatible html"""
-
+from django.db import models
 from django.forms.forms import BaseForm
 from django.utils.html import conditional_escape
 from django.utils.encoding import force_text

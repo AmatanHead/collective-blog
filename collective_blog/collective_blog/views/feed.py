@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.db.models import Q, Sum
+from django.db.models import Q
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -27,7 +27,7 @@ class GenericFeedView(ListView):
             context['interesting_blogs'] = []
         else:
             context['interesting_blogs'] = {
-                m.blog.id: m for m in Membership.objects.filter(user=self.request.user)
+                m.blog.id: m for m in Membership.objects.filter(user=self.request.user).exclude(role__in=['L', 'LB'])
             }
 
         return context
@@ -42,6 +42,7 @@ class FeedView(GenericFeedView):
                     .select_related('author', 'blog')
                     .prefetch_related('blog')
                     .filter(blog__type='O', is_draft=False)
+                    .distinct()
                     .all())
         else:
             return (Post.objects
@@ -49,6 +50,7 @@ class FeedView(GenericFeedView):
                     .filter(
                         Q(blog__type='O') | Q(blog__members=self.request.user),
                         is_draft=False)
+                    .distinct()
                     .all())
 
 

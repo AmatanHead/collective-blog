@@ -138,10 +138,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGES = [
     ('ru', _('Russian')),
-    ('en', _('English')),
+    # ('en', _('English')),
 ]
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'ru_RU'
 
 TIME_ZONE = 'Europe/Moscow'
 

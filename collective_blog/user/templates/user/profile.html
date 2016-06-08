@@ -83,9 +83,18 @@
                     {% endif %}
 
                     {% if blog.role == "A" %}
-                        &bull; <a href="">{% trans "A" %}{# Translators: A for Administrator #}</a>
+                        &bull;
+                        {# TODO: links #}
+                        <a href="">
+                            {# Translators: A for Administrator #}
+                            {% trans "A" %}
+                        </a>
                     {% elif blog.role == "O" %}
-                        &bull; <a href="">{% trans "O" %}{# Translators: O for Owner #}</a>
+                        &bull;
+                        <a href="">
+                            {# Translators: O for Owner #}
+                            {% trans "O" %}
+                        </a>
                     {% endif %}
 {#                </span>#}
                 <br>

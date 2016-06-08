@@ -156,7 +156,7 @@ class Blog(models.Model):
         No-members (membership==None) considered to be not banned.
 
         """
-        if membership is not None:
+        if membership is not None and not membership.is_left():
             return membership.is_banned()
         else:
             return False
@@ -167,21 +167,21 @@ class Blog(models.Model):
         No-members (membership==None) considered to have no rights.
 
         """
-        if membership is not None:
+        if membership is not None and not membership.is_left():
             return membership.can_change_settings()
         else:
             return False
 
-    def check_can_edit_posts(self, membership):
-        """Check if the given user has permissions edit posts in the blog
-
-        No-members (membership==None) considered to have no rights.
-
-        """
-        if membership is not None:
-            return membership.can_edit_posts()
-        else:
-            return False
+    # def check_can_edit_posts(self, membership):
+    #     """Check if the given user has permissions edit posts in the blog
+    #
+    #     No-members (membership==None) considered to have no rights.
+    #
+    #     """
+    #     if membership is not None and not membership.is_left():
+    #         return membership.can_edit_posts()
+    #     else:
+    #         return False
 
     def check_can_delete_posts(self, membership):
         """Check if the given user has permissions delete posts in the blog
@@ -189,21 +189,21 @@ class Blog(models.Model):
         No-members (membership==None) considered to have no rights.
 
         """
-        if membership is not None:
+        if membership is not None and not membership.is_left():
             return membership.can_delete_posts()
         else:
             return False
 
-    def check_can_edit_comments(self, membership):
-        """Check if the given user has permissions edit comments in the blog
-
-        No-members (membership==None) considered to have no rights.
-
-        """
-        if membership is not None:
-            return membership.can_edit_comments()
-        else:
-            return False
+    # def check_can_edit_comments(self, membership):
+    #     """Check if the given user has permissions edit comments in the blog
+    #
+    #     No-members (membership==None) considered to have no rights.
+    #
+    #     """
+    #     if membership is not None and not membership.is_left():
+    #         return membership.can_edit_comments()
+    #     else:
+    #         return False
 
     def check_can_delete_comments(self, membership):
         """Check if the given user has permissions delete comments in the blog
@@ -211,7 +211,7 @@ class Blog(models.Model):
         No-members (membership==None) considered to have no rights.
 
         """
-        if membership is not None:
+        if membership is not None and not membership.is_left():
             return membership.can_delete_comments()
         else:
             return False
@@ -222,7 +222,7 @@ class Blog(models.Model):
         No-members (membership==None) considered to have no rights.
 
         """
-        if membership is not None:
+        if membership is not None and not membership.is_left():
             return membership.can_ban()
         else:
             return False
@@ -242,13 +242,12 @@ class Blog(models.Model):
 
         membership = self.check_membership(user)
 
-        if membership is not None:
+        if membership is not None and not membership.is_left():
             return False  # Already joined
 
         if self.join_condition == 'A':
             return True
         elif self.join_condition == 'K':
-            # TODO test
             return user.profile.karma >= self.join_karma_threshold
         elif self.join_condition == 'I':
             return True  # Can send a request
@@ -267,11 +266,22 @@ class Blog(models.Model):
 
         """
         if self.check_can_join(user):
-            if self.join_condition == 'I':
-                Membership.objects.create(user=user, blog=self, role='W')
+            rating = PostVote.objects.filter(object__author=user, object__blog=self).score()
+            membership, c = Membership.objects.get_or_create(user=user, blog=self)
+            membership.overall_posts_rating = rating
+            if membership.role == 'LB':
+                membership.role = 'B'
+                membership.save()
+                return _("Success. You are still banned, though")
+            elif membership.role != 'L':
+                return _("You've already joined to the=is blog")
+            elif self.join_condition == 'I':
+                membership.role = 'W'
+                membership.save()
                 return _("A request has been sent")
             else:
-                Membership.objects.create(user=user, blog=self, role='M')
+                membership.role = 'M'
+                membership.save()
                 return _("Success")
         else:
             raise PermissionCheckFailed(_("You can't join this blog"))
@@ -283,8 +293,12 @@ class Blog(models.Model):
 
         """
         membership = self.check_membership(user)
-        if membership is not None and membership.role not in ['B', 'O']:
-            membership.delete()
+        if membership is not None and membership.role != 'O':
+            if membership.role == 'B':
+                membership.role = 'LB'
+            else:
+                membership.role = 'L'
+            membership.save()
 
     def approve(self, user, new_role='M', save=True):
         membership = self.check_membership(user)
@@ -295,7 +309,8 @@ class Blog(models.Model):
 
 
 def _overall_posts_rating_cache_query(v):
-    return Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.blog.pk)
+    return (Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.blog.pk) & ~Q(
+        role__in=['L', 'LB']))
 
 
 class Membership(models.Model):
@@ -326,7 +341,9 @@ class Membership(models.Model):
         ('M', _('Member')),
         ('B', _('Banned')),
         ('A', _('Administrator')),
-        ('W', _('Waiting for approval'))
+        ('W', _('Waiting for approval')),
+        ('L', _('Left the blog')),
+        ('LB', _('Left the blog (banned)')),
     )
 
     role = models.CharField(max_length=2, choices=ROLES, default='M')
@@ -336,13 +353,13 @@ class Membership(models.Model):
     can_change_settings_flag = models.BooleanField(
         default=False, verbose_name=_("Can change blog's settings"))
 
-    can_edit_posts_flag = models.BooleanField(
-        default=False, verbose_name=_("Can edit posts"))
+    # can_edit_posts_flag = models.BooleanField(
+    #     default=False, verbose_name=_("Can edit posts"))
     can_delete_posts_flag = models.BooleanField(
         default=False, verbose_name=_("Can delete posts"))
 
-    can_edit_comments_flag = models.BooleanField(
-        default=False, verbose_name=_("Can edit comments"))
+    # can_edit_comments_flag = models.BooleanField(
+    #     default=False, verbose_name=_("Can edit comments"))
     can_delete_comments_flag = models.BooleanField(
         default=False, verbose_name=_("Can delete comments"))
 
@@ -394,29 +411,34 @@ class Membership(models.Model):
     def ban_is_permanent(self):
         return self.role == 'B'
 
+    def is_left(self):
+        return self.role in ['L', 'LB']
+
     def _common_check(self, flag):
         """Check that the member can perform an action
 
         Here to reduce code duplication.
 
         """
-        has_perms = self.user.is_active and self.is_staff and (
+        has_perms = self.user.is_active and self.user.is_staff and (
             self.user.has_perm('blog.change_membership') or
             self.user.has_perm('blog.change_blog'))
         return has_perms or (self.role in ['O', 'A'] and
-                             not self.is_banned() and flag)
+                             not self.is_left() and
+                             not self.is_banned() and
+                             (flag or self.role == 'O'))
 
     def can_change_settings(self):
         return self._common_check(self.can_change_settings_flag)
 
-    def can_edit_posts(self):
-        return self._common_check(self.can_edit_posts_flag)
+    # def can_edit_posts(self):
+    #     return self._common_check(self.can_edit_posts_flag)
 
     def can_delete_posts(self):
         return self._common_check(self.can_delete_posts_flag)
 
-    def can_edit_comments(self):
-        return self._common_check(self.can_edit_comments_flag)
+    # def can_edit_comments(self):
+    #     return self._common_check(self.can_edit_comments_flag)
 
     def can_delete_comments(self):
         return self._common_check(self.can_delete_comments_flag)

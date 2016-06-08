@@ -1,0 +1,385 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-09 00:05+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: collective_blog/models/blog.py:29
+msgid "Name"
+msgstr ""
+
+#: collective_blog/models/blog.py:56
+msgid "About this blog"
+msgstr ""
+
+#: collective_blog/models/blog.py:63
+msgid "Open"
+msgstr ""
+
+#: collective_blog/models/blog.py:64
+msgid "Private"
+msgstr ""
+
+#: collective_blog/models/blog.py:68
+msgid "Type of the blog"
+msgstr ""
+
+#: collective_blog/models/blog.py:71
+msgid "Anyone can join"
+msgstr ""
+
+#: collective_blog/models/blog.py:72
+msgid "Only users with high karma can join"
+msgstr ""
+
+#: collective_blog/models/blog.py:73
+msgid "Manual approval required"
+msgstr ""
+
+#: collective_blog/models/blog.py:78
+msgid "Who can join the blog"
+msgstr ""
+
+#: collective_blog/models/blog.py:82
+msgid "Join karma threshold"
+msgstr ""
+
+#: collective_blog/models/blog.py:85
+msgid "Anyone can add post"
+msgstr ""
+
+#: collective_blog/models/blog.py:86
+msgid "Only users with high karma can add post"
+msgstr ""
+
+#: collective_blog/models/blog.py:91
+msgid "Who can add posts"
+msgstr ""
+
+#: collective_blog/models/blog.py:94
+msgid "Require membership to write posts"
+msgstr ""
+
+#: collective_blog/models/blog.py:97
+msgid "Post karma threshold"
+msgstr ""
+
+#: collective_blog/models/blog.py:100
+msgid "Anyone can comment"
+msgstr ""
+
+#: collective_blog/models/blog.py:101
+msgid "Only users with high karma can comment"
+msgstr ""
+
+#: collective_blog/models/blog.py:107
+msgid "Who can comment in the blog"
+msgstr ""
+
+#: collective_blog/models/blog.py:110
+msgid "Require membership to write comments"
+msgstr ""
+
+#: collective_blog/models/blog.py:113
+msgid "Comment karma threshold"
+msgstr ""
+
+#: collective_blog/models/blog.py:137 collective_blog/models/post.py:93
+msgid "Blog"
+msgstr ""
+
+#: collective_blog/models/blog.py:138
+msgid "Blogs"
+msgstr ""
+
+#: collective_blog/models/blog.py:275
+msgid "Success. You're still banned, though =("
+msgstr ""
+
+#: collective_blog/models/blog.py:281
+msgid "A request has been sent"
+msgstr ""
+
+#: collective_blog/models/blog.py:285
+msgid "Success"
+msgstr ""
+
+#: collective_blog/models/blog.py:287
+msgid "You can't join this blog"
+msgstr ""
+
+#: collective_blog/models/blog.py:325
+msgid "Gray"
+msgstr ""
+
+#: collective_blog/models/blog.py:326
+msgid "Black"
+msgstr ""
+
+#: collective_blog/models/blog.py:327
+msgid "Blue"
+msgstr ""
+
+#: collective_blog/models/blog.py:328
+msgid "Orange"
+msgstr ""
+
+#: collective_blog/models/blog.py:329
+msgid "Purple"
+msgstr ""
+
+#: collective_blog/models/blog.py:330
+msgid "Marshy"
+msgstr ""
+
+#: collective_blog/models/blog.py:331
+msgid "Turquoise"
+msgstr ""
+
+#: collective_blog/models/blog.py:332
+msgid "Red"
+msgstr ""
+
+#: collective_blog/models/blog.py:333
+msgid "Yellow"
+msgstr ""
+
+#: collective_blog/models/blog.py:334
+msgid "Green"
+msgstr ""
+
+#: collective_blog/models/blog.py:340
+msgid "Owner"
+msgstr ""
+
+#: collective_blog/models/blog.py:341
+msgid "Member"
+msgstr ""
+
+#: collective_blog/models/blog.py:342
+msgid "Banned"
+msgstr ""
+
+#: collective_blog/models/blog.py:343
+msgid "Administrator"
+msgstr ""
+
+#: collective_blog/models/blog.py:344
+msgid "Waiting for approval"
+msgstr ""
+
+#: collective_blog/models/blog.py:345
+msgid "Left the blog"
+msgstr ""
+
+#: collective_blog/models/blog.py:346
+msgid "Left the blog (banned)"
+msgstr ""
+
+#: collective_blog/models/blog.py:354
+msgid "Can change blog's settings"
+msgstr ""
+
+#: collective_blog/models/blog.py:357
+msgid "Can edit posts"
+msgstr ""
+
+#: collective_blog/models/blog.py:359
+msgid "Can delete posts"
+msgstr ""
+
+#: collective_blog/models/blog.py:362
+msgid "Can edit comments"
+msgstr ""
+
+#: collective_blog/models/blog.py:364
+msgid "Can delete comments"
+msgstr ""
+
+#: collective_blog/models/blog.py:367
+msgid "Can ban a member"
+msgstr ""
+
+#: collective_blog/models/post.py:52
+msgid "Author"
+msgstr ""
+
+#: collective_blog/models/post.py:55
+msgid "Caption"
+msgstr ""
+
+#: collective_blog/models/post.py:64
+msgid "Is draft"
+msgstr ""
+
+#: collective_blog/models/post.py:84
+msgid "Content"
+msgstr ""
+
+#: collective_blog/models/post.py:103
+msgid "You must choose a blog before publishing"
+msgstr ""
+
+#: collective_blog/models/post.py:152
+msgid "Read more ->"
+msgstr ""
+
+#: collective_blog/models/post.py:177
+msgid "Post"
+msgstr ""
+
+#: collective_blog/models/post.py:178
+msgid "Posts"
+msgstr ""
+
+#: collective_blog/settings/settings.py:140
+msgid "Russian"
+msgstr ""
+
+#: collective_blog/templates/base.html:27
+msgid "Log in"
+msgstr ""
+
+#: collective_blog/templates/base.html:29
+msgid "Register"
+msgstr ""
+
+#: collective_blog/templates/base.html:33
+msgid "log out"
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:14
+#, python-format
+msgid "%(counter)s member"
+msgid_plural "%(counter)s members"
+msgstr[0] "%(counter)s пользователь"
+msgstr[1] "%(counter)s пользователя"
+msgstr[2] "%(counter)s пользователей"
+msgstr[3] "%(counter)s пользователей"
+
+#: collective_blog/templates/blog/blog.html:18
+#, python-format
+msgid "%(counter)s post"
+msgid_plural "%(counter)s posts"
+msgstr[0] "%(counter)s пост"
+msgstr[1] "%(counter)s поста"
+msgstr[2] "%(counter)s постов"
+msgstr[3] "%(counter)s постов"
+
+#: collective_blog/templates/blog/blog.html:28
+msgid "Your request is being processed."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:29
+msgid "You are an owner of this blog."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:30
+msgid "You are an administrator of this blog."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:33
+msgid "You are banned in this blog."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:35
+#, python-format
+msgid "Ban expires %(expires)s."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:46
+msgid "Update"
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:52
+msgid "Leave the blog"
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:59
+msgid "Join the blog"
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:62
+msgid "You should login to join this blog."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:64
+msgid "You can't join this blog."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:66
+#, python-format
+msgid "Your karma should be greater than %(karma)s."
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:114
+#: collective_blog/templates/blog/feed.html:49
+msgid "Nothing to show"
+msgstr ""
+
+#: collective_blog/templates/blog/blog.html:116
+msgid "Sorry, but we have no entries to show."
+msgstr ""
+
+#: collective_blog/templates/blog/feed.html:51
+msgid "Sorry, but we have no entries to show. Maybe you'd like to write one?"
+msgstr ""
+
+#: collective_blog/templates/blog/post.html:24
+#: collective_blog/templates/blog/tags/post_preview.html:35
+msgid "Rating"
+msgstr ""
+
+#: collective_blog/templates/blog/post_message_fail.html:5
+msgid "Post is hidden"
+msgstr ""
+
+#: collective_blog/templates/blog/post_message_fail.html:11
+msgid "You have no access to this post"
+msgstr ""
+
+#: collective_blog/templates/blog/tags/post_header.html:6
+#: collective_blog/templates/blog/tags/post_preview.html:8
+msgid "Author:"
+msgstr ""
+
+#: collective_blog/templates/blog/tags/post_preview.html:13
+#, python-format
+msgid ""
+"This post have very low rating (%(rating)s). It was hidden from your feed."
+msgstr ""
+
+#: collective_blog/views/feed.py:100
+msgid "The author has hidden this post."
+msgstr ""
+
+#: collective_blog/views/feed.py:102
+#, python-format
+msgid "You should be a member of the \"%(blog)s\" blog to view this post."
+msgstr ""
+
+#: collective_blog/views/feed.py:106
+#, python-format
+msgid ""
+"Your account is banned in the \"%(blog)s\" blog. You can't see this post."
+msgstr ""
+
+#: collective_blog/views/feed.py:111
+msgid "You have no access to this page."
+msgstr ""

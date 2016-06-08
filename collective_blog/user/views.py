@@ -8,14 +8,14 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, Case, When, F
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import DetailView, RedirectView, View
 from django.views.generic.base import TemplateResponseMixin
-from django.utils.translation import ugettext as __
+from django.utils.translation import ugettext_lazy as _, ugettext as __
 
 from collective_blog.utils.errors import PermissionCheckFailed
 from collective_blog.models import Membership
@@ -33,7 +33,7 @@ class ProfileView(DetailView):
     template_name = 'user/profile.html'
 
     # TODO check iexact here
-    queryset = User.objects.select_related('profile')
+    queryset = User.objects.select_related('profile').distinct()
 
     def get_context_data(self, **kwargs):
         context = {}  # No need to call super. There's nothing interesting
@@ -59,6 +59,7 @@ class ProfileView(DetailView):
             .exclude(role__in=['W', 'B'])
             .filter(user=user)
             .select_related('blog')
+            .distinct()
             .annotate(
                 rating=F('overall_posts_rating') * 10
             ).order_by('-rating')
@@ -136,10 +137,11 @@ class EditProfileView(View, TemplateResponseMixin):
 
     def denied(self):
         """Render the `denied` message"""
-        self.template_name = 'user/edit_profile_fail.html'
-        return self.render_to_response({
-            'user_display': self.user
-        }, status=403)
+        messages.error(self.request, _('You can\'t perform this action'))
+        return HttpResponseRedirect(
+            reverse('view_profile',
+                    kwargs=dict(username=self.user.username))
+        )
 
 
 @method_decorator(csrf_protect, 'dispatch')
@@ -169,11 +171,11 @@ class SwitchIsActiveView(View, TemplateResponseMixin):
         try:
             self.user.profile.switch_is_active(request.user)
         except PermissionCheckFailed as e:
-            self.template_name = 'user/edit_profile_fail.html'
-            return self.render_to_response({
-                'user_display': self.user,
-                'note': e.note
-            }, status=403)
+            messages.error(self.request, e.note)
+            return HttpResponseRedirect(
+                reverse('view_profile',
+                        kwargs=dict(username=self.user.username))
+            )
 
         if self.user.is_active:
             messages.success(

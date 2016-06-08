@@ -1,0 +1,414 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-08 23:06+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: s_appearance/utils/icons.py:4
+msgid "aircraft"
+msgstr ""
+
+#: s_appearance/utils/icons.py:5
+msgid "aircraft take off"
+msgstr ""
+
+#: s_appearance/utils/icons.py:6
+msgid "aircraft landing"
+msgstr ""
+
+#: s_appearance/utils/icons.py:7
+msgid "area graph"
+msgstr ""
+
+#: s_appearance/utils/icons.py:8
+msgid "archive"
+msgstr ""
+
+#: s_appearance/utils/icons.py:9
+msgid "attachment"
+msgstr ""
+
+#: s_appearance/utils/icons.py:10
+msgid "awareness ribbon"
+msgstr ""
+
+#: s_appearance/utils/icons.py:11
+msgid "back in time"
+msgstr ""
+
+#: s_appearance/utils/icons.py:12
+msgid "bar graph"
+msgstr ""
+
+#: s_appearance/utils/icons.py:13
+msgid "beamed note"
+msgstr ""
+
+#: s_appearance/utils/icons.py:14
+msgid "bell"
+msgstr ""
+
+#: s_appearance/utils/icons.py:15
+msgid "blackboard"
+msgstr ""
+
+#: s_appearance/utils/icons.py:16
+msgid "book"
+msgstr ""
+
+#: s_appearance/utils/icons.py:17
+msgid "bowl"
+msgstr ""
+
+#: s_appearance/utils/icons.py:18
+msgid "bookmarks"
+msgstr ""
+
+#: s_appearance/utils/icons.py:19
+msgid "box"
+msgstr ""
+
+#: s_appearance/utils/icons.py:20
+msgid "briefcase"
+msgstr ""
+
+#: s_appearance/utils/icons.py:21
+msgid "brush"
+msgstr ""
+
+#: s_appearance/utils/icons.py:22
+msgid "bucket"
+msgstr ""
+
+#: s_appearance/utils/icons.py:23
+msgid "bug"
+msgstr ""
+
+#: s_appearance/utils/icons.py:24
+msgid "cake"
+msgstr ""
+
+#: s_appearance/utils/icons.py:25
+msgid "camera"
+msgstr ""
+
+#: s_appearance/utils/icons.py:26
+msgid "chat"
+msgstr ""
+
+#: s_appearance/utils/icons.py:27
+msgid "clapperboard"
+msgstr ""
+
+#: s_appearance/utils/icons.py:28
+msgid "classic computer"
+msgstr ""
+
+#: s_appearance/utils/icons.py:29
+msgid "clipboard"
+msgstr ""
+
+#: s_appearance/utils/icons.py:30
+msgid "cloud"
+msgstr ""
+
+#: s_appearance/utils/icons.py:31
+msgid "code"
+msgstr ""
+
+#: s_appearance/utils/icons.py:32
+msgid "cog"
+msgstr ""
+
+#: s_appearance/utils/icons.py:33
+msgid "colours"
+msgstr ""
+
+#: s_appearance/utils/icons.py:34
+msgid "compass"
+msgstr ""
+
+#: s_appearance/utils/icons.py:35
+msgid "database"
+msgstr ""
+
+#: s_appearance/utils/icons.py:36
+msgid "dial pad"
+msgstr ""
+
+#: s_appearance/utils/icons.py:37
+msgid "documents"
+msgstr ""
+
+#: s_appearance/utils/icons.py:38
+msgid "feather"
+msgstr ""
+
+#: s_appearance/utils/icons.py:39
+msgid "flag"
+msgstr ""
+
+#: s_appearance/utils/icons.py:40
+msgid "flash"
+msgstr ""
+
+#: s_appearance/utils/icons.py:41
+msgid "flashlight"
+msgstr ""
+
+#: s_appearance/utils/icons.py:42
+msgid "flat brush"
+msgstr ""
+
+#: s_appearance/utils/icons.py:43
+msgid "flow branch"
+msgstr ""
+
+#: s_appearance/utils/icons.py:44
+msgid "flower"
+msgstr ""
+
+#: s_appearance/utils/icons.py:45
+msgid "folder"
+msgstr ""
+
+#: s_appearance/utils/icons.py:46
+msgid "info with circle"
+msgstr ""
+
+#: s_appearance/utils/icons.py:47
+msgid "infinity"
+msgstr ""
+
+#: s_appearance/utils/icons.py:48
+msgid "image"
+msgstr ""
+
+#: s_appearance/utils/icons.py:49
+msgid "hand"
+msgstr ""
+
+#: s_appearance/utils/icons.py:50
+msgid "hair cross"
+msgstr ""
+
+#: s_appearance/utils/icons.py:51
+msgid "grid"
+msgstr ""
+
+#: s_appearance/utils/icons.py:52
+msgid "graduation cap"
+msgstr ""
+
+#: s_appearance/utils/icons.py:53
+msgid "globe"
+msgstr ""
+
+#: s_appearance/utils/icons.py:54
+msgid "lab flask"
+msgstr ""
+
+#: s_appearance/utils/icons.py:55
+msgid "landline"
+msgstr ""
+
+#: s_appearance/utils/icons.py:56
+msgid "keyboard"
+msgstr ""
+
+#: s_appearance/utils/icons.py:57
+msgid "key"
+msgstr ""
+
+#: s_appearance/utils/icons.py:58
+msgid "layers"
+msgstr ""
+
+#: s_appearance/utils/icons.py:59
+msgid "laptop"
+msgstr ""
+
+#: s_appearance/utils/icons.py:60
+msgid "leaf"
+msgstr ""
+
+#: s_appearance/utils/icons.py:61
+msgid "lifebuoy"
+msgstr ""
+
+#: s_appearance/utils/icons.py:62
+msgid "light bulb"
+msgstr ""
+
+#: s_appearance/utils/icons.py:63
+msgid "light up"
+msgstr ""
+
+#: s_appearance/utils/icons.py:64
+msgid "line graph"
+msgstr ""
+
+#: s_appearance/utils/icons.py:65
+msgid "location pin"
+msgstr ""
+
+#: s_appearance/utils/icons.py:66
+msgid "modern mic"
+msgstr ""
+
+#: s_appearance/utils/icons.py:67
+msgid "moon"
+msgstr ""
+
+#: s_appearance/utils/icons.py:68
+msgid "mic"
+msgstr ""
+
+#: s_appearance/utils/icons.py:69
+msgid "medal"
+msgstr ""
+
+#: s_appearance/utils/icons.py:70
+msgid "mail"
+msgstr ""
+
+#: s_appearance/utils/icons.py:71
+msgid "magnet"
+msgstr ""
+
+#: s_appearance/utils/icons.py:72
+msgid "mouse pointer"
+msgstr ""
+
+#: s_appearance/utils/icons.py:73
+msgid "mouse"
+msgstr ""
+
+#: s_appearance/utils/icons.py:74
+msgid "network"
+msgstr ""
+
+#: s_appearance/utils/icons.py:75
+msgid "palette"
+msgstr ""
+
+#: s_appearance/utils/icons.py:76
+msgid "new message"
+msgstr ""
+
+#: s_appearance/utils/icons.py:77
+msgid "new"
+msgstr ""
+
+#: s_appearance/utils/icons.py:78
+msgid "newsletter"
+msgstr ""
+
+#: s_appearance/utils/icons.py:79
+msgid "note"
+msgstr ""
+
+#: s_appearance/utils/icons.py:80
+msgid "paper plane"
+msgstr ""
+
+#: s_appearance/utils/icons.py:81
+msgid "phone"
+msgstr ""
+
+#: s_appearance/utils/icons.py:82
+msgid "rocket"
+msgstr ""
+
+#: s_appearance/utils/icons.py:83
+msgid "radio"
+msgstr ""
+
+#: s_appearance/utils/icons.py:84
+msgid "print"
+msgstr ""
+
+#: s_appearance/utils/icons.py:85
+msgid "price tag"
+msgstr ""
+
+#: s_appearance/utils/icons.py:86
+msgid "shop"
+msgstr ""
+
+#: s_appearance/utils/icons.py:87
+msgid "suitcase"
+msgstr ""
+
+#: s_appearance/utils/icons.py:88
+msgid "tablet mobile combo"
+msgstr ""
+
+#: s_appearance/utils/icons.py:89
+msgid "thunder cloud"
+msgstr ""
+
+#: s_appearance/utils/icons.py:90
+msgid "ticket"
+msgstr ""
+
+#: s_appearance/utils/icons.py:91
+msgid "time slot"
+msgstr ""
+
+#: s_appearance/utils/icons.py:92
+msgid "tools"
+msgstr ""
+
+#: s_appearance/utils/icons.py:93
+msgid "traffic cone"
+msgstr ""
+
+#: s_appearance/utils/icons.py:94
+msgid "tree"
+msgstr ""
+
+#: s_appearance/utils/icons.py:95
+msgid "tv"
+msgstr ""
+
+#: s_appearance/utils/icons.py:96
+msgid "video camera"
+msgstr ""
+
+#: s_appearance/utils/icons.py:97
+msgid "video"
+msgstr ""
+
+#: s_appearance/utils/icons.py:98
+msgid "vinyl"
+msgstr ""
+
+#: s_appearance/utils/icons.py:99
+msgid "voicemail"
+msgstr ""
+
+#: s_appearance/utils/icons.py:100
+msgid "wallet"
+msgstr ""
+
+#: s_appearance/utils/icons.py:101
+msgid "warning"
+msgstr ""
+
+#: s_appearance/utils/icons.py:102
+msgid "water"
+msgstr ""

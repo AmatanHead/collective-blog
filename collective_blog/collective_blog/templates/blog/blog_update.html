@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% blocktrans trimmed with name=blog.name %}Edit the "{{ name }}" blog{% endblocktrans %}{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    {{ form_user.media }}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+    <form class="primary container" method="post">
+        <h1 class="title">
+            {% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}
+            <small>{% trans "edit blog" %}</small>
+        </h1>
+        {% csrf_token %}
+        {{ form.as_section }}
+        <section class="inline separate">
+            <button type="submit" class="primary">{% trans "Save" %}</button>
+            <a class="secondary button" href="{% url 'view_blog' blog_slug=blog.slug %}">{% trans "Cancel" %}</a>
+        </section>
+    </form>
+{% endblock %}

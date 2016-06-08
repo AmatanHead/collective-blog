@@ -9,20 +9,33 @@
 
 {% block content %}
 
-    <div class="primary container">
+    <div class="secondary container" id="blog_container">
         <h1>{% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}</h1>
-        {% blocktrans count counter=members %}
-            {{ members }} user{% plural %}{{ members }} users
+        {% blocktrans trimmed count counter=members %}
+            {{ counter }} member{% plural %}{{ counter }} members
+        {% endblocktrans %}
+        &bull;
+        {% blocktrans trimmed count counter=posts %}
+            {{ counter }} post{% plural %}{{ counter }} posts
         {% endblocktrans %}
         {% if blog.about.html_force %}<hr>{% endif %}
         {{ blog.about.html_force|safe }}
-    </div>
 
-    <div class="primary container">
+        <hr>
+
         <h2>Blog membership</h2>
-        {% if membership %}
+        {% if membership and not membership.is_left %}
             {% if membership.role == "W" %}<p>{% trans "Your request is being processed." %}</p>{% endif %}
             {% if membership.role == "O" %}<p>{% trans "You are an owner of this blog." %}</p>{% endif %}
+            {% if membership.role == "A" %}<p>{% trans "You are an administrator of this blog." %}</p>{% endif %}
+            {% if is_banned %}
+                <p>
+                    {% blocktrans trimmed %}You are banned in this blog.{% endblocktrans %}
+                    {% if not membership.ban_is_permanent %}
+                        {% blocktrans trimmed with expires=membership.ban_expiration|naturaltime %}Ban expires {{ expires }}.{% endblocktrans %}
+                    {% endif %}
+                </p>
+            {% endif %}
             <form class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
                 {% csrf_token %}
                 <span class="select-arrow"><select id="color-select" name="color" class="small blue">
@@ -32,18 +45,15 @@
                 </select></span>
                 <button>{% trans "Update" %}</button>
             </form>
-            &nbsp;&nbsp;
-            <form class="inline display-inline" method="post" action="{% url "leave_blog" blog_slug=blog.slug %}">
-                {% csrf_token %}
-                <button class="plain">{% trans "Leave the blog" %}</button>
-            </form>
+            {% if membership.role != "O" %}
+                &nbsp;&nbsp;
+                <form class="inline display-inline" method="post" action="{% url "leave_blog" blog_slug=blog.slug %}">
+                    {% csrf_token %}
+                    <button class="plain">{% trans "Leave the blog" %}</button>
+                </form>
+            {% endif %}
         {% else %}
-            {% if is_banned %}
-                {% blocktrans trimmed %}You are banned in this blog.{% endblocktrans %}
-                {% if not membership.ban_is_permanent %}
-                    {% blocktrans trimmed with expires=membership.ban_expiration|naturaltime %}Ban expires {{ expires }}.{% endblocktrans %}
-                {% endif %}
-            {% elif can_join %}
+            {% if can_join %}
                 <form class="inline" method="post" action="{% url "join_blog" blog_slug=blog.slug %}">
                     {% csrf_token %}
                     <button>{% trans "Join the blog" %}</button>
@@ -54,7 +64,7 @@
                 {% trans "You can't join this blog." %}
                 {% if blog.join_condition == 'K' %}
                     {% blocktrans trimmed with karma=blog.join_karma_threshold %}
-                        Your karma should be more than {{ karma }}.
+                        Your karma should be greater than {{ karma }}.
                     {% endblocktrans %}
                 {% endif %}
             {% endif %}
@@ -119,6 +129,7 @@
     (function () {
         function color_update () {
             d3.select('#color-select').attr('class', 'bg-' + d3.select('#color-select').node().value);
+            d3.select('#blog_container').attr('class', 'secondary container bg-' + d3.select('#color-select').node().value);
         }
 
         d3.select('#color-select').on('change', color_update);
