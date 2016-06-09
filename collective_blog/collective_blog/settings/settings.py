@@ -53,6 +53,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+
+    'collective_blog.middleware.ActiveUserMiddleware',
 ]
 
 # This list and its substructures may be extended in build-specific configs

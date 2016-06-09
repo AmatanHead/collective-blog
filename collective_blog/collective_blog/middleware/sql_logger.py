@@ -8,7 +8,7 @@ Taken from https://djangosnippets.org/snippets/264/
 from django.db import connection
 
 
-class TerminalLogging:
+class TerminalLoggingMiddleware:
     @staticmethod
     def process_response(request, response):
         """Reads the query data and prints it"""

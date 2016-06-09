@@ -6,7 +6,7 @@
 {% block title %}{% blocktrans trimmed with username=user_display %}{{ username }}'s profile{% endblocktrans %}{% endblock %}
 
 {% block content %}
-    <div class="primary container">
+    <div class="bg-blue secondary container">
         <h1 class="title">
             {{ user_display }}
             {% if not user_display.is_active %}
@@ -84,7 +84,7 @@
 
                     {% if blog.role == "A" %}
                         &bull;
-                        {# TODO: links #}
+{#                        TODO: links #}
                         <a href="">
                             {# Translators: A for Administrator #}
                             {% trans "A" %}
@@ -97,6 +97,22 @@
                         </a>
                     {% endif %}
 {#                </span>#}
+                <br>
+            {% endfor %}
+            </p>
+        {% endif %}
+
+        <hr>
+
+        {% if not posts %}
+            <p>{% trans "No posts" %}</p>
+        {% else %}
+            <p><b>Posts</b></p>
+            <p style="column-width: 200px">
+            {% for post in posts %}
+                <a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a>
+                &bull;
+                {{ post.rating }}
                 <br>
             {% endfor %}
             </p>

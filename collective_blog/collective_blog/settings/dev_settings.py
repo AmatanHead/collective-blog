@@ -13,7 +13,7 @@ DEBUG = True
 from .settings import *
 
 # Log all sql queries
-MIDDLEWARE_CLASSES.append('collective_blog.middleware.TerminalLogging')
+MIDDLEWARE_CLASSES.append('collective_blog.middleware.TerminalLoggingMiddleware')
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases

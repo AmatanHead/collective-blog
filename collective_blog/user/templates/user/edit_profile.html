@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <form class="primary container" method="post">
+    <form class="bg-blue secondary container" method="post">
         <h1 class="title">
             {{ user_display }}
             <small>{% trans "edit profile" %}</small>
@@ -20,7 +20,7 @@
             <section class="errorlist">
                 {% blocktrans trimmed %}
                     Warning: you are about to change other's user profile.
-                    You have permission to do that, but don't mess it up!
+                    You have permission to do that, just don't mess it up!
                 {% endblocktrans %}
             </section>
             <hr>

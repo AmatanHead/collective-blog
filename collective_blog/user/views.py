@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import F
+from django.db.models import F, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -18,7 +18,7 @@ from django.views.generic.base import TemplateResponseMixin
 from django.utils.translation import ugettext_lazy as _, ugettext as __
 
 from collective_blog.utils.errors import PermissionCheckFailed
-from collective_blog.models import Membership
+from collective_blog.models import Membership, Post
 from s_voting.views import VoteView
 from .models import Karma
 from .forms import ProfileForm, UserForm
@@ -56,7 +56,7 @@ class ProfileView(DetailView):
 
         membership = (
             Membership.objects
-            .exclude(role__in=['W', 'B'])
+            .exclude(role__in=['W', 'B', 'L', 'LB'])
             .filter(user=user)
             .select_related('blog')
             .distinct()
@@ -65,6 +65,22 @@ class ProfileView(DetailView):
             ).order_by('-rating')
         )
         context['blogs'] = membership
+
+        posts = (
+            Post.objects
+            .filter(
+                Q(blog__type='O') | (
+                    Q(blog__members=self.request.user) &
+                    Q(blog__membership__role__in=['O', 'M', 'A'])
+                ) if not self.request.user.is_anonymous() else (
+                    Q(blog__type='O')
+                ),
+                is_draft=False,
+                author=user)
+            .distinct()
+            .order_by('-rating')
+        )
+        context['posts'] = posts
 
         return context
 

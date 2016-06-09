@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.forms import ModelForm
+from django.forms import ModelForm, CharField
 from s_appearance.widgets import LightSelect
 
 from ..models import Blog
@@ -12,7 +12,6 @@ User = get_user_model()
 
 class BlogForm(ModelForm, BaseFormRenderer):
     renderer = [
-        'name',
         'icon',
         'about',
         '-----',
@@ -30,7 +29,6 @@ class BlogForm(ModelForm, BaseFormRenderer):
     class Meta:
         model = Blog
         fields = [
-            'name',
             'about',
             'icon',
             'type',

@@ -32,26 +32,22 @@ class GenericFeedView(ListView):
 
         return context
 
+    def get_queryset(self):
+        return (Post.objects
+                .select_related('author', 'blog')
+                .filter(
+                    Q(blog__type='O') | (
+                        Q(blog__members=self.request.user) &
+                        Q(blog__membership__role__in=['O', 'M', 'A'])
+                    ) if not self.request.user.is_anonymous() else (
+                        Q(blog__type='O')
+                    ),
+                    is_draft=False)
+                .distinct())
+
 
 class FeedView(GenericFeedView):
     template_name = 'blog/feed.html'
-
-    def get_queryset(self):
-        if self.request.user.is_anonymous():
-            return (Post.objects
-                    .select_related('author', 'blog')
-                    .prefetch_related('blog')
-                    .filter(blog__type='O', is_draft=False)
-                    .distinct()
-                    .all())
-        else:
-            return (Post.objects
-                    .select_related('author', 'blog')
-                    .filter(
-                        Q(blog__type='O') | Q(blog__members=self.request.user),
-                        is_draft=False)
-                    .distinct()
-                    .all())
 
 
 class PostView(DetailView):

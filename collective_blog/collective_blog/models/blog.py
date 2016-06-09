@@ -150,6 +150,13 @@ class Blog(models.Model):
             return None
         return Membership.objects.filter(blog=self, user=user).first()
 
+    @staticmethod
+    def can_be_moderated_by(user):
+        """Check if the user is a moderator with profile editing rights"""
+        return user.is_active and user.is_staff and (
+            user.has_perm('blog.change_membership') or
+            user.has_perm('blog.change_blog'))
+
     def is_banned(self, membership):
         """Check if the given user is banned in this blog
 
@@ -172,17 +179,6 @@ class Blog(models.Model):
         else:
             return False
 
-    # def check_can_edit_posts(self, membership):
-    #     """Check if the given user has permissions edit posts in the blog
-    #
-    #     No-members (membership==None) considered to have no rights.
-    #
-    #     """
-    #     if membership is not None and not membership.is_left():
-    #         return membership.can_edit_posts()
-    #     else:
-    #         return False
-
     def check_can_delete_posts(self, membership):
         """Check if the given user has permissions delete posts in the blog
 
@@ -193,17 +189,6 @@ class Blog(models.Model):
             return membership.can_delete_posts()
         else:
             return False
-
-    # def check_can_edit_comments(self, membership):
-    #     """Check if the given user has permissions edit comments in the blog
-    #
-    #     No-members (membership==None) considered to have no rights.
-    #
-    #     """
-    #     if membership is not None and not membership.is_left():
-    #         return membership.can_edit_comments()
-    #     else:
-    #         return False
 
     def check_can_delete_comments(self, membership):
         """Check if the given user has permissions delete comments in the blog
@@ -267,6 +252,7 @@ class Blog(models.Model):
         """
         if self.check_can_join(user):
             rating = PostVote.objects.filter(object__author=user, object__blog=self).score()
+            print(rating, list(PostVote.objects.filter(object__author=user, object__blog=self)), '!' * 80)
             membership, c = Membership.objects.get_or_create(user=user, blog=self)
             membership.overall_posts_rating = rating
             if membership.role == 'LB':
@@ -431,14 +417,8 @@ class Membership(models.Model):
     def can_change_settings(self):
         return self._common_check(self.can_change_settings_flag)
 
-    # def can_edit_posts(self):
-    #     return self._common_check(self.can_edit_posts_flag)
-
     def can_delete_posts(self):
         return self._common_check(self.can_delete_posts_flag)
-
-    # def can_edit_comments(self):
-    #     return self._common_check(self.can_edit_comments_flag)
 
     def can_delete_comments(self):
         return self._common_check(self.can_delete_comments_flag)

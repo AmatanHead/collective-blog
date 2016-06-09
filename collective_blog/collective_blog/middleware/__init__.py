@@ -1,3 +1,2 @@
-
-# Database debug system
-from collective_blog.middleware.sql_logger import TerminalLogging
+from .sql_logger import TerminalLoggingMiddleware
+from .active_user import ActiveUserMiddleware

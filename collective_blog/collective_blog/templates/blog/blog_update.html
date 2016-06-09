@@ -10,11 +10,21 @@
 {% endblock %}
 
 {% block content %}
-    <form class="primary container" method="post">
+    <form class="bg-{{ membership.color }} secondary container" method="post">
         <h1 class="title">
             {% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}
             <small>{% trans "edit blog" %}</small>
         </h1>
+        {% if is_moderator and not membership or is_moderator and membership.is_left or is_moderator and membership.role == 'M' %}
+            <hr>
+            <section class="errorlist">
+                {% blocktrans trimmed %}
+                    Warning: you are about to change a blog that you are not an administrator of.
+                    You have permission to do that, just don't mess it up!
+                {% endblocktrans %}
+            </section>
+            <hr>
+        {% endif %}
         {% csrf_token %}
         {{ form.as_section }}
         <section class="inline separate">

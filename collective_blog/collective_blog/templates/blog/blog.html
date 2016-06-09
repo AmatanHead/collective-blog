@@ -24,18 +24,19 @@
         <hr>
 
         <h2>Blog membership</h2>
+        {% if membership.role == "W" %}<p>{% trans "Your request is being processed." %}</p>{% endif %}
+        {% if membership.role == "O" %}<p>{% trans "You are an owner of this blog." %}</p>{% endif %}
+        {% if membership.role == "A" %}<p>{% trans "You are an administrator of this blog." %}</p>{% endif %}
+        {% if is_banned %}
+            <p>
+                {% blocktrans trimmed %}You are banned in this blog.{% endblocktrans %}
+                {% if not membership.ban_is_permanent %}
+                    {% blocktrans trimmed with expires=membership.ban_expiration|naturaltime %}Ban expires {{ expires }}.{% endblocktrans %}
+                {% endif %}
+            </p>
+        {% endif %}
+
         {% if membership and not membership.is_left %}
-            {% if membership.role == "W" %}<p>{% trans "Your request is being processed." %}</p>{% endif %}
-            {% if membership.role == "O" %}<p>{% trans "You are an owner of this blog." %}</p>{% endif %}
-            {% if membership.role == "A" %}<p>{% trans "You are an administrator of this blog." %}</p>{% endif %}
-            {% if is_banned %}
-                <p>
-                    {% blocktrans trimmed %}You are banned in this blog.{% endblocktrans %}
-                    {% if not membership.ban_is_permanent %}
-                        {% blocktrans trimmed with expires=membership.ban_expiration|naturaltime %}Ban expires {{ expires }}.{% endblocktrans %}
-                    {% endif %}
-                </p>
-            {% endif %}
             <form class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
                 {% csrf_token %}
                 <span class="select-arrow"><select id="color-select" name="color" class="small blue">
@@ -45,29 +46,41 @@
                 </select></span>
                 <button>{% trans "Update" %}</button>
             </form>
-            {% if membership.role != "O" %}
-                &nbsp;&nbsp;
-                <form class="inline display-inline" method="post" action="{% url "leave_blog" blog_slug=blog.slug %}">
-                    {% csrf_token %}
-                    <button class="plain">{% trans "Leave the blog" %}</button>
-                </form>
-            {% endif %}
-        {% else %}
+        {% endif %}
+
+        {% if not membership or membership.is_left  %}
             {% if can_join %}
-                <form class="inline" method="post" action="{% url "join_blog" blog_slug=blog.slug %}">
+                <form class="inline display-inline" method="post" action="{% url "join_blog" blog_slug=blog.slug %}">
                     {% csrf_token %}
                     <button>{% trans "Join the blog" %}</button>
                 </form>
             {% elif user.is_anonymous %}
-                {% trans "You should login to join this blog." %}
+                <p>{% trans "You should login to join this blog." %}</p>
             {% else %}
-                {% trans "You can't join this blog." %}
-                {% if blog.join_condition == 'K' %}
-                    {% blocktrans trimmed with karma=blog.join_karma_threshold %}
-                        Your karma should be greater than {{ karma }}.
-                    {% endblocktrans %}
-                {% endif %}
+                <p>
+                    {% trans "You can't join this blog." %}
+                    {% if blog.join_condition == 'K' %}
+                        {% blocktrans trimmed with karma=blog.join_karma_threshold %}
+                            Your karma should be greater than {{ karma }}.
+                        {% endblocktrans %}
+                    {% endif %}
+                </p>
             {% endif %}
+        {% endif %}
+
+        {% if membership.can_change_settings or is_moderator %}
+            <div class="inline display-inline">
+                &nbsp;&nbsp;
+                <a href="{% url "edit_blog" blog_slug=blog.slug %}"><button class="plain bg-green">{% trans "Manage the blog" %}</button></a>
+            </div>
+        {% endif %}
+
+        {% if membership and not membership.is_left and membership.role != "O" %}
+            &nbsp;&nbsp;
+            <form class="inline display-inline" method="get" action="{% url "leave_blog" blog_slug=blog.slug %}">
+                {% csrf_token %}
+                <button class="plain bg-err">{% trans "Leave the blog" %}</button>
+            </form>
         {% endif %}
     </div>
 
