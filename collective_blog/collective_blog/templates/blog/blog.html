@@ -10,7 +10,7 @@
 {% block content %}
 
     <div class="secondary container" id="blog_container">
-        <h1>{% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}</h1>
+        <h1 class="title">{% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}</h1>
         {% blocktrans trimmed count counter=members %}
             {{ counter }} member{% plural %}{{ counter }} members
         {% endblocktrans %}
@@ -82,6 +82,20 @@
                 <button class="plain bg-err">{% trans "Leave the blog" %}</button>
             </form>
         {% endif %}
+
+        <hr>
+
+        <h2>Other members</h2>
+        <div class="inline display-inline">
+            <a href="{% url "members_blog" blog_slug=blog.slug %}"><button class="plain">{% trans "See them" %}</button></a>
+            {% if pending %}
+                {% blocktrans trimmed count counter=pending %}
+                    ({{ counter }} member is waiting for approval)
+                    {% plural %}
+                    ({{ counter }} members are waiting for approval)
+                {% endblocktrans %}
+            {% endif %}
+        </div>
     </div>
 
     {% if post_list %}

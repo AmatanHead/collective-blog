@@ -12,6 +12,12 @@ from s_voting.views import VoteView
 
 
 class GenericFeedView(ListView):
+    """This is the mixin for displaying a feed
+
+    Overload `get_queryset` and `get_context_data` to alter the results.
+
+    """
+
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
@@ -33,6 +39,7 @@ class GenericFeedView(ListView):
         return context
 
     def get_queryset(self):
+        """Returns a queryset of posts that are visible to a user"""
         return (Post.objects
                 .select_related('author', 'blog')
                 .filter(

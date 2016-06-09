@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, QuerySet, F
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
@@ -212,6 +212,17 @@ class Blog(models.Model):
         else:
             return False
 
+    def check_can_accept_new_users(self, membership):
+        """Check if the given user has permissions to can accept new users
+
+        No-members (membership==None) considered to have no rights.
+
+        """
+        if membership is not None and not membership.is_left():
+            return membership.can_accept_new_users()
+        else:
+            return False
+
     def check_can_join(self, user):
         """Checks if the user can join the blog
 
@@ -294,6 +305,26 @@ class Blog(models.Model):
                 membership.save()
 
 
+class MembershipQuerySet(QuerySet):
+    """Queryset of votes
+
+    Allows for routine operations like getting overall rating etc.
+
+    """
+    def with_rating(self):
+        """Annotate rating of the member"""
+        return self.annotate(
+            rating=F('overall_posts_rating') * 10
+        )
+
+
+class MembershipManager(models.Manager):
+    """Wrap objects to the `MembershipQuerySet`"""
+
+    def get_queryset(self):
+        return MembershipQuerySet(self.model)
+
+
 def _overall_posts_rating_cache_query(v):
     return (Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.blog.pk) & ~Q(
         role__in=['L', 'LB']))
@@ -320,7 +351,7 @@ class Membership(models.Model):
         ('green', _('Green')),
     )
 
-    color = models.CharField(max_length=10, choices=COLORS, default='')
+    color = models.CharField(max_length=10, choices=COLORS, default='gray')
 
     ROLES = (
         ('O', _('Owner')),
@@ -339,23 +370,24 @@ class Membership(models.Model):
     can_change_settings_flag = models.BooleanField(
         default=False, verbose_name=_("Can change blog's settings"))
 
-    # can_edit_posts_flag = models.BooleanField(
-    #     default=False, verbose_name=_("Can edit posts"))
     can_delete_posts_flag = models.BooleanField(
         default=False, verbose_name=_("Can delete posts"))
 
-    # can_edit_comments_flag = models.BooleanField(
-    #     default=False, verbose_name=_("Can edit comments"))
     can_delete_comments_flag = models.BooleanField(
         default=False, verbose_name=_("Can delete comments"))
 
     can_ban_flag = models.BooleanField(
         default=False, verbose_name=_("Can ban a member"))
 
+    can_accept_new_users_flag = models.BooleanField(
+        default=False, verbose_name=_("Can accept new users"))
+
     overall_posts_rating = VoteCacheField(PostVote, _overall_posts_rating_cache_query)
 
     # Common methods
     # --------------
+
+    objects = MembershipManager()
 
     class Meta:
         unique_together = ('user', 'blog')
@@ -425,3 +457,6 @@ class Membership(models.Model):
 
     def can_ban(self):
         return self._common_check(self.can_ban_flag)
+
+    def can_accept_new_users(self):
+        return self._common_check(self.can_accept_new_users_flag)

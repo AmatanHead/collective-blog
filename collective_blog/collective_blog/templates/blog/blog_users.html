@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load members %}
+
+{% block title %}{% blocktrans trimmed with name=blog.name %}Leave the "{{ name }}" blog{% endblocktrans %}{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    {{ form_user.media }}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+    <div class="bg-{{ membership.color }} secondary container">
+        <h1 class="title">
+            <a href="{% url "view_blog" blog_slug=blog.slug %}">
+                {% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}
+                <small>{% trans "members" %}</small>
+            </a>
+        </h1>
+
+        {% if owners %}
+            <h2>{% trans "Owners" %}</h2>
+            <p style="column-width: 200px">
+            {% for owner in owners %}{% render_membership owner %}<br>{% endfor %}
+            </p>
+            <hr>
+        {% endif %}
+        {% if admins %}
+            <h2>{% trans "Admins" %}</h2>
+            <p style="column-width: 200px">
+            {% for admin in admins %}{% render_membership admin %}<br>{% endfor %}
+            </p>
+            <hr>
+        {% endif %}
+        {% if waiting %}
+            <h2>{% trans "Waiting for approval" %}</h2>
+            <p style="column-width: 200px">
+            {% for member in waiting %}{% render_membership member %}<br>{% endfor %}
+            </p>
+            <hr>
+        {% endif %}
+        {% if members %}
+            <h2>{% trans "Members" %}</h2>
+            <p style="column-width: 200px">
+            {% for member in members %}{% render_membership member %}<br>{% endfor %}
+            </p>
+            <hr>
+        {% endif %}
+    </div>
+{% endblock %}

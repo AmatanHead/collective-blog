@@ -1,0 +1,7 @@
+<a href="{% url "view_profile" username=membership.user.username %}">{{ membership.user }}</a>
+&bull;
+{{ membership.rating }}
+{% if render_karma %}
+    &bull;
+    {{ membership.user.profile.karma }}
+{% endif %}

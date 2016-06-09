@@ -60,9 +60,8 @@ class ProfileView(DetailView):
             .filter(user=user)
             .select_related('blog')
             .distinct()
-            .annotate(
-                rating=F('overall_posts_rating') * 10
-            ).order_by('-rating')
+            .with_rating()
+            .order_by('-rating')
         )
         context['blogs'] = membership
 

@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from collective_blog.views import (FeedView, VotePostView, PostView, BlogView,
                                    JoinBlogView, LeaveBlogView, UpdateColorBlogView,
-                                   EditBlogView)
+                                   EditBlogView, UsersBlogView)
 
 urlpatterns = [
     url(r'^u/', include('user.urls')),
@@ -22,6 +22,8 @@ urlpatterns = [
         UpdateColorBlogView.as_view(), name='update_color_blog'),
     url(r'^b/e/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
         EditBlogView.as_view(), name='edit_blog'),
+    url(r'^b/m/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
+        UsersBlogView.as_view(), name='members_blog'),
 
     url(r'^b/p/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
         PostView.as_view(), name='view_post'),
