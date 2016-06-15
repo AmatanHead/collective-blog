@@ -3,9 +3,11 @@
 For most of that forms we just mixin renderer.
 
 """
-
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from registration.forms import RegistrationFormUniqueEmail
 from captcha.fields import ReCaptchaField
+from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth.forms import AuthenticationForm as _AuthenticationForm
 from django.contrib.auth.forms import PasswordResetForm as _PasswordResetForm
@@ -14,6 +16,8 @@ from django.contrib.auth.forms import SetPasswordForm as _SetPasswordForm
 
 from s_appearance.forms import BaseFormRenderer
 from collective_blog.settings import DEBUG
+
+User = get_user_model()
 
 
 class AuthenticationForm(_AuthenticationForm, BaseFormRenderer):
@@ -42,6 +46,11 @@ class RegistrationFormCaptcha(RegistrationFormUniqueEmail, BaseFormRenderer):
                                            'with DEBUG=True.')
     else:
         captcha = ReCaptchaField()
+
+    def clean_username(self):
+        if User.objects.filter(username__iexact=self.cleaned_data['username']).count():
+            raise ValidationError(_('A user with that username already exists.'))
+        return self.cleaned_data['username']
 
 
 class SetPasswordForm(_SetPasswordForm, BaseFormRenderer):

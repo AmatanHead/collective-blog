@@ -90,6 +90,10 @@ WSGI_APPLICATION = 'collective_blog.wsgi.application'
 
 AUTH_USER_MODEL = 'auth.User'
 
+AUTHENTICATION_BACKENDS = (
+    'collective_blog.backend.auth.CaseInsensitiveModelBackend',
+)
+
 LOGIN_URL = '/u/a/login/'
 
 LOGIN_REDIRECT_URL = '/'
