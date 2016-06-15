@@ -2,13 +2,15 @@ from operator import itemgetter
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.http import HttpResponsePermanentRedirect, HttpResponse, \
     HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import View, UpdateView, ListView
+from django.views.generic import View, UpdateView
 from django.views.generic.base import TemplateResponseMixin
 
 from collective_blog.models import Blog, Membership, Post
@@ -64,11 +66,11 @@ class BlogView(GenericBlogView, GenericFeedView):
         context['can_join'] = self.blog.check_can_join(self.request.user)
         context['colors'] = Membership.COLORS
         context['current_color'] = self.membership.color if self.membership else ''
-        context['members'] = Membership.objects.filter(blog=self.blog).count()
-        context['posts'] = Post.objects.filter(blog=self.blog).count()
+        context['members'] = Membership.objects.filter(blog=self.blog).exclude(role__in=['L', 'LB']).count()
+        context['posts'] = Post.objects.filter(blog=self.blog, is_draft=False).count()
         context['is_moderator'] = Blog.can_be_moderated_by(self.request.user)
 
-        if self.membership.role in ['O', 'A'] and self.membership.can_accept_new_users():
+        if self.membership and self.membership.role in ['O', 'A'] and self.membership.can_accept_new_users():
             context['pending'] = Membership.objects.filter(role='W', blog=self.blog).count()
 
         return context
@@ -149,6 +151,11 @@ class EditBlogView(GenericBlogView, UpdateView):
     model = Blog
     slug_url_kwarg = 'blog_slug'
 
+    def get_context_data(self, **kwargs):
+        context = super(EditBlogView, self).get_context_data(**kwargs)
+        context['is_moderator'] = Blog.can_be_moderated_by(self.request.user)
+        return context
+
     def get_success_url(self, obj=None):
         if obj is None:
             obj = self.blog
@@ -171,6 +178,11 @@ class EditBlogView(GenericBlogView, UpdateView):
             messages.error(self.request, _('You can\'t perform this action'))
             return HttpResponseRedirect(self.get_success_url(self.blog))
 
+    def form_valid(self, form):
+        messages.success(self.request,
+                         _('"%(blog)s" blog was saved') % dict(blog=self.blog.name))
+        return super(EditBlogView, self).form_valid(form)
+
 
 class UsersBlogView(GenericBlogView, TemplateResponseMixin):
     view_name = 'members_blog'
@@ -182,38 +194,38 @@ class UsersBlogView(GenericBlogView, TemplateResponseMixin):
         context.update({
             'owners': (
                 Membership.objects
-                .select_related('user', 'user__profile')
+                .prefetch_related('user', 'user__profile', 'blog')
+                .distinct()
                 .filter(blog=self.blog, role='O')
                 .with_rating()
-                .distinct()
                 .order_by('user')
             ),
             'admins': (
                 Membership.objects
-                .select_related('user', 'user__profile')
+                .prefetch_related('user', 'user__profile', 'blog')
+                .distinct()
                 .filter(blog=self.blog, role='A')
                 .with_rating()
-                .distinct()
                 .order_by('user')
             ),
             'members': (
                 Membership.objects
-                .select_related('user', 'user__profile')
-                .filter(blog=self.blog, role='M')
-                .with_rating()
+                .prefetch_related('user', 'user__profile', 'blog')
                 .distinct()
+                .filter(blog=self.blog, role__in=['M', 'B'])
+                .with_rating()
                 .order_by('-rating')
-            )[:50],
+            ),
         })
 
-        if self.membership.role in ['O', 'A'] and self.membership.can_accept_new_users():
+        if self.membership and self.membership.role in ['O', 'A'] and self.membership.can_accept_new_users():
             context.update(dict(
                 waiting=(
                     Membership.objects
-                    .select_related('user', 'user__profile')
+                    .prefetch_related('user', 'user__profile', 'blog')
+                    .distinct()
                     .filter(blog=self.blog, role='W')
                     .with_rating()
-                    .distinct()
                     .order_by('-user__karma')
                 )
             ))

@@ -223,6 +223,18 @@ class Blog(models.Model):
         else:
             return False
 
+    def check_can_manage_permissions(self, membership):
+        """Check if the given user has permissions to manage permissions
+        of other users.
+
+        No-members (membership==None) considered to have no rights.
+
+        """
+        if membership is not None and not membership.is_left():
+            return membership.can_manage_permissions()
+        else:
+            return False
+
     def check_can_join(self, user):
         """Checks if the user can join the blog
 
@@ -268,16 +280,19 @@ class Blog(models.Model):
             membership.overall_posts_rating = rating
             if membership.role == 'LB':
                 membership.role = 'B'
+                membership.color = 'gray'
                 membership.save()
                 return _("Success. You are still banned, though")
             elif membership.role != 'L':
                 return _("You've already joined to the=is blog")
             elif self.join_condition == 'I':
                 membership.role = 'W'
+                membership.color = ''
                 membership.save()
                 return _("A request has been sent")
             else:
                 membership.role = 'M'
+                membership.color = 'gray'
                 membership.save()
                 return _("Success")
         else:
@@ -295,14 +310,8 @@ class Blog(models.Model):
                 membership.role = 'LB'
             else:
                 membership.role = 'L'
+            membership.color = ''
             membership.save()
-
-    def approve(self, user, new_role='M', save=True):
-        membership = self.check_membership(user)
-        if membership is not None and membership.role == 'W':
-            membership.role = new_role
-            if save:
-                membership.save()
 
 
 class MembershipQuerySet(QuerySet):
@@ -363,7 +372,7 @@ class Membership(models.Model):
         ('LB', _('Left the blog (banned)')),
     )
 
-    role = models.CharField(max_length=2, choices=ROLES, default='M')
+    role = models.CharField(max_length=2, choices=ROLES, default='L')
 
     ban_expiration = models.DateTimeField(default=timezone.now)
 
@@ -382,6 +391,9 @@ class Membership(models.Model):
     can_accept_new_users_flag = models.BooleanField(
         default=False, verbose_name=_("Can accept new users"))
 
+    can_manage_permissions_flag = models.BooleanField(
+        default=False, verbose_name=_("Can manage permissions"))
+
     overall_posts_rating = VoteCacheField(PostVote, _overall_posts_rating_cache_query)
 
     # Common methods
@@ -399,29 +411,21 @@ class Membership(models.Model):
     # -------------------
 
     def can_be_banned(self):
-        return self.role not in ['O', 'A']
+        return self.role in ['M', 'B', 'LB']
 
-    @classmethod
-    def ban_permanently(cls, blog, user):
-        membership = cls.objects.filter(user=user, blog=blog).first()
+    def ban(self, time=None):
+        if self.can_be_banned():
+            if time is None:
+                self.role = 'B'
+            else:
+                self.ban_expiration = timezone.now() + time
+            self.save()
 
-        if membership is None:
-            membership = Membership(user=user, blog=blog)
-
-        if membership.can_be_banned():
-            membership.role = 'B'
-            membership.save()
-
-    @classmethod
-    def ban(cls, blog, user, timedelta):
-        membership = cls.objects.filter(user=user, blog=blog).first()
-
-        if membership is None:
-            membership = Membership(user=user, blog=blog)
-
-        if membership.can_be_banned():
-            membership.ban_expiration = timezone.now() + timedelta
-            membership.save()
+    def unban(self):
+        if self.can_be_banned():
+            self.role = 'M'
+            self.ban_expiration = timezone.now()
+            self.save()
 
     def is_banned(self):
         return self.role == 'B' or self.ban_expiration >= timezone.now()
@@ -460,3 +464,6 @@ class Membership(models.Model):
 
     def can_accept_new_users(self):
         return self._common_check(self.can_accept_new_users_flag)
+
+    def can_manage_permissions(self):
+        return self._common_check(self.can_manage_permissions_flag)

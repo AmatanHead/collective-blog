@@ -7,6 +7,7 @@
 
 @import '../settings'
 @import '../misc/media_queries'
+@import '../misc/extract'
 
 
 %tag-animated
@@ -45,6 +46,10 @@
     border-style: dashed !important
 
   +tags-additional-style
+
+  &.compact
+    padding-left: left($tags-padding) / 3
+    padding-right: right($tags-padding) / 3
 
   & > .icon.center
     margin-right: 0
@@ -134,18 +139,18 @@
   +badge-additional-style
 
 .badge-group
-  .badge
+  .badge, button, input[type="button"]
     border-radius: 0
     margin-right: -1px
 
+    &:first-child
+      border-top-left-radius: $badge-border-radius
+      border-bottom-left-radius: $badge-border-radius
+
+    &:last-child
+      border-top-right-radius: $badge-border-radius
+      border-bottom-right-radius: $badge-border-radius
+      margin-right: 0
+
   &:hover .animated
     @extend %tag-animated
-
-  .badge:first-child
-    border-top-left-radius: $badge-border-radius
-    border-bottom-left-radius: $badge-border-radius
-
-  .badge:last-child
-    border-top-right-radius: $badge-border-radius
-    border-bottom-right-radius: $badge-border-radius
-    margin-right: 0

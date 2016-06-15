@@ -1,7 +1,12 @@
-<a href="{% url "view_profile" username=membership.user.username %}">{{ membership.user }}</a>
-&bull;
-{{ membership.rating }}
-{% if render_karma %}
+{% load humanize %}
+<span class="user" data-user="{{ membership.user.username }}" data-url="{% url "blog_api" blog_slug=membership.blog.slug %}" data-ban_perm="{{ ban_perm }}" data-accept_perm="{{ accept_perm }}" data-manage_perm="{{ manage_perm }}" data-is_banned="{{ membership.is_banned }}" data-rating="{{ membership.rating }}" data-role="{{ membership.role }}">
+    <a href="{% url "view_profile" username=membership.user.username %}" name="user__{{ membership.user.username }}">{{ membership.user }}</a>
+    <span class="ad"></span>
     &bull;
-    {{ membership.user.profile.karma }}
-{% endif %}
+    {{ membership.rating }}
+    {% if render_karma %}
+        &bull;
+        {{ membership.user.profile.karma }}
+    {% endif %}
+    <span class="outline compact badge member-manager"><span class="flash center icon"></span></span>
+</span>

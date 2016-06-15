@@ -3,11 +3,19 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from collective_blog.views import (FeedView, VotePostView, PostView, BlogView,
+from collective_blog.views import (FeedView, BestView, MonthBestView, DayBestView,
+                                   PersonalFeedView, VotePostView, PostView, BlogView,
                                    JoinBlogView, LeaveBlogView, UpdateColorBlogView,
-                                   EditBlogView, UsersBlogView)
+                                   EditBlogView, UsersBlogView, MembershipApi)
+from django.views.i18n import javascript_catalog
+
+js_info_dict = {
+    'packages': ('collective_blog',),
+}
 
 urlpatterns = [
+    url(r'^jsi18n/$', javascript_catalog, js_info_dict, name='javascript-catalog'),
+
     url(r'^u/', include('user.urls')),
 
     url(r'^b/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
@@ -24,6 +32,8 @@ urlpatterns = [
         EditBlogView.as_view(), name='edit_blog'),
     url(r'^b/m/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
         UsersBlogView.as_view(), name='members_blog'),
+    url(r'^b/api/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
+        MembershipApi.as_view(), name='blog_api'),
 
     url(r'^b/p/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
         PostView.as_view(), name='view_post'),
@@ -34,5 +44,17 @@ urlpatterns = [
     url(r'^messages/', include('messages_extends.urls')),
 
     url(r'^(?P<page>[0-9]+)/$', FeedView.as_view(), name='homepage'),
-    url(r'^$', FeedView.as_view(), name='homepage')
+    url(r'^$', FeedView.as_view(), name='homepage'),
+
+    url(r'^feed-best/(?P<page>[0-9]+)/$', BestView.as_view(), name='feed_best'),
+    url(r'^feed-best/$', BestView.as_view(), name='feed_best'),
+
+    url(r'^feed-month-best/(?P<page>[0-9]+)/$', MonthBestView.as_view(), name='feed_month_best'),
+    url(r'^feed-month-best/$', MonthBestView.as_view(), name='feed_month_best'),
+
+    url(r'^feed-day-best/(?P<page>[0-9]+)/$', DayBestView.as_view(), name='feed_day_best'),
+    url(r'^feed-day-best/$', DayBestView.as_view(), name='feed_day_best'),
+
+    url(r'^feed/(?P<page>[0-9]+)/$', PersonalFeedView.as_view(), name='feed_personal'),
+    url(r'^feed/$', PersonalFeedView.as_view(), name='feed_personal'),
 ]

@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <form class="bg-{{ membership.color }} secondary container" method="post">
+    <form class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container" method="post">
         <h1 class="title">
             {% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}
             <small>{% trans "leave blog" %}</small>

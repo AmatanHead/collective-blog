@@ -137,6 +137,7 @@ label
   input, button, .button, select
     display: inline-block
     width: auto
+    margin-bottom: .2rem
     +no-clear
 
   input
@@ -145,6 +146,12 @@ label
 
   .full-width-on-low
     +respond-to(low)
+      width: 100%
+
+  .full-width-on-mid
+    +respond-to(low)
+      width: 100%
+    +respond-to(mid)
       width: 100%
 
 .required

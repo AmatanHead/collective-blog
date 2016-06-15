@@ -1,7 +1,9 @@
+from datetime import timedelta
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView
@@ -33,7 +35,7 @@ class GenericFeedView(ListView):
             context['interesting_blogs'] = []
         else:
             context['interesting_blogs'] = {
-                m.blog.id: m for m in Membership.objects.filter(user=self.request.user).exclude(role__in=['L', 'LB'])
+                m.blog.id: m for m in Membership.objects.filter(user=self.request.user).filter(role__in=['O', 'M', 'A'])
             }
 
         return context
@@ -55,6 +57,55 @@ class GenericFeedView(ListView):
 
 class FeedView(GenericFeedView):
     template_name = 'blog/feed.html'
+    type = 'feed'
+
+    def get_context_data(self, **kwargs):
+        context = super(FeedView, self).get_context_data(**kwargs)
+        context['type'] = self.type
+        return context
+
+
+class GenericBestFeedView(FeedView):
+    template_name = 'blog/feed.html'
+    time = None
+
+    def get_queryset(self):
+        query = (
+            super(GenericBestFeedView, self).get_queryset()
+            .order_by('-rating')
+        )
+        if self.time is not None:
+            query = query.filter(created__gt=timezone.now() - self.time)
+        return query
+
+
+class DayBestView(GenericBestFeedView):
+    template_name = 'blog/feed.html'
+    time = timedelta(days=1)
+    type = 'day'
+
+
+class MonthBestView(GenericBestFeedView):
+    template_name = 'blog/feed.html'
+    time = timedelta(days=30)
+    type = 'month'
+
+
+class BestView(GenericBestFeedView):
+    template_name = 'blog/feed.html'
+    type = 'best'
+
+
+class PersonalFeedView(FeedView):
+    template_name = 'blog/feed.html'
+    type = 'personal'
+
+    def get_queryset(self):
+        return (
+            super(PersonalFeedView, self).get_queryset()
+            .filter(blog__membership__role__in=['O', 'M', 'A'],
+                    blog__members=self.request.user)
+        )
 
 
 class PostView(DetailView):

@@ -8,17 +8,17 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import F, Q
+from django.db.models import F, Q, Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import DetailView, RedirectView, View
 from django.views.generic.base import TemplateResponseMixin
-from django.utils.translation import ugettext_lazy as _, ugettext as __
+from django.utils.translation import ugettext_lazy as _
 
 from collective_blog.utils.errors import PermissionCheckFailed
-from collective_blog.models import Membership, Post
+from collective_blog.models import Membership, Post, Blog
 from s_voting.views import VoteView
 from .models import Karma
 from .forms import ProfileForm, UserForm
@@ -87,6 +87,7 @@ class ProfileView(DetailView):
 @method_decorator(login_required, name='dispatch')
 class SelfProfileView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
+        list(Blog.objects.annotate(n=Count('members'), m=Count('members')))
         return reverse('view_profile',
                        kwargs=dict(username=self.request.user.username))
 
@@ -142,7 +143,7 @@ class EditProfileView(View, TemplateResponseMixin):
         form.save()
         user_form.save()
 
-        message = __("%(username)s's profile was saved") % dict(username=self.user.username)
+        message = _("%(username)s's profile was saved") % dict(username=self.user.username)
         messages.success(request, message)
 
         return HttpResponseRedirect(
@@ -195,12 +196,12 @@ class SwitchIsActiveView(View, TemplateResponseMixin):
         if self.user.is_active:
             messages.success(
                 self.request,
-                __("%(username)s's account activated")
+                _("%(username)s's account activated")
                 % dict(username=self.user.username))
         else:
             messages.success(
                 self.request,
-                __("%(username)s's account deactivated")
+                _("%(username)s's account deactivated")
                 % dict(username=self.user.username))
 
         return HttpResponseRedirect(

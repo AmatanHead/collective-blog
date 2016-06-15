@@ -75,3 +75,39 @@
   @extend .primary.container
   border-left: 4px solid #fdb814
   padding-left: calc(#{$main-container-padding-horizontal} - 4px)
+
+.popup-body
+  @extend %container !optional
+  margin: 4rem 20%
+  padding: 2rem
+  +bleed(2rem, 2rem)
+  border-radius: 5px
+  background: #fff
+  max-height: calc(100% - 8rem)
+  min-width: 25rem
+  overflow: auto
+  overflow-x: hidden
+
+  +respond-to(mid)
+    margin: 4rem 4rem
+
+  +respond-to(low)
+    margin: 4rem 0
+    border-radius: 0
+
+.popup-close
+  position: absolute
+  top: 4.3rem
+  right: calc(20% + 0.5rem)
+  width: 21px
+  height: 21px
+  text-align: center
+  color: #ccc
+  cursor: pointer
+  font-size: 1.1rem
+
+  +respond-to(mid)
+    right: calc(4.5rem)
+
+  +respond-to(low)
+    right: calc(0.5rem)

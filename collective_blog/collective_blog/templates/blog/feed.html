@@ -6,6 +6,49 @@
 
 
 {% block content %}
+    <div class="inline primary container">
+        <p class="text-centered">
+            {% if type == "feed" %}
+                <span class="disabled full-width-on-low button">{% trans "All" %}</span>
+            {% else %}
+                <a class="full-width-on-low button" href="{% url "homepage" page=page_obj.number %}">{% trans "All" %}</a>
+            {% endif %}
+
+            {% if not user.is_anonymous %}
+                &nbsp;&nbsp;
+
+                {% if type == "personal" %}
+                    <span class="disabled full-width-on-low button">{% trans "Feed" %}</span>
+                {% else %}
+                    <a class="full-width-on-low button" href="{% url "feed_personal" page=page_obj.number %}">{% trans "Feed" %}</a>
+                {% endif %}
+            {% endif %}
+
+            &nbsp;&nbsp;
+
+            {% if type == "day" %}
+                <span class="disabled full-width-on-low button">{% trans "Day best" %}</span>
+            {% else %}
+                <a class="full-width-on-low button" href="{% url "feed_day_best" page=page_obj.number %}">{% trans "Day best" %}</a>
+            {% endif %}
+
+            &nbsp;&nbsp;
+
+            {% if type == "month" %}
+                <span class="disabled full-width-on-low button">{% trans "Month best" %}</span>
+            {% else %}
+                <a class="full-width-on-low button" href="{% url "feed_month_best" page=page_obj.number %}">{% trans "Month best" %}</a>
+            {% endif %}
+
+            &nbsp;&nbsp;
+
+            {% if type == "best" %}
+                <span class="disabled full-width-on-low button">{% trans "All time best" %}</span>
+            {% else %}
+                <a class="full-width-on-low button" href="{% url "feed_best" page=page_obj.number %}">{% trans "All time best" %}</a>
+            {% endif %}
+        </p>
+    </div>
 
     {% if post_list %}
         {% for post in post_list %}
@@ -15,9 +58,7 @@
         {% endfor %}
 
         <div class="inline primary container">
-
             <p class="text-centered">
-
                 {% if page_obj.has_previous %}
                     <a class="full-width-on-low button" href="{% url "homepage" page=page_obj.previous_page_number %}">&lt;&lt;&lt;</a>
                 {% else %}
@@ -43,7 +84,6 @@
                 {% endif %}
             </p>
         </div>
-
     {% else %}
         <div class="primary container">
             <h1 class="title">{% trans "Nothing to show" %}</h1>

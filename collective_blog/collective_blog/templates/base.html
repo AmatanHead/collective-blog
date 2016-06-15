@@ -76,6 +76,11 @@
     {% block scripts %}
         <script src="{% static "d3.min.js" %}"></script>
         <script src="{% static "cookie.js" %}"></script>
+
+        <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+        <script src="{% static "popup.js" %}"></script>
+        <script src="{% static "membership_manage.js" %}"></script>
+
     {% endblock %}
     {% block extra_scripts %}
         <script>

@@ -73,7 +73,6 @@
             <p><b>Blogs</b></p>
             <p style="column-width: 200px">
             {% for blog in blogs %}
-{#                <span class="nowrap">#}
                     <a href="{% url "view_blog" blog_slug=blog.blog.slug %}">{{ blog.blog.name }}</a>
                     &bull;
                     {% if blog.rating %}
@@ -84,19 +83,17 @@
 
                     {% if blog.role == "A" %}
                         &bull;
-{#                        TODO: links #}
-                        <a href="">
+                        <a href="{% url "members_blog" blog_slug=blog.blog.slug %}#user__{{ user_display.username }}">
                             {# Translators: A for Administrator #}
                             {% trans "A" %}
                         </a>
                     {% elif blog.role == "O" %}
                         &bull;
-                        <a href="">
+                        <a href="{% url "members_blog" blog_slug=blog.blog.slug %}#user__{{ user_display.username }}">
                             {# Translators: O for Owner #}
                             {% trans "O" %}
                         </a>
                     {% endif %}
-{#                </span>#}
                 <br>
             {% endfor %}
             </p>

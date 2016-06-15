@@ -9,7 +9,7 @@
 
 {% block content %}
 
-    <div class="secondary container" id="blog_container">
+    <div class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container" id="blog_container">
         <h1 class="title">{% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}</h1>
         {% blocktrans trimmed count counter=members %}
             {{ counter }} member{% plural %}{{ counter }} members
@@ -36,7 +36,7 @@
             </p>
         {% endif %}
 
-        {% if membership and not membership.is_left %}
+        {% if membership and not membership.is_left and membership.role != "W" %}
             <form class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
                 {% csrf_token %}
                 <span class="select-arrow"><select id="color-select" name="color" class="small blue">
@@ -45,6 +45,7 @@
                     {% endfor %}
                 </select></span>
                 <button>{% trans "Update" %}</button>
+                &nbsp;&nbsp;
             </form>
         {% endif %}
 
@@ -70,16 +71,16 @@
 
         {% if membership.can_change_settings or is_moderator %}
             <div class="inline display-inline">
-                &nbsp;&nbsp;
                 <a href="{% url "edit_blog" blog_slug=blog.slug %}"><button class="plain bg-green">{% trans "Manage the blog" %}</button></a>
+                &nbsp;&nbsp;
             </div>
         {% endif %}
 
         {% if membership and not membership.is_left and membership.role != "O" %}
-            &nbsp;&nbsp;
             <form class="inline display-inline" method="get" action="{% url "leave_blog" blog_slug=blog.slug %}">
                 {% csrf_token %}
                 <button class="plain bg-err">{% trans "Leave the blog" %}</button>
+                &nbsp;&nbsp;
             </form>
         {% endif %}
 

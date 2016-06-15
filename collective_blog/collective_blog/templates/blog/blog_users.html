@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="bg-{{ membership.color }} secondary container">
+    <div class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container">
         <h1 class="title">
             <a href="{% url "view_blog" blog_slug=blog.slug %}">
                 {% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}
@@ -22,30 +22,37 @@
         {% if owners %}
             <h2>{% trans "Owners" %}</h2>
             <p style="column-width: 200px">
-            {% for owner in owners %}{% render_membership owner %}<br>{% endfor %}
+            {% for owner in owners %}{% render_membership owner membership %}<br>{% endfor %}
             </p>
             <hr>
         {% endif %}
         {% if admins %}
             <h2>{% trans "Admins" %}</h2>
             <p style="column-width: 200px">
-            {% for admin in admins %}{% render_membership admin %}<br>{% endfor %}
+            {% for admin in admins %}{% render_membership admin membership %}<br>{% endfor %}
             </p>
             <hr>
         {% endif %}
         {% if waiting %}
             <h2>{% trans "Waiting for approval" %}</h2>
             <p style="column-width: 200px">
-            {% for member in waiting %}{% render_membership member %}<br>{% endfor %}
+            {% for member in waiting %}{% render_membership member membership %}<br>{% endfor %}
             </p>
             <hr>
         {% endif %}
         {% if members %}
             <h2>{% trans "Members" %}</h2>
             <p style="column-width: 200px">
-            {% for member in members %}{% render_membership member %}<br>{% endfor %}
+            {% for member in members %}{% render_membership member membership %}<br>{% endfor %}
             </p>
             <hr>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ block.super }}
+    <script>
+        d3.selectAll('.user').each(setupManager);
+    </script>
 {% endblock %}
