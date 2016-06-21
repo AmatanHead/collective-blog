@@ -22,19 +22,22 @@
             <div class="primary container">
                 <div class="separate">
                     <h2 style="display: inline-block"><a href="{% url "feed_personal" %}">{{ global_site_name }}</a></h2>
-                    <span class="hor-separate">
-                        {% if user.is_anonymous %}
+                    {% if user.is_anonymous %}
+                        <span class="hor-separate">
                                 <a href="{% url "login" %}">{% trans "Log in" %}</a>
                                 &bull;
                                 <a href="{% url "registration_register" %}">{% trans "Register" %}</a>
-                        {% else %}
+                        </span>
+                    {% else %}
+                        <span class="hor-separate">
+                                <a href="{% url "feed_my_posts" %}">{% trans "my posts" %}</a>
+                        </span>
+                        <span class="hor-separate">
                                 <a href="{% url "view_self_profile" %}">{{ user.username }}</a>
                                 &bull;
-                                <a href="{% url "feed_my_posts" %}">{% trans "my posts" %}</a>
-                                &bull;
                                 <a href="{% url "logout" %}">{% trans "log out" %}</a>
-                        {% endif %}
-                    </span>
+                        </span>
+                    {% endif %}
                 </div>
             </div>
         {% endblock %}

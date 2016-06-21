@@ -12,6 +12,9 @@
                 {% post_preview post interesting_blogs=interesting_blogs hide_threshold=None %}
             </div>
         {% endfor %}
+
+        {% post_navigation page_obj pages 'feed_my_posts' %}
+
     {% else %}
         <div class="primary container">
             <h1 class="title">{% trans "Nothing to show" %}</h1>

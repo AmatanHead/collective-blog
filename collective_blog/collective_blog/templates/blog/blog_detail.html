@@ -8,7 +8,6 @@
 
 
 {% block content %}
-
     <div class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container" id="blog_container">
         <h1 class="title">{% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}</h1>
         {% blocktrans trimmed count counter=members %}
