@@ -3,5 +3,6 @@ from .feed import (GenericFeedView, FeedView,
                    PersonalFeedView, MyPostsFeedView)
 from .post import (PostView, VotePostView)
 from .blog import (BlogView, JoinBlogView, LeaveBlogView, UpdateColorBlogView,
-                   EditBlogView, UsersBlogView)
+                   UsersBlogView, EditBlogView, CreateBlogView, DeleteBlogView,
+                   ListBlogView)
 from .membership_api import MembershipApi

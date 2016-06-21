@@ -1,1 +1,1 @@
-from .blog import BlogForm
+from .blog import BlogForm, BlogFormCreate

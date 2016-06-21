@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Create a new blog" %}{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    {{ form_user.media }}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+    <form class="secondary container" method="post">
+        <h1 class="title">{% trans "Create a blog" %}</h1>
+        {% csrf_token %}
+        {{ form.as_section }}
+        <section class="inline separate">
+            <button type="submit" class="primary">{% trans "Create" %}</button>
+            <a class="secondary button" href="{% url 'homepage' %}">{% trans "Cancel" %}</a>
+        </section>
+    </form>
+{% endblock %}

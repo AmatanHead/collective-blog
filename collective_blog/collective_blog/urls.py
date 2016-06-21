@@ -15,9 +15,9 @@ urlpatterns = [
 
     url(r'^u/', include('user.urls')),
 
-    url(r'^b/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
+    url(r'^b/v/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
         BlogView.as_view(), name='view_blog'),
-    url(r'^b/(?P<blog_slug>[a-zA-Z0-9_-]+)/(?P<page>[0-9]+)/$',
+    url(r'^b/v/(?P<blog_slug>[a-zA-Z0-9_-]+)/(?P<page>[0-9]+)/$',
         BlogView.as_view(), name='view_blog'),
     url(r'^b/j/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
         JoinBlogView.as_view(), name='join_blog'),
@@ -27,6 +27,10 @@ urlpatterns = [
         UpdateColorBlogView.as_view(), name='update_color_blog'),
     url(r'^b/e/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
         EditBlogView.as_view(), name='edit_blog'),
+    url(r'^b/c/$',
+        CreateBlogView.as_view(), name='create_blog'),
+    url(r'^b/d/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
+        DeleteBlogView.as_view(), name='delete_blog'),
     url(r'^b/m/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
         UsersBlogView.as_view(), name='members_blog'),
     url(r'^b/api/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',

@@ -265,19 +265,24 @@ class Blog(models.Model):
     # Actions
     # -------
 
-    def join(self, user):
+    def join(self, user, role=None):
         """Add the user to the blog's membership
 
         :param user: User which wants to be a member.
-        :return: Message
+        :param role: Force the role of the user. Ignore join conditions.
+        Does change the role of the users who already joined.
+        :return: Message or None if the role passed.
         :raises PermissionCheckFailed: If the user can't join the blog.
 
         """
         if self.check_can_join(user):
             rating = PostVote.objects.filter(object__author=user, object__blog=self).score()
-            print(rating, list(PostVote.objects.filter(object__author=user, object__blog=self)), '!' * 80)
             membership, c = Membership.objects.get_or_create(user=user, blog=self)
             membership.overall_posts_rating = rating
+            if role is not None:
+                membership.role = role
+                membership.save()
+                return
             if membership.role == 'LB':
                 membership.role = 'B'
                 membership.color = 'gray'
