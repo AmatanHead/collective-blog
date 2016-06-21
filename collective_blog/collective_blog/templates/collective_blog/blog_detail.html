@@ -4,8 +4,7 @@
 {% load humanize %}
 {% load post %}
 
-{% block title %}{{ blog.name }}{% endblock %}
-
+{% block title %}{% blocktrans trimmed with name=blog.name %}"{{ name }}" blog{% endblocktrans %}{% endblock %}
 
 {% block content %}
     <div class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container" id="blog_container">
@@ -113,7 +112,7 @@
             <p>
                 {% blocktrans trimmed %}
                     There are no posts in this blog.
-                    They don't exists. Or they're hidden.
+                    They don't exist. Or they're hidden.
                     We don't know.
                 {% endblocktrans %}
                 <!-- TODO link to the post creation form -->

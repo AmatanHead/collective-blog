@@ -34,6 +34,10 @@
         <section class="inline separate">
             <button type="submit" class="primary">{% trans "Save" %}</button>
             <a class="secondary button" href="{% url 'view_blog' blog_slug=blog.slug %}">{% trans "Cancel" %}</a>
+            {% if membership.role == 'O' and not membership.is_banned %}
+                &nbsp;&nbsp;
+                <a class="plain button" href="{% url 'delete_blog' blog_slug=blog.slug %}">{% trans "Delete the blog" %}</a>
+            {% endif %}
         </section>
     </form>
 {% endblock %}

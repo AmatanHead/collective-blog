@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load post %}
 
-{% block title_global %}{{ global_site_name }}{% endblock %}
+{% block title %}{% trans "My posts" %}{% endblock %}
 
 
 {% block content %}
@@ -13,7 +13,7 @@
             </div>
         {% endfor %}
 
-        {% post_navigation page_obj pages 'feed_my_posts' %}
+        {% post_navigation page_obj pages 'my_posts' %}
 
     {% else %}
         <div class="primary container">

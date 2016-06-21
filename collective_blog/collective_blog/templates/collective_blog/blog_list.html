@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title %}{% trans "My blogs" %}{% endblock %}
+
+
+{% block content %}
+    {% if membership_list %}
+        {% for membership in membership_list %}
+            <div class="primary container">
+                {{ membership }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="primary container">
+            <h1 class="title">{% trans "Nothing to show" %}</h1>
+            <p>
+                {% blocktrans trimmed %}
+                    You haven't joined any blog.
+                {% endblocktrans %}
+                <!-- TODO link to the post creation form -->
+            </p>
+        </div>
+    {% endif %}
+
+{% endblock %}
