@@ -116,7 +116,7 @@ def _default_cache_query(v):
     return Q(pk=v.object.pk)
 
 
-class VoteCacheField(models.PositiveSmallIntegerField):
+class VoteCacheField(models.SmallIntegerField):
     def __init__(self, vote_model, query=_default_cache_query, default=0):
         """A field that caches the sum of all votes for a particular object
 
