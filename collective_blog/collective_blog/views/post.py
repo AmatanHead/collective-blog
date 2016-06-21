@@ -48,10 +48,10 @@ class PostView(DetailView):
             membership = None
 
         if self.object.can_be_seen_by_user(self.request.user, membership):
-            self.template_name = 'blog/post_detail.html'
+            self.template_name = 'collective_blog/post_detail.html'
             self.status = 200
         else:
-            self.template_name = 'blog/post_message_fail.html'
+            self.template_name = 'collective_blog/post_denied.html'
             self.status = 403
             if self.object.is_draft:
                 context['note'] = _('The author has hidden this post.')

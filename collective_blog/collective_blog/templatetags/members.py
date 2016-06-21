@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag('blog/tags/member.html')
+@register.inclusion_tag('collective_blog/tags/member.html')
 def render_membership(membership, self_membership, render_rating=True, render_karma=True):
     return dict(
         membership=membership,

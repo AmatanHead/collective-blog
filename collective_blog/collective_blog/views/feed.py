@@ -28,7 +28,7 @@ class GenericFeedView(ListView):
             context['pages'] = range(frm, to)
 
         if self.request.user.is_anonymous():
-            context['interesting_blogs'] = []
+            context['interesting_blogs'] = {}
         else:
             context['interesting_blogs'] = {
                 m.blog.id: m for m in Membership.objects.filter(user=self.request.user).filter(role__in=['O', 'M', 'A'])
@@ -53,7 +53,7 @@ class GenericFeedView(ListView):
 
 class FeedView(GenericFeedView):
     """A view for displaying main feed (homepage and others)"""
-    template_name = 'blog/feed.html'
+    template_name = 'collective_blog/feed.html'
     type = 'homepage'
 
     def get_context_data(self, **kwargs):
@@ -64,7 +64,7 @@ class FeedView(GenericFeedView):
 
 class GenericBestFeedView(FeedView):
     """A view for displaying feed ordered by rating"""
-    template_name = 'blog/feed.html'
+    template_name = 'collective_blog/feed.html'
     time = None
 
     def get_queryset(self):
@@ -78,25 +78,25 @@ class GenericBestFeedView(FeedView):
 
 
 class DayBestFeedView(GenericBestFeedView):
-    template_name = 'blog/feed.html'
+    template_name = 'collective_blog/feed.html'
     time = timedelta(days=1)
     type = 'feed_day_best'
 
 
 class MonthBestFeedView(GenericBestFeedView):
-    template_name = 'blog/feed.html'
+    template_name = 'collective_blog/feed.html'
     time = timedelta(days=30)
     type = 'feed_month_best'
 
 
 class BestFeedView(GenericBestFeedView):
-    template_name = 'blog/feed.html'
+    template_name = 'collective_blog/feed.html'
     type = 'feed_best'
 
 
 class PersonalFeedView(FeedView):
     """A view for displaying personal feed ordered by time"""
-    template_name = 'blog/feed.html'
+    template_name = 'collective_blog/feed.html'
     type = 'feed_personal'
 
     def get(self, request, *args, **kwargs):
@@ -115,7 +115,7 @@ class PersonalFeedView(FeedView):
 
 class MyPostsFeedView(GenericFeedView):
     """A view for displaying personal feed ordered by time"""
-    template_name = 'blog/feed_drafts.html'
+    template_name = 'collective_blog/feed_drafts.html'
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_anonymous():
@@ -129,5 +129,5 @@ class MyPostsFeedView(GenericFeedView):
                 .select_related('author', 'blog')
                 .filter(author=self.request.user)
                 .distinct()
-                .order_by('updated')
+                .order_by('-is_draft', 'updated')
         )
