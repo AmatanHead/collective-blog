@@ -1,16 +1,12 @@
 from datetime import timedelta
+
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponsePermanentRedirect
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
-from django.views.generic import ListView, DetailView
-from django.utils.translation import ugettext_lazy as _
+from django.views.generic import ListView
 
-from collective_blog.models import Post, PostVote, Membership
-from s_voting.views import VoteView
+from collective_blog.models import Post, Membership
 
 
 class GenericFeedView(ListView):
@@ -56,8 +52,9 @@ class GenericFeedView(ListView):
 
 
 class FeedView(GenericFeedView):
+    """A view for displaying main feed (homepage and others)"""
     template_name = 'blog/feed.html'
-    type = 'feed'
+    type = 'homepage'
 
     def get_context_data(self, **kwargs):
         context = super(FeedView, self).get_context_data(**kwargs)
@@ -66,6 +63,7 @@ class FeedView(GenericFeedView):
 
 
 class GenericBestFeedView(FeedView):
+    """A view for displaying feed ordered by rating"""
     template_name = 'blog/feed.html'
     time = None
 
@@ -79,26 +77,27 @@ class GenericBestFeedView(FeedView):
         return query
 
 
-class DayBestView(GenericBestFeedView):
+class DayBestFeedView(GenericBestFeedView):
     template_name = 'blog/feed.html'
     time = timedelta(days=1)
-    type = 'day'
+    type = 'feed_day_best'
 
 
-class MonthBestView(GenericBestFeedView):
+class MonthBestFeedView(GenericBestFeedView):
     template_name = 'blog/feed.html'
     time = timedelta(days=30)
-    type = 'month'
+    type = 'feed_month_best'
 
 
-class BestView(GenericBestFeedView):
+class BestFeedView(GenericBestFeedView):
     template_name = 'blog/feed.html'
-    type = 'best'
+    type = 'feed_best'
 
 
 class PersonalFeedView(FeedView):
+    """A view for displaying personal feed ordered by time"""
     template_name = 'blog/feed.html'
-    type = 'personal'
+    type = 'feed_personal'
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_anonymous():
@@ -114,85 +113,21 @@ class PersonalFeedView(FeedView):
         )
 
 
-class PostView(DetailView):
-    model = Post
-
-    def dispatch(self, request, *args, **kwargs):
-        self.post_slug = kwargs.pop('post_slug')
-
-        if self.post_slug != self.post_slug.lower():
-            return HttpResponsePermanentRedirect(
-                reverse('view_post',
-                        kwargs=dict(post_slug=self.post_slug.lower())))
-
-        return super(PostView, self).dispatch(request, *args, **kwargs)
-
-    def get_object(self, *args, **kwargs):
-        return get_object_or_404(Post.objects.select_related('author'),
-                                 slug=self.post_slug)
-
-    def get_context_data(self, **kwargs):
-        context = super(PostView, self).get_context_data(**kwargs)
-        context['rating'] = {
-            'model': PostVote,
-            'user': self.request.user,
-            'obj': self.object,
-            'disabled': self.request.user.is_anonymous(),
-            # 'color_threshold': [0, 0],
-            'use_colors': False,
-        }
-        return context
+class MyPostsFeedView(GenericFeedView):
+    """A view for displaying personal feed ordered by time"""
+    template_name = 'blog/feed_drafts.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-
-        if self.object.blog is not None:
-            membership = self.object.blog.check_membership(self.request.user)
-        else:
-            membership = None
-
-        if self.object.can_be_seen_by_user(self.request.user, membership):
-            self.template_name = 'blog/post_detail.html'
-            self.status = 200
-        else:
-            self.template_name = 'blog/post_message_fail.html'
-            self.status = 403
-            if self.object.is_draft:
-                context['note'] = _('The author has hidden this post.')
-            elif membership is None:
-                context['note'] = _('You should be a member of the '
-                                    '"%(blog)s" blog to view this post.' %
-                                    {'blog': self.object.blog.name})
-            elif membership.is_banned():
-                context['note'] = _('Your account is banned in the '
-                                    '"%(blog)s" blog. You can\'t '
-                                    'see this post.' %
-                                    {'blog': self.object.blog.name})
-            else:
-                context['note'] = _('You have no access to this page.')
-
-        return self.render_to_response(context)
-
-
-@method_decorator(csrf_protect, 'dispatch')
-class VotePostView(VoteView):
-    model = PostVote
-
-    def dispatch(self, request, *args, **kwargs):
-        self.post_slug = kwargs.pop('post_slug')
-
-        if self.post_slug != self.post_slug.lower():
+        if self.request.user.is_anonymous():
             return HttpResponsePermanentRedirect(
-                reverse('view_post',
-                        kwargs=dict(post_slug=self.post_slug.lower())))
+                reverse('homepage', kwargs=kwargs))
+        return super(MyPostsFeedView, self).get(request, *args, **kwargs)
 
-        return super(VotePostView, self).dispatch(request, *args, **kwargs)
-
-    def get_score(self):
-        self.object.refresh_from_db()
-        return self.object.rating
-
-    def get_object(self, *args, **kwargs):
-        return get_object_or_404(Post.objects.select_related('author'),
-                                 slug=self.post_slug)
+    def get_queryset(self):
+        return (
+            Post.objects
+                .select_related('author', 'blog')
+                .filter(author=self.request.user)
+                .distinct()
+                .order_by('updated')
+        )
