@@ -2,8 +2,8 @@
 {% load humanize %}
 {% load post %}
 
-{% if post.rating <= -20 %}
-    <h1 class="title"><a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a></h1>
+{% if hide_threshold and post.rating <= hide_threshold %}
+    <h1><a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a></h1>
     <p>
         {% trans "Author:" %}
         <a href="{% url "view_profile" username=post.author.username %}">{{ post.author.username }}</a>,

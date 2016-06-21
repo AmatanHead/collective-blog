@@ -8,7 +8,7 @@
 {% block content %}
     <div class="inline primary container">
         <p class="text-centered">
-            {% if type == "feed" %}
+            {% if type == "homepage" %}
                 <span class="disabled full-width-on-low button">{% trans "All" %}</span>
             {% else %}
                 <a class="full-width-on-low button" href="{% url "homepage" page=page_obj.number %}">{% trans "All" %}</a>
@@ -17,7 +17,7 @@
             {% if not user.is_anonymous %}
                 &nbsp;&nbsp;
 
-                {% if type == "personal" %}
+                {% if type == "feed_personal" %}
                     <span class="disabled full-width-on-low button">{% trans "Feed" %}</span>
                 {% else %}
                     <a class="full-width-on-low button" href="{% url "feed_personal" page=page_obj.number %}">{% trans "Feed" %}</a>
@@ -26,7 +26,7 @@
 
             &nbsp;&nbsp;
 
-            {% if type == "day" %}
+            {% if type == "feed_day_best" %}
                 <span class="disabled full-width-on-low button">{% trans "Day best" %}</span>
             {% else %}
                 <a class="full-width-on-low button" href="{% url "feed_day_best" page=page_obj.number %}">{% trans "Day best" %}</a>
@@ -34,7 +34,7 @@
 
             &nbsp;&nbsp;
 
-            {% if type == "month" %}
+            {% if type == "feed_month_best" %}
                 <span class="disabled full-width-on-low button">{% trans "Month best" %}</span>
             {% else %}
                 <a class="full-width-on-low button" href="{% url "feed_month_best" page=page_obj.number %}">{% trans "Month best" %}</a>
@@ -42,7 +42,7 @@
 
             &nbsp;&nbsp;
 
-            {% if type == "best" %}
+            {% if type == "feed_best" %}
                 <span class="disabled full-width-on-low button">{% trans "All time best" %}</span>
             {% else %}
                 <a class="full-width-on-low button" href="{% url "feed_best" page=page_obj.number %}">{% trans "All time best" %}</a>
@@ -57,33 +57,8 @@
             </div>
         {% endfor %}
 
-        <div class="inline primary container">
-            <p class="text-centered">
-                {% if page_obj.has_previous %}
-                    <a class="full-width-on-low button" href="{% url "homepage" page=page_obj.previous_page_number %}">&lt;&lt;&lt;</a>
-                {% else %}
-                    <span class="disabled full-width-on-low button">&lt;&lt;&lt;</span>
-                {% endif %}
+        {% post_navigation page_obj pages type %}
 
-                &nbsp;&nbsp;
-
-                {% for page in pages %}
-                    {% if page == page_obj.number %}
-                        <span class="full-width-on-low button">{{ page }}</span>
-                    {% else %}
-                        <a class="full-width-on-low button" href="{% url "homepage" page=page %}">{{ page }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                &nbsp;&nbsp;
-
-                {% if page_obj.has_next %}
-                    <a class="full-width-on-low button" href="{% url "homepage" page=page_obj.next_page_number %}">&gt;&gt;&gt;</a>
-                {% else %}
-                    <span class="disabled full-width-on-low button">&gt;&gt;&gt;</span>
-                {% endif %}
-            </p>
-        </div>
     {% else %}
         <div class="primary container">
             <h1 class="title">{% trans "Nothing to show" %}</h1>

@@ -3,10 +3,7 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from collective_blog.views import (FeedView, BestView, MonthBestView, DayBestView,
-                                   PersonalFeedView, VotePostView, PostView, BlogView,
-                                   JoinBlogView, LeaveBlogView, UpdateColorBlogView,
-                                   EditBlogView, UsersBlogView, MembershipApi)
+from collective_blog.views import *
 from django.views.i18n import javascript_catalog
 
 js_info_dict = {
@@ -46,15 +43,18 @@ urlpatterns = [
     url(r'^(?P<page>[0-9]+)/$', FeedView.as_view(), name='homepage'),
     url(r'^$', FeedView.as_view(), name='homepage'),
 
-    url(r'^feed-best/(?P<page>[0-9]+)/$', BestView.as_view(), name='feed_best'),
-    url(r'^feed-best/$', BestView.as_view(), name='feed_best'),
+    url(r'^feed-best/(?P<page>[0-9]+)/$', BestFeedView.as_view(), name='feed_best'),
+    url(r'^feed-best/$', BestFeedView.as_view(), name='feed_best'),
 
-    url(r'^feed-month-best/(?P<page>[0-9]+)/$', MonthBestView.as_view(), name='feed_month_best'),
-    url(r'^feed-month-best/$', MonthBestView.as_view(), name='feed_month_best'),
+    url(r'^feed-month-best/(?P<page>[0-9]+)/$', MonthBestFeedView.as_view(), name='feed_month_best'),
+    url(r'^feed-month-best/$', MonthBestFeedView.as_view(), name='feed_month_best'),
 
-    url(r'^feed-day-best/(?P<page>[0-9]+)/$', DayBestView.as_view(), name='feed_day_best'),
-    url(r'^feed-day-best/$', DayBestView.as_view(), name='feed_day_best'),
+    url(r'^feed-day-best/(?P<page>[0-9]+)/$', DayBestFeedView.as_view(), name='feed_day_best'),
+    url(r'^feed-day-best/$', DayBestFeedView.as_view(), name='feed_day_best'),
 
     url(r'^feed/(?P<page>[0-9]+)/$', PersonalFeedView.as_view(), name='feed_personal'),
     url(r'^feed/$', PersonalFeedView.as_view(), name='feed_personal'),
+
+    url(r'^my/(?P<page>[0-9]+)/$', MyPostsFeedView.as_view(), name='feed_my_posts'),
+    url(r'^my/$', MyPostsFeedView.as_view(), name='feed_my_posts'),
 ]

@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load humanize %}
 
-<h1 class="title"><a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a></h1>
+<h1{% if big_title %} class="title"{% endif %}><a href="{% url "view_post" post_slug=post.slug %}">{{ post.heading }}</a>{% if post.is_draft %} <small>{% trans "draft" %}</small>{% endif %}</h1>
 <p>
     {% trans "Author:" %}
     <a href="{% url "view_profile" username=post.author %}">{{ post.author }}</a>,

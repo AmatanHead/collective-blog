@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
@@ -27,18 +27,27 @@ User = get_user_model()
 
 
 class ProfileView(DetailView):
-    slug_field = 'username'
+    slug_field = 'username__iexact'
     slug_url_kwarg = 'username'
 
-    template_name = 'user/profile.html'
+    template_name = 'user/profile_detail.html'
 
-    # TODO check iexact here
+    def dispatch(self, request, *args, **kwargs):
+        self.username = kwargs.pop('username')
+
+        if self.username != self.username.lower():
+            return HttpResponsePermanentRedirect(
+                reverse('view_profile',
+                        kwargs=dict(username=self.username.lower())))
+
+        return super(ProfileView, self).dispatch(request, *args, **kwargs)
+
     queryset = User.objects.select_related('profile').distinct()
 
     def get_context_data(self, **kwargs):
-        context = {}  # No need to call super. There's nothing interesting
+        context = super(ProfileView, self).get_context_data(**kwargs)
 
-        user = kwargs['object']
+        user = self.object
 
         context['user_display'] = user
         context['karma'] = {
@@ -98,7 +107,7 @@ class EditProfileView(View, TemplateResponseMixin):
     # Thus, this class can't be derived from the `FormView` class
     # because the `FormView` works with one form only.
 
-    template_name = 'user/edit_profile.html'
+    template_name = 'user/profile_edit.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.user = get_object_or_404(

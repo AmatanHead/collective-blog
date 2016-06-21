@@ -86,9 +86,8 @@
 
         <hr>
 
-        <h2>Other members</h2>
-        <div class="inline display-inline">
-            <a href="{% url "members_blog" blog_slug=blog.slug %}"><button class="plain">{% trans "See them" %}</button></a>
+        <p>
+            <a href="{% url "members_blog" blog_slug=blog.slug %}">{% trans "See all members" %}</a>
             {% if pending %}
                 {% blocktrans trimmed count counter=pending %}
                     ({{ counter }} member is waiting for approval)
@@ -96,7 +95,7 @@
                     ({{ counter }} members are waiting for approval)
                 {% endblocktrans %}
             {% endif %}
-        </div>
+        </p>
     </div>
 
     {% if post_list %}
@@ -107,42 +106,16 @@
             </div>
         {% endfor %}
 
-        <div class="inline primary container">
-
-            <p class="text-centered">
-
-                {% if page_obj.has_previous %}
-                    <a class="full-width-on-low button" href="{% url "view_blog" blog_slug=blog.slug page=page_obj.previous_page_number %}#posts">&lt;&lt;&lt;</a>
-                {% else %}
-                    <span class="disabled full-width-on-low button">&lt;&lt;&lt;</span>
-                {% endif %}
-
-                &nbsp;&nbsp;
-
-                {% for page in pages %}
-                    {% if page == page_obj.number %}
-                        <span class="full-width-on-low button">{{ page }}</span>
-                    {% else %}
-                        <a class="full-width-on-low button" href="{% url "view_blog" blog_slug=blog.slug page=page %}#posts">{{ page }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                &nbsp;&nbsp;
-
-                {% if page_obj.has_next %}
-                    <a class="full-width-on-low button" href="{% url "view_blog" blog_slug=blog.slug page=page_obj.next_page_number %}#posts">&gt;&gt;&gt;</a>
-                {% else %}
-                    <span class="disabled full-width-on-low button">&gt;&gt;&gt;</span>
-                {% endif %}
-            </p>
-        </div>
+        {% post_navigation page_obj pages "view_blog" blog_slug=blog.slug %}
 
     {% else %}
         <div class="primary container">
             <h1 class="title">{% trans "Nothing to show" %}</h1>
             <p>
                 {% blocktrans trimmed %}
-                    Sorry, but we have no entries to show.
+                    There are no posts in this blog.
+                    They don't exists. Or they're hidden.
+                    We don't know.
                 {% endblocktrans %}
                 <!-- TODO link to the post creation form -->
             </p>

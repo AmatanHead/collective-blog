@@ -30,6 +30,8 @@
                         {% else %}
                                 <a href="{% url "view_self_profile" %}">{{ user.username }}</a>
                                 &bull;
+                                <a href="{% url "feed_my_posts" %}">{% trans "my posts" %}</a>
+                                &bull;
                                 <a href="{% url "logout" %}">{% trans "log out" %}</a>
                         {% endif %}
                     </span>

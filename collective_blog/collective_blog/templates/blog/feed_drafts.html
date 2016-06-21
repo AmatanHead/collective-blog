@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title_global %}{{ global_site_name }}{% endblock %}
+
+
+{% block content %}
+    {% if post_list %}
+        {% for post in post_list %}
+            <div class="primary container">
+                {% post_preview post interesting_blogs=interesting_blogs hide_threshold=None %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="primary container">
+            <h1 class="title">{% trans "Nothing to show" %}</h1>
+            <p>
+                {% blocktrans trimmed %}
+                    There are no posts here.
+                {% endblocktrans %}
+                <!-- TODO link to the post creation form -->
+            </p>
+        </div>
+    {% endif %}
+
+{% endblock %}

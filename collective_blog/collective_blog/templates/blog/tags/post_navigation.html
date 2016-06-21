@@ -1,0 +1,27 @@
+<div class="inline primary container">
+    <p class="text-centered">
+        {% if current_page.has_previous %}
+            <a class="full-width-on-low button" href="{{ prev_url }}">&lt;&lt;&lt;</a>
+        {% else %}
+            <span class="disabled full-width-on-low button">&lt;&lt;&lt;</span>
+        {% endif %}
+
+        &nbsp;&nbsp;
+
+        {% for page, url_string in pages %}
+            {% if page == current_page.number %}
+                <span class="full-width-on-low button">{{ page }}</span>
+            {% else %}
+                <a class="full-width-on-low button" href="{{ url_string }}">{{ page }}</a>
+            {% endif %}
+        {% endfor %}
+
+        &nbsp;&nbsp;
+
+        {% if current_page.has_next %}
+            <a class="full-width-on-low button" href="{{ next_url }}">&gt;&gt;&gt;</a>
+        {% else %}
+            <span class="disabled full-width-on-low button">&gt;&gt;&gt;</span>
+        {% endif %}
+    </p>
+</div>
