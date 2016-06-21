@@ -1,18 +1,33 @@
-from django.forms import ModelForm
-from s_appearance.widgets import LightSelect
+from django.db.models import Q
+from django.forms import ModelForm, HiddenInput, ChoiceField
 
-from ..models import Post
+from ..models import Post, Blog
 from s_markdown.widgets import CodeMirror
 from s_appearance.forms import BaseFormRenderer
+from s_appearance.widgets import LightSelect
 
 
 class PostForm(ModelForm, BaseFormRenderer):
+    def __init__(self, **kwargs):
+        super(PostForm, self).__init__(**kwargs)
+        choices = (
+            Blog.objects.filter(
+                (Q(type='O') & Q(post_membership_required=False)) |
+                Q(members=self.initial['author'])).distinct()
+        )
+        self.fields['blog'] = ChoiceField(
+            choices=[(o.id, str(o)) for o in choices]
+        )
+
     renderer = [
         'heading',
         'content',
         'blog',
         'is_draft',
     ]
+
+    def clean_author(self):
+        return self.initial['author']
 
     class Meta:
         model = Post
@@ -21,6 +36,7 @@ class PostForm(ModelForm, BaseFormRenderer):
             'content',
             'blog',
             'is_draft',
+            # 'author',
         ]
         widgets = {
             'content': CodeMirror(
@@ -37,4 +53,5 @@ class PostForm(ModelForm, BaseFormRenderer):
                 js_var_format='editor_%s'
             ),
             'blog': LightSelect(),
+            'author': HiddenInput(),
         }

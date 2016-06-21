@@ -1,6 +1,7 @@
 from operator import itemgetter
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponsePermanentRedirect, HttpResponse, \
     HttpResponseRedirect
@@ -79,6 +80,7 @@ class BlogView(GenericBlogView, GenericFeedView):
 
 
 @method_decorator(csrf_protect, 'dispatch')
+@method_decorator(login_required, 'dispatch')
 class JoinBlogView(GenericBlogView):
     view_name = 'join_blog'
 
@@ -96,6 +98,7 @@ class JoinBlogView(GenericBlogView):
 
 
 @method_decorator(csrf_protect, 'dispatch')
+@method_decorator(login_required, 'dispatch')
 class LeaveBlogView(GenericBlogView, TemplateResponseMixin):
     view_name = 'leave_blog'
 
@@ -123,6 +126,7 @@ class LeaveBlogView(GenericBlogView, TemplateResponseMixin):
 
 
 @method_decorator(csrf_protect, 'dispatch')
+@method_decorator(login_required, 'dispatch')
 class UpdateColorBlogView(GenericBlogView):
     view_name = 'update_color_blog'
 
@@ -194,6 +198,7 @@ class UsersBlogView(GenericBlogView, TemplateResponseMixin):
         return self.render_to_response(self.get_context_data(**kwargs))
 
 
+@method_decorator(login_required, 'dispatch')
 class EditBlogView(GenericBlogView, UpdateView):
     view_name = 'edit_blog'
 
@@ -235,6 +240,7 @@ class EditBlogView(GenericBlogView, UpdateView):
         return super(EditBlogView, self).form_valid(form)
 
 
+@method_decorator(login_required, 'dispatch')
 class CreateBlogView(CreateView):
     form_class = BlogFormCreate
     template_name = 'collective_blog/blog_create.html'
@@ -266,6 +272,7 @@ class CreateBlogView(CreateView):
             return HttpResponseRedirect(reverse('homepage'))
 
 
+@method_decorator(login_required, 'dispatch')
 class DeleteBlogView(GenericBlogView, DeleteView):
     template_name = 'collective_blog/blog_delete_confirm.html'
     model = Blog
@@ -289,6 +296,7 @@ class DeleteBlogView(GenericBlogView, DeleteView):
             return HttpResponseRedirect(self.get_success_url(self.blog))
 
 
+@method_decorator(login_required, 'dispatch')
 class ListBlogView(ListView):
     paginate_by = None
 
@@ -296,7 +304,7 @@ class ListBlogView(ListView):
     context_object_name = 'membership_list'
 
     def get_queryset(self):
-        """Returns a queryset of posts that are visible to a user"""
+        """Returns a queryset of blogs that are visible to a user"""
         return sorted(
             Membership.objects
             .exclude(role__in=['L'])

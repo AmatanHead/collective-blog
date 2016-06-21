@@ -19,20 +19,19 @@
 
     {% post_header post color=color %}
 
-    <hr>
-
-    {{ post.content_before_cut|safe }}
-
-    <p class="inline">
-        <a class="info outline badge" href="{% url "view_post" post_slug=post.slug %}#cut">{{ post.cut_caption|safe }}</a>
-    </p>
-
-    <hr>
-
-    <p>
-        {{ post.rating_cache }}
-        <span class="badge-group">
-            <span class="gray badge">{% trans "Rating" %}</span><span class="gray badge outline">{% if post.rating == None %}0{% else %}{{ post.rating }}{% endif %}</span>
-        </span>
-    </p>
+    {% if post.is_draft %}
+    {% else %}
+        <hr>
+        {{ post.content_before_cut|safe }}
+        <p class="inline">
+            <a class="info outline badge" href="{% url "view_post" post_slug=post.slug %}#cut">{{ post.cut_caption|safe }}</a>
+        </p>
+        <hr>
+        <p>
+            {{ post.rating_cache }}
+            <span class="badge-group">
+                <span class="gray badge">{% trans "Rating" %}</span><span class="gray badge outline">{% if post.rating == None %}0{% else %}{{ post.rating }}{% endif %}</span>
+            </span>
+        </p>
+    {% endif %}
 {% endif %}

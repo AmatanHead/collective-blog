@@ -82,16 +82,16 @@ class Blog(models.Model):
                                                         'Join karma threshold'))
 
     POST_CONDITIONS = (
-        ('A', _('Anyone can add post')),
-        ('K', _('Only users with high karma can add post')),
+        ('A', _('Anyone can add posts')),
+        ('K', _('Only users with high karma can add posts')),
     )
 
-    post_condition = models.CharField(max_length=2, default='A',
+    post_condition = models.CharField(max_length=2, default='K',
                                       choices=POST_CONDITIONS,
                                       verbose_name=_('Who can add posts'))
 
     post_membership_required = models.BooleanField(
-        default=False, verbose_name=_('Require membership to write posts'))
+        default=True, verbose_name=_('Require membership to write posts'))
 
     post_karma_threshold = models.SmallIntegerField(
         default=0, verbose_name=_('Post karma threshold'))
@@ -234,6 +234,24 @@ class Blog(models.Model):
             return membership.can_manage_permissions()
         else:
             return False
+
+    def check_can_post(self, user):
+        """Check if the given user has permissions to add posts to this blog"""
+        if not user.is_active or user.is_anonymous():
+            return False
+
+        membership = self.check_membership(user)
+
+        if ((self.type != 'O' or self.post_membership_required) and
+                (membership is None or
+                 membership.is_banned() or
+                 membership.is_left())):
+            return False
+        elif (self.post_condition == 'K' and
+                user.profile.karma < self.post_karma_threshold):
+            return False
+        else:
+            return True
 
     def check_can_join(self, user):
         """Checks if the user can join the blog

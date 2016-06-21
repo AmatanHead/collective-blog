@@ -31,7 +31,11 @@
                     {% else %}
                         <span class="hor-separate">
                                 <a href="{% url 'my_posts' %}">{% trans "my posts" %}</a>
-                                <span class="new-message center icon"></span>
+                                {% if user.profile.karma >= 0 %}
+                                    <a href="{% url "create_post" %}">
+                                        <span class="new-message center icon"></span>
+                                    </a>
+                                {% endif %}
                                 &bull;
                                 <a href="{% url 'my_blogs' %}">{% trans "my blogs" %}</a>
                                 {% if user.profile.karma >= 0 %}

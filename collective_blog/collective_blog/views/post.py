@@ -101,12 +101,14 @@ class CreatePostView(CreateView):
     model = Post
 
     def get_success_url(self, obj=None):
-        return reverse('view_blog',
-                       kwargs=dict(blog_slug=self.blog.slug))
+        return reverse('view_post',
+                       kwargs=dict(post_slug=self.post.slug))
+
+    def get_initial(self):
+        return dict(author=self.request.user)
 
     def form_valid(self, form):
-        self.blog = form.save()
-        self.blog.join(self.request.user, role='O')
+        self.post = form.save()
         messages.success(self.request,
-                         _('"%(blog)s" blog was created') % dict(blog=self.blog.name))
+                         _('"%(post)s" post was created') % dict(post=self.post.heading))
         return HttpResponseRedirect(self.get_success_url())

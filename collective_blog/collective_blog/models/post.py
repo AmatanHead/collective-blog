@@ -103,6 +103,11 @@ class Post(models.Model):
             raise ValidationError(_('You must choose a blog '
                                     'before publishing'))
 
+        if not self.is_draft and self.blog:
+            if not self.blog.check_can_post(self.author):
+                raise ValidationError(_('You have no permissions '
+                                        'to write to this blog'))
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         """Pre-save routine like updating the slug field etc."""

@@ -1,9 +1,9 @@
 from datetime import timedelta
 
-from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponsePermanentRedirect
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from collective_blog.models import Post, Membership
@@ -94,16 +94,11 @@ class BestFeedView(GenericBestFeedView):
     type = 'feed_best'
 
 
+@method_decorator(login_required, 'dispatch')
 class PersonalFeedView(FeedView):
     """A view for displaying personal feed ordered by time"""
     template_name = 'collective_blog/feed.html'
     type = 'feed_personal'
-
-    def get(self, request, *args, **kwargs):
-        if self.request.user.is_anonymous():
-            return HttpResponsePermanentRedirect(
-                reverse('homepage', kwargs=kwargs))
-        return super(PersonalFeedView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         return (
@@ -113,15 +108,10 @@ class PersonalFeedView(FeedView):
         )
 
 
+@method_decorator(login_required, 'dispatch')
 class MyPostsFeedView(GenericFeedView):
     """A view for displaying personal feed ordered by time"""
     template_name = 'collective_blog/feed_drafts.html'
-
-    def get(self, request, *args, **kwargs):
-        if self.request.user.is_anonymous():
-            return HttpResponsePermanentRedirect(
-                reverse('homepage', kwargs=kwargs))
-        return super(MyPostsFeedView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         return (

@@ -1,7 +1,6 @@
 from datetime import timedelta
 from django.contrib import messages
 from messages_extends import constants as constants_messages
-from django.contrib.auth import get_user_model
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -13,8 +12,6 @@ from django.views.generic import View
 from collective_blog.models import Blog, Membership
 
 import json
-
-User = get_user_model()
 
 
 @method_decorator(csrf_protect, 'dispatch')
@@ -29,6 +26,9 @@ class MembershipApi(View):
         return super(MembershipApi, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        if not request.is_ajax():
+            return HttpResponse('This page is ajax-only', status=418)
+
         try:
             data = json.loads(request.POST['data'])
         except (KeyError, ValueError):
