@@ -157,7 +157,7 @@ class MembershipApi(View):
 
     def ban_perm(self):
         return (
-            (self.self_membership.role == "O" and self.membership.role != "O") or (
+            (self.self_membership.role == "O" and self.membership.role not in ["O", "A"]) or (
                 self.self_membership.can_ban() and
                 self.membership.role in ["M", "B", "LB"])
         ) if self.membership is not None and self.self_membership is not None else False
