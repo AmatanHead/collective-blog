@@ -36,10 +36,12 @@ urlpatterns = [
     url(r'^b/api/(?P<blog_slug>[a-zA-Z0-9_-]+)/$',
         MembershipApi.as_view(), name='blog_api'),
 
-    url(r'^b/p/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
+    url(r'^p/v/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
         PostView.as_view(), name='view_post'),
-    url(r'^b/a/vote_post/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
+    url(r'^p/a/vote_post/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
         VotePostView.as_view(), name='vote_post'),
+    url(r'^p/c/$',
+        CreatePostView.as_view(), name='create_post'),
 
     url(r'^admin/', admin.site.urls),
     url(r'^messages/', include('messages_extends.urls')),

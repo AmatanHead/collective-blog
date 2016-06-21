@@ -52,7 +52,7 @@ class Post(models.Model):
                                verbose_name=_('Author'))
 
     heading = models.CharField(max_length=100,
-                               verbose_name=_('Caption'))
+                               verbose_name=_('Title'))
 
     slug = models.SlugField(max_length=100,
                             db_index=True,

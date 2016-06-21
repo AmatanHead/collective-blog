@@ -377,6 +377,8 @@ class Membership(models.Model):
         ('LB', _('Left the blog (banned)')),
     )
 
+    ROLE_ORDERING = dict(O=0, A=2, W=3, M=4, B=5, LB=5, L=6)
+
     role = models.CharField(max_length=2, choices=ROLES, default='L')
 
     ban_expiration = models.DateTimeField(default=timezone.now)

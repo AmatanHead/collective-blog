@@ -1,11 +1,13 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 
+from collective_blog.forms import PostForm
 from collective_blog.models import Post, PostVote
 from s_voting.views import VoteView
 
@@ -91,3 +93,20 @@ class VotePostView(VoteView):
     def get_object(self, *args, **kwargs):
         return get_object_or_404(Post.objects.select_related('author'),
                                  slug=self.post_slug)
+
+
+class CreatePostView(CreateView):
+    form_class = PostForm
+    template_name = 'collective_blog/post_create.html'
+    model = Post
+
+    def get_success_url(self, obj=None):
+        return reverse('view_blog',
+                       kwargs=dict(blog_slug=self.blog.slug))
+
+    def form_valid(self, form):
+        self.blog = form.save()
+        self.blog.join(self.request.user, role='O')
+        messages.success(self.request,
+                         _('"%(blog)s" blog was created') % dict(blog=self.blog.name))
+        return HttpResponseRedirect(self.get_success_url())
