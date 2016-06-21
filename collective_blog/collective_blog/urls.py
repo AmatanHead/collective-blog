@@ -59,6 +59,8 @@ urlpatterns = [
     url(r'^feed/(?P<page>[0-9]+)/$', PersonalFeedView.as_view(), name='feed_personal'),
     url(r'^feed/$', PersonalFeedView.as_view(), name='feed_personal'),
 
-    url(r'^my/(?P<page>[0-9]+)/$', MyPostsFeedView.as_view(), name='feed_my_posts'),
-    url(r'^my/$', MyPostsFeedView.as_view(), name='feed_my_posts'),
+    url(r'^my-posts/(?P<page>[0-9]+)/$', MyPostsFeedView.as_view(), name='my_posts'),
+    url(r'^my-posts/$', MyPostsFeedView.as_view(), name='my_posts'),
+
+    url(r'^my-blogs/$', ListBlogView.as_view(), name='my_blogs'),
 ]

@@ -30,7 +30,15 @@
                         </span>
                     {% else %}
                         <span class="hor-separate">
-                                <a href="{% url "feed_my_posts" %}">{% trans "my posts" %}</a>
+                                <a href="{% url 'my_posts' %}">{% trans "my posts" %}</a>
+                                <span class="new-message center icon"></span>
+                                &bull;
+                                <a href="{% url 'my_blogs' %}">{% trans "my blogs" %}</a>
+                                {% if user.profile.karma >= 0 %}
+                                    <a href="{% url "create_blog" %}">
+                                        <span class="new-message center icon"></span>
+                                    </a>
+                                {% endif %}
                         </span>
                         <span class="hor-separate">
                                 <a href="{% url "view_self_profile" %}">{{ user.username }}</a>
