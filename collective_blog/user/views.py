@@ -32,41 +32,41 @@ class ProfileView(DetailView):
 
     template_name = 'user/profile_detail.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        self.username = kwargs.pop('username')
+    queryset = User.objects.select_related('profile').distinct()
 
-        if self.username != self.username.lower():
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.username != kwargs['username']:
+            # Wrong case
             return HttpResponsePermanentRedirect(
                 reverse('view_profile',
-                        kwargs=dict(username=self.username.lower())))
+                        kwargs=dict(username=self.object.username)))
 
-        return super(ProfileView, self).dispatch(request, *args, **kwargs)
-
-    queryset = User.objects.select_related('profile').distinct()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
 
-        user = self.object
-
-        context['user_display'] = user
+        context['user_display'] = self.object
         context['karma'] = {
             'model': Karma,
             'user': self.request.user,
-            'obj': user,
+            'obj': self.object,
             'disabled': self.request.user.is_anonymous(),
             # 'color_threshold': [0, 0],
             # 'use_colors': False,
         }
-        context['visible_email'] = user.profile.email_as_seen_by(self.request.user)
-        context['is_moderator'] = user.profile.can_be_moderated_by(self.request.user)
-        context['is_self_profile'] = user.pk == self.request.user.pk
-        context['editable'] = user.profile.can_be_edited_by(self.request.user)
+        context['visible_email'] = self.object.profile.email_as_seen_by(self.request.user)
+        context['is_moderator'] = self.object.profile.can_be_moderated_by(self.request.user)
+        context['is_self_profile'] = self.object.pk == self.request.user.pk
+        context['editable'] = self.object.profile.can_be_edited_by(self.request.user)
 
         membership = (
             Membership.objects
             .exclude(role__in=['W', 'B', 'L', 'LB'])
-            .filter(user=user)
+            .filter(user=self.object)
             .select_related('blog')
             .distinct()
             .with_rating()
@@ -84,7 +84,7 @@ class ProfileView(DetailView):
                     Q(blog__type='O')
                 ),
                 is_draft=False,
-                author=user)
+                author=self.object)
             .distinct()
             .order_by('-rating')
         )
