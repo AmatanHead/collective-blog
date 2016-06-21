@@ -100,6 +100,12 @@ class PersonalFeedView(FeedView):
     template_name = 'blog/feed.html'
     type = 'personal'
 
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_anonymous():
+            return HttpResponsePermanentRedirect(
+                reverse('homepage', kwargs=kwargs))
+        return super(PersonalFeedView, self).get(request, *args, **kwargs)
+
     def get_queryset(self):
         return (
             super(PersonalFeedView, self).get_queryset()
@@ -147,7 +153,7 @@ class PostView(DetailView):
             membership = None
 
         if self.object.can_be_seen_by_user(self.request.user, membership):
-            self.template_name = 'blog/post.html'
+            self.template_name = 'blog/post_detail.html'
             self.status = 200
         else:
             self.template_name = 'blog/post_message_fail.html'

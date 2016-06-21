@@ -58,7 +58,7 @@ class GenericBlogView(View):
 class BlogView(GenericBlogView, GenericFeedView):
     view_name = 'view_blog'
 
-    template_name = 'blog/blog.html'
+    template_name = 'blog/blog_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(BlogView, self).get_context_data(**kwargs)

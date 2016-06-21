@@ -81,7 +81,9 @@ class MembershipApi(View):
             return HttpResponse(_('You can\'t perform this action'), status=400)
 
         if self.membership is not None and self.membership.role == 'W':
-            self.membership.delete()
+            self.membership.role = 'L'
+            self.membership.color = 'gray'
+            self.membership.save()
             messages.add_message(
                 self.request,
                 constants_messages.INFO_PERSISTENT,
@@ -95,9 +97,6 @@ class MembershipApi(View):
         if self.membership is None or not self.ban_perm():
             return HttpResponse(_('You can\'t perform this action'), status=400)
 
-        if 'time' not in data or not data['time'] in ['5m', '30m', '1h', '1d', '1w', 'forever']:
-            return HttpResponse('Wrong data', status=400)
-
         time = {
             '5m': timedelta(minutes=5),
             '30m': timedelta(minutes=30),
@@ -106,6 +105,9 @@ class MembershipApi(View):
             '1w': timedelta(days=7),
             'forever': None,
         }
+
+        if 'time' not in data or data['time'] not in time:
+            return HttpResponse('Wrong data', status=400)
 
         self.membership.ban(time=time[data['time']])
 
