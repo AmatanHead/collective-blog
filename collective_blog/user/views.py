@@ -47,7 +47,7 @@ class ProfileView(DetailView):
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
-        context = super(ProfileView, self).get_context_data(**kwargs)
+        context = dict()
 
         context['user_display'] = self.object
         context['karma'] = {

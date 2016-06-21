@@ -74,7 +74,7 @@ class Profile(models.Model):
 
     # To go: liked tags
 
-    karma = VoteCacheField(Karma)
+    karma = VoteCacheField(Karma, _karma_cache_query)
 
     # Common methods
     # --------------
