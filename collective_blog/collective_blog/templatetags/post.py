@@ -14,6 +14,7 @@ def post_preview(post, interesting_blogs, hide_threshold=-20):
         color = interesting_blogs[post.blog.id].color
     return dict(post=post, color=color, hide_threshold=hide_threshold)
 
+
 @register.inclusion_tag('collective_blog/tags/post_header.html')
 def post_header(post, color='', big_title=False):
     if post.created:
@@ -21,6 +22,7 @@ def post_header(post, color='', big_title=False):
     else:
         show_full_date = True
     return dict(post=post, show_full_date=show_full_date, color=color, big_title=big_title)
+
 
 @register.inclusion_tag('collective_blog/tags/post_navigation.html')
 def post_navigation(current_page, pages, view_name, **url_kwargs):
