@@ -6,16 +6,14 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import DetailView, CreateView, DeleteView
+from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
 
 from collective_blog.forms import PostForm
 from collective_blog.models import Post, PostVote, Blog
 from s_voting.views import VoteView
 
 
-class PostView(DetailView):
-    model = Post
-
+class GenericPostView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         self.post_slug = kwargs.pop('post_slug')
 
@@ -24,14 +22,14 @@ class PostView(DetailView):
                 reverse('view_post',
                         kwargs=dict(post_slug=self.post_slug.lower())))
 
-        return super(PostView, self).dispatch(request, *args, **kwargs)
+        return super(GenericPostView, self).dispatch(request, *args, **kwargs)
 
     def get_object(self, *args, **kwargs):
         return get_object_or_404(Post.objects.select_related('author'),
                                  slug=self.post_slug)
 
     def get_context_data(self, **kwargs):
-        context = super(PostView, self).get_context_data(**kwargs)
+        context = super(GenericPostView, self).get_context_data(**kwargs)
         context['rating'] = {
             'model': PostVote,
             'user': self.request.user,
@@ -42,6 +40,10 @@ class PostView(DetailView):
         if self.object.blog:
             context['membership'] = self.object.blog.check_membership(self.request.user)
         return context
+
+
+class PostView(GenericPostView):
+    model = Post
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -81,12 +83,6 @@ class VotePostView(VoteView):
 
     def dispatch(self, request, *args, **kwargs):
         self.post_slug = kwargs.pop('post_slug')
-
-        if self.post_slug != self.post_slug.lower():
-            return HttpResponsePermanentRedirect(
-                reverse('view_post',
-                        kwargs=dict(post_slug=self.post_slug.lower())))
-
         return super(VotePostView, self).dispatch(request, *args, **kwargs)
 
     def get_score(self):
@@ -118,8 +114,12 @@ class CreatePostView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+class EditPostView(GenericPostView, UpdateView):
+    pass
+
+
 @method_decorator(login_required, 'dispatch')
-class DeletePostView(DeleteView):
+class DeletePostView(GenericPostView, DeleteView):
     template_name = 'collective_blog/post_delete_confirm.html'
     model = Post
     slug_url_kwarg = 'post_slug'
@@ -127,14 +127,26 @@ class DeletePostView(DeleteView):
     def get_success_url(self, obj=None):
         return reverse('homepage')
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.blog is not None:
             membership = self.object.blog.check_membership(request.user)
         else:
             membership = None
         if request.user == self.object.author or Blog.check_can_delete_posts(membership):
-            return super(DeletePostView, self).dispatch(request, *args, **kwargs)
+            return super(DeletePostView, self).get(request, *args, **kwargs)
+        else:
+            messages.error(self.request, _('You can\'t perform this action'))
+            return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.blog is not None:
+            membership = self.object.blog.check_membership(request.user)
+        else:
+            membership = None
+        if request.user == self.object.author or Blog.check_can_delete_posts(membership):
+            return super(DeletePostView, self).post(request, *args, **kwargs)
         else:
             messages.error(self.request, _('You can\'t perform this action'))
             return HttpResponseRedirect(self.get_success_url())

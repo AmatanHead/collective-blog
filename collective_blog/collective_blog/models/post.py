@@ -112,9 +112,7 @@ class Post(models.Model):
              update_fields=None):
         """Pre-save routine like updating the slug field etc."""
 
-        if self.is_draft:
-            self.created = None
-        elif self.created is None:
+        if not self.is_draft and self.created is None:
             self.created = timezone.now()
 
         self.slug = uuslug(self.heading,
@@ -129,7 +127,7 @@ class Post(models.Model):
         super(Post, self).save(force_insert, force_update, using, update_fields)
 
     cut_pattern = re.compile(r'<!-- cut here '
-                             r'(\{\{(?P<caption>[^\}]+)\}\} )?'
+                             r'(\{\{(?P<caption>.+?)\}\} )?'
                              r'-->')
 
     def content_before_cut(self):
