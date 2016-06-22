@@ -5,7 +5,7 @@
 
 {% block content %}
     <form method="post" action="" class="primary container">
-        <h2 class="title">{% trans 'Register for an account' %}</h2>
+        <h1>{% trans 'Register for an account' %}</h1>
         {% csrf_token %}
         {{ form.as_section }}
 
