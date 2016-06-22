@@ -52,4 +52,20 @@ class PostForm(ModelForm, BaseFormRenderer):
             ),
             'blog': LightSelect(),
             'author': HiddenInput(),
+            'created': HiddenInput(),
         }
+
+
+class PostCreateForm(PostForm):
+    def __init__(self, created, **kwargs):
+        self._created = created
+        super(PostCreateForm, self).__init__(**kwargs)
+
+        if self._created:
+            self.fields['blog'].widget.attrs['disabled'] = 'disabled'
+
+    def clean_blog(self):
+        if self._created:
+            return self.initial['blog']
+        else:
+            return self.cleaned_data['blog']

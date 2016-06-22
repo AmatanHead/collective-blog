@@ -4,12 +4,6 @@
 
 {% block title %}{% blocktrans trimmed with name=blog.name %}Users of the "{{ name }}" blog{% endblocktrans %}{% endblock %}
 
-{% block extra_head %}
-    {{ block.super }}
-    {{ form_user.media }}
-    {{ form.media }}
-{% endblock %}
-
 {% block content %}
     <div class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container">
         <h1 class="title">

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% blocktrans trimmed with name=blog.name %}Edit the "{{ post.heading }}" post{% endblocktrans %}{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+    <form class="primary container" method="post">
+        <h1 class="title">
+            <a href="{% url "view_post" post_slug=post.slug %}">
+                {{ post.heading }}
+                <small>{% trans "edit post" %}</small>
+            </a>
+        </h1>
+
+        {% csrf_token %}
+        {{ form.as_section }}
+        <section class="inline separate">
+            <button type="submit" class="primary">{% trans "Save" %}</button>
+            <a class="secondary button" href="{% url "view_post" post_slug=post.slug %}">{% trans "Cancel" %}</a>
+            &nbsp;&nbsp;
+            <a href="{% url "delete_post" post_slug=post.slug %}" class="plain button">{% trans "Delete the post" %}</a>
+        </section>
+    </form>
+{% endblock %}

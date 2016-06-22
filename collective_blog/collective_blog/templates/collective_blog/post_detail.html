@@ -27,12 +27,16 @@
         </p>
 
         <div class="inline">
-            {% if post.author == user or membership.can_delete_posts %}
+            {% if post.author == user or can_edit_posts or membership.can_delete_posts or can_delete_posts %}
                 <hr>
+            {% endif %}
+            {% if post.author == user or can_edit_posts %}
+                <a href="{% url "edit_post" post_slug=post.slug %}" class="plain button">{% trans "Edit the post" %}</a>
+            {% endif %}
+            {% if post.author == user or membership.can_delete_posts or can_delete_posts %}
                 <a href="{% url "delete_post" post_slug=post.slug %}" class="plain button">{% trans "Delete the post" %}</a>
             {% endif %}
         </div>
-
     </div>
 
 {% endblock %}

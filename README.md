@@ -72,8 +72,8 @@ And **no** WYSIWYG! ('cause it's evil!)
 * <s>Markdown system</s> — done
 * <s>Votes system</s> — done
 * <s>User profiles</s> — done
-* Blogs
-* Posts
+* <s>Blogs</s> — done
+* <s>Posts</s> — done
 * Comments
 
 

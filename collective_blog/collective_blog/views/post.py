@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
 
-from collective_blog.forms import PostForm
+from collective_blog.forms import PostForm, PostCreateForm
 from collective_blog.models import Post, PostVote, Blog
 from s_voting.views import VoteView
 
@@ -39,6 +39,8 @@ class GenericPostView(DetailView):
         }
         if self.object.blog:
             context['membership'] = self.object.blog.check_membership(self.request.user)
+        context['can_delete_posts'] = self.request.user.has_perm('collective_blog.delete_post')
+        context['can_edit_posts'] = self.request.user.has_perm('collective_blog.edit_post')
         return context
 
 
@@ -114,8 +116,50 @@ class CreatePostView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+@method_decorator(login_required, 'dispatch')
 class EditPostView(GenericPostView, UpdateView):
-    pass
+    form_class = PostCreateForm
+    template_name = 'collective_blog/post_edit.html'
+    model = Post
+    slug_url_kwarg = 'post_slug'
+
+    def get_success_url(self, obj=None):
+        return reverse('view_post',
+                       kwargs=dict(post_slug=self.object.slug))
+
+    def get_initial(self):
+        return dict(author=self.object.author,
+                    blog=self.object.blog)
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        return form_class(created=self.object.created is not None,
+                          **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        self.object = form.save()
+        messages.success(self.request,
+                         _('"%(post)s" post was saved') % dict(post=self.object.heading))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if (self.object.author == self.request.user or
+                self.request.user.has_perm('collective_blog.delete_post')):
+            return super(EditPostView, self).get(request, *args, **kwargs)
+        else:
+            messages.error(self.request, _('You can\'t perform this action'))
+            return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if (self.object.author == self.request.user or
+                self.request.user.has_perm('collective_blog.delete_post')):
+            return super(EditPostView, self).post(request, *args, **kwargs)
+        else:
+            messages.error(self.request, _('You can\'t perform this action'))
+            return HttpResponseRedirect(self.get_success_url())
 
 
 @method_decorator(login_required, 'dispatch')
@@ -133,7 +177,9 @@ class DeletePostView(GenericPostView, DeleteView):
             membership = self.object.blog.check_membership(request.user)
         else:
             membership = None
-        if request.user == self.object.author or Blog.check_can_delete_posts(membership):
+        if (request.user == self.object.author or
+                Blog.check_can_delete_posts(membership) or
+                self.request.user.has_perm('collective_blog.delete_post')):
             return super(DeletePostView, self).get(request, *args, **kwargs)
         else:
             messages.error(self.request, _('You can\'t perform this action'))
@@ -145,7 +191,9 @@ class DeletePostView(GenericPostView, DeleteView):
             membership = self.object.blog.check_membership(request.user)
         else:
             membership = None
-        if request.user == self.object.author or Blog.check_can_delete_posts(membership):
+        if (request.user == self.object.author or
+                Blog.check_can_delete_posts(membership) or
+                self.request.user.has_perm('collective_blog.delete_post')):
             return super(DeletePostView, self).post(request, *args, **kwargs)
         else:
             messages.error(self.request, _('You can\'t perform this action'))

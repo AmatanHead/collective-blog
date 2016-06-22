@@ -301,9 +301,7 @@ class Blog(models.Model):
 
         """
         if self.check_can_join(user):
-            rating = PostVote.objects.filter(object__author=user, object__blog=self).score()
             membership, c = Membership.objects.get_or_create(user=user, blog=self)
-            membership.overall_posts_rating = rating
             if role is not None:
                 membership.role = role
                 membership.save()
