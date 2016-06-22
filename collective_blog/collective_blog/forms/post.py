@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.forms import ModelForm, HiddenInput, ChoiceField
+from django.forms import ModelForm, HiddenInput, ModelChoiceField
 
 from ..models import Post, Blog
 from s_markdown.widgets import CodeMirror
@@ -15,9 +15,7 @@ class PostForm(ModelForm, BaseFormRenderer):
                 (Q(type='O') & Q(post_membership_required=False)) |
                 Q(members=self.initial['author'])).distinct()
         )
-        self.fields['blog'] = ChoiceField(
-            choices=[(o.id, str(o)) for o in choices]
-        )
+        self.fields['blog'].queryset = choices
 
     renderer = [
         'heading',
@@ -36,7 +34,7 @@ class PostForm(ModelForm, BaseFormRenderer):
             'content',
             'blog',
             'is_draft',
-            # 'author',
+            'author',
         ]
         widgets = {
             'content': CodeMirror(
