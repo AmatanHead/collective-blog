@@ -92,6 +92,7 @@ AUTH_USER_MODEL = 'auth.User'
 
 AUTHENTICATION_BACKENDS = (
     'collective_blog.backend.auth.CaseInsensitiveModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 LOGIN_URL = '/u/a/login/'

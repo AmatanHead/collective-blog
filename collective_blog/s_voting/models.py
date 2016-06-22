@@ -126,7 +126,7 @@ class VoteCacheField(models.SmallIntegerField):
         """
         self.vote_model = vote_model
         self.query = query
-        super().__init__(default=default, editable=False)
+        super(VoteCacheField, self).__init__(default=default, editable=False)
 
     def deconstruct(self):
         """Returns enough information to recreate the field"""
