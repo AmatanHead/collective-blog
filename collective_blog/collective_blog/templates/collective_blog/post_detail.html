@@ -26,6 +26,13 @@
             </span>
         </p>
 
+        <div class="inline">
+            {% if post.author == user or membership.can_delete_posts %}
+                <hr>
+                <a href="{% url "delete_post" post_slug=post.slug %}" class="plain button">{% trans "Delete the post" %}</a>
+            {% endif %}
+        </div>
+
     </div>
 
 {% endblock %}

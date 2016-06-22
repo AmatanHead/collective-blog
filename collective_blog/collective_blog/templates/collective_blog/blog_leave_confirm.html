@@ -3,12 +3,6 @@
 
 {% block title %}{% blocktrans trimmed with name=blog.name %}Leave the "{{ name }}" blog{% endblocktrans %}{% endblock %}
 
-{% block extra_head %}
-    {{ block.super }}
-    {{ form_user.media }}
-    {{ form.media }}
-{% endblock %}
-
 {% block content %}
     <form class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container" method="post">
         <h1 class="title">

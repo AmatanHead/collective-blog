@@ -1,14 +1,15 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, DeleteView
 
 from collective_blog.forms import PostForm
-from collective_blog.models import Post, PostVote
+from collective_blog.models import Post, PostVote, Blog
 from s_voting.views import VoteView
 
 
@@ -38,6 +39,8 @@ class PostView(DetailView):
             'disabled': self.request.user.is_anonymous(),
             'use_colors': False,
         }
+        if self.object.blog:
+            context['membership'] = self.object.blog.check_membership(self.request.user)
         return context
 
     def get(self, request, *args, **kwargs):
@@ -95,6 +98,7 @@ class VotePostView(VoteView):
                                  slug=self.post_slug)
 
 
+@method_decorator(login_required, 'dispatch')
 class CreatePostView(CreateView):
     form_class = PostForm
     template_name = 'collective_blog/post_create.html'
@@ -102,13 +106,35 @@ class CreatePostView(CreateView):
 
     def get_success_url(self, obj=None):
         return reverse('view_post',
-                       kwargs=dict(post_slug=self.post.slug))
+                       kwargs=dict(post_slug=self.object.slug))
 
     def get_initial(self):
         return dict(author=self.request.user)
 
     def form_valid(self, form):
-        self.post = form.save()
+        self.object = form.save()
         messages.success(self.request,
-                         _('"%(post)s" post was created') % dict(post=self.post.heading))
+                         _('"%(post)s" post was created') % dict(post=self.object.heading))
         return HttpResponseRedirect(self.get_success_url())
+
+
+@method_decorator(login_required, 'dispatch')
+class DeletePostView(DeleteView):
+    template_name = 'collective_blog/post_delete_confirm.html'
+    model = Post
+    slug_url_kwarg = 'post_slug'
+
+    def get_success_url(self, obj=None):
+        return reverse('homepage')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.blog is not None:
+            membership = self.object.blog.check_membership(request.user)
+        else:
+            membership = None
+        if request.user == self.object.author or Blog.check_can_delete_posts(membership):
+            return super(DeletePostView, self).dispatch(request, *args, **kwargs)
+        else:
+            messages.error(self.request, _('You can\'t perform this action'))
+            return HttpResponseRedirect(self.get_success_url())

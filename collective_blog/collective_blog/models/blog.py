@@ -148,7 +148,7 @@ class Blog(models.Model):
         """Check if the given user is a member of the blog"""
         if user.is_anonymous():
             return None
-        return Membership.objects.filter(blog=self, user=user).first()
+        return Membership.objects.filter(blog=self, user=user).with_rating().first()
 
     @staticmethod
     def can_be_moderated_by(user):
@@ -157,7 +157,8 @@ class Blog(models.Model):
             user.has_perm('blog.change_membership') or
             user.has_perm('blog.change_blog'))
 
-    def is_banned(self, membership):
+    @staticmethod
+    def is_banned(membership):
         """Check if the given user is banned in this blog
 
         No-members (membership==None) considered to be not banned.
@@ -168,7 +169,8 @@ class Blog(models.Model):
         else:
             return False
 
-    def check_can_change_settings(self, membership):
+    @staticmethod
+    def check_can_change_settings(membership):
         """Check if the given user has permissions to change settings
 
         No-members (membership==None) considered to have no rights.
@@ -179,7 +181,8 @@ class Blog(models.Model):
         else:
             return False
 
-    def check_can_delete_posts(self, membership):
+    @staticmethod
+    def check_can_delete_posts(membership):
         """Check if the given user has permissions delete posts in the blog
 
         No-members (membership==None) considered to have no rights.
@@ -190,7 +193,8 @@ class Blog(models.Model):
         else:
             return False
 
-    def check_can_delete_comments(self, membership):
+    @staticmethod
+    def check_can_delete_comments(membership):
         """Check if the given user has permissions delete comments in the blog
 
         No-members (membership==None) considered to have no rights.
@@ -201,7 +205,8 @@ class Blog(models.Model):
         else:
             return False
 
-    def check_can_ban(self, membership):
+    @staticmethod
+    def check_can_ban(membership):
         """Check if the given user has permissions to ban members of the blog
 
         No-members (membership==None) considered to have no rights.
@@ -212,7 +217,8 @@ class Blog(models.Model):
         else:
             return False
 
-    def check_can_accept_new_users(self, membership):
+    @staticmethod
+    def check_can_accept_new_users(membership):
         """Check if the given user has permissions to can accept new users
 
         No-members (membership==None) considered to have no rights.
@@ -223,7 +229,8 @@ class Blog(models.Model):
         else:
             return False
 
-    def check_can_manage_permissions(self, membership):
+    @staticmethod
+    def check_can_manage_permissions(membership):
         """Check if the given user has permissions to manage permissions
         of other users.
 

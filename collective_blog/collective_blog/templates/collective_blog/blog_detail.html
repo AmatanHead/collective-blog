@@ -21,16 +21,40 @@
 
         <hr>
 
+        <p>
+            {% if blog.type != 'O' or blog.post_membership_required %}
+                {% trans "Membership required to write posts here;" %}
+            {% endif %}
+            {% if blog.post_condition == 'K' %}
+                {% blocktrans trimmed with threshold=blog.post_karma_threshold %}
+                    Your karma should be greater than {{ threshold }}  to write posts here;
+                {% endblocktrans %}
+            {% endif %}
+            {% if blog.type == 'O' and not blog.post_membership_required and blog.post_condition != 'K' %}
+                {% trans "Anyone can write posts here;" %}
+            {% endif %}
+        </p>
+
+        <hr>
+
         <h2>Blog membership</h2>
-        {% if membership.role == "W" %}<p>{% trans "Your request is being processed." %}</p>{% endif %}
-        {% if membership.role == "O" %}<p>{% trans "You are an owner of this blog." %}</p>{% endif %}
-        {% if membership.role == "A" %}<p>{% trans "You are an administrator of this blog." %}</p>{% endif %}
-        {% if is_banned %}
+        {% if not user.is_anonymous %}
             <p>
-                {% blocktrans trimmed %}You are banned in this blog.{% endblocktrans %}
-                {% if not membership.ban_is_permanent %}
-                    {% blocktrans trimmed with expires=membership.ban_expiration|naturaltime %}Ban expires {{ expires }}.{% endblocktrans %}
+                {% if is_banned %}
+                    {% blocktrans trimmed %}You are banned in this blog.{% endblocktrans %}
+                    {% if not membership.ban_is_permanent %}
+                        {% blocktrans trimmed with expires=membership.ban_expiration|naturaltime %}Ban expires {{ expires }}.{% endblocktrans %}
+                    {% endif %}
+                {% elif membership.role == "W" %}
+                    {% trans "Your request is being processed." %}
+                {% elif membership.role == "O" %}
+                    {% trans "You are an owner of this blog." %}
+                {% elif membership.role == "A" %}
+                    {% trans "You are an administrator of this blog." %}
+                {% elif membership.role == "M" %}
+                    {% trans "You are a member of this blog." %}
                 {% endif %}
+                {% trans "Rating:" %} {{ membership.rating }}
             </p>
         {% endif %}
 

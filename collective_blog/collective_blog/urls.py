@@ -42,6 +42,8 @@ urlpatterns = [
         VotePostView.as_view(), name='vote_post'),
     url(r'^p/c/$',
         CreatePostView.as_view(), name='create_post'),
+    url(r'^p/d/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
+        DeletePostView.as_view(), name='delete_post'),
 
     url(r'^admin/', admin.site.urls),
     url(r'^messages/', include('messages_extends.urls')),

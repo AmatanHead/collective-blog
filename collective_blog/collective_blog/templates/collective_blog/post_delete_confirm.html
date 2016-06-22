@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% blocktrans trimmed with name=blog.name %}Delete the "{{ post.heading }}" post{% endblocktrans %}{% endblock %}
+
+{% block content %}
+    <form class="primary container" method="post">
+        <h1 class="title">
+            <a href="{% url "view_post" post_slug=post.slug %}">
+                {{ post.heading }}
+                <small>{% trans "delete post" %}</small>
+            </a>
+        </h1>
+        {% csrf_token %}
+        <p>
+            {% blocktrans trimmed with name=post.heading %}
+                Are you sure you want to delete the "{{ name }}" post?
+            {% endblocktrans %}
+            <br><b>
+                {% blocktrans trimmed with name=blog.name %}
+                    All comments will be deleted.
+                    This action cannot be undone.
+                {% endblocktrans %}
+            </b>
+        </p>
+        <section class="inline separate">
+            <button type="submit" class="primary">{% trans "Delete" %}</button>
+            <a class="secondary button" href="{% url 'view_post' post_slug=post.slug %}">{% trans "Cancel" %}</a>
+        </section>
+    </form>
+{% endblock %}
