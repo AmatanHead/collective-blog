@@ -1,3 +1,0 @@
-[submodule "s_markdown/static/s_markdown/codemirror"]
-	path = s_markdown/static/s_markdown/codemirror
-	url = https://github.com/codemirror/CodeMirror.git
