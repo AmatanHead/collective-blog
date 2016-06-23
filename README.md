@@ -20,7 +20,7 @@ $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 
-By default, SQLite is used. Be aware that SQLite can't perform iexact queries.
+By default, SQLite is used. Be aware that SQLite can't perform case insensitive queries so urls and usernames will be case sensitive.
 
 Launch the dev server:
 
@@ -34,17 +34,17 @@ Or tests (well, they are not ready yed; only markdown rendering is covered prope
 $ python manage.py test
 ```
 
-## Functionality planned
+## Functionality
 
-Each user can create a new blog. No limit for blogs per user. Once a new blog is created, it can be filled with content.
+Each user can create a new blog. Once a new blog is created, it can be filled with content.
 
-A blog's creator can decide how to configure it:
-* Type of the blog: *open* (anyone can see everything, news are shown on the main page), or *private* (only users who joined the blog can see its content).
-* Who can join the blog: anyone, user with rating above a decided value, only approved users.
-* Who can write to the blog: anyone with rating above a decided value, only members of this blog.
-* Who can write comments: anyone with rating above a decided value, only members of this blog.
+All blogs can be configured by creator:
+* Type of the blog: *open* (anyone can see everything, news are shown on the main page), or *private* (only users who joined the blog can see its contents).
+* Who can join the blog: anyone, user with karma above a decided value, or only approved users.
+* Who can write to the blog: anyone or users with karma above a decided value or members of the blog.
+* Who can write comments: anyone or users with karma above a decided value or members of the blog.
 
-A blog's author can assign blog administrators and moderators and (in any time) resign them.
+A blog's creator can assign administrators of the blog.
 Permissions are configurable:
 * Change another user's permissions.
 * Change posts.
@@ -52,7 +52,7 @@ Permissions are configurable:
 * Ban a member.
 * Change blog's settings.
 
-Each user has its rating (karma). Users can vote up and down for any other users raising and dropping his karma respectively. Also, each member has individual blog's rating, one value per each blog. This value only matters inside that particular blog and changes while blog members are voting for comments and posts.
+Each user has its rating (karma). Users can vote up and down for any other user raising and dropping his karma respectively. Also, each member has individual blog's rating, one value per each blog. This value only matters inside that particular blog and changes while blog members are voting for comments and posts.
 
 
 ## Tools
@@ -81,7 +81,7 @@ And **no** WYSIWYG! ('cause it's evil!)
 
 * `collective_blog` — django project
   * `collective_blog` — root app; Holds config, root url dispatcher, common css, scripts, and templates.
-  * `blog` — blogs and posts and main feed; core functionality.
+  Contains main app logic.
   * `user` — auth and user profile stuff, everything behind `/u/`; Holds auth logic and user profiles.
   * `s_appearance` — styles and form renderer.
   * `s_markdown` — standalone reusable app for markdown support.
