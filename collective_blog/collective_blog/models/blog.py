@@ -390,6 +390,7 @@ class MembershipManager(models.Manager):
 def _overall_posts_rating_cache_query(v):
     return Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.blog.pk)
 
+
 def _overall_comments_rating_cache_query(v):
     return Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.post.blog.pk)
 
