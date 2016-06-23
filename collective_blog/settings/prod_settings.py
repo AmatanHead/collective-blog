@@ -5,6 +5,7 @@ See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 """
 
 from __future__ import unicode_literals
+from django.utils.translation import ugettext_lazy as _
 import dj_database_url
 
 print('\033[00;32mLoading production settings\033[0;00m')
@@ -74,3 +75,10 @@ STATICFILES_DIRS = (
 )
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+LANGUAGES = [
+    # ('ru', _('Russian')),
+    ('en', _('English')),
+]
+
+LANGUAGE_CODE = 'en'
