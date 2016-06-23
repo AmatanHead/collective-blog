@@ -129,6 +129,13 @@ class Blog(models.Model):
                            start_no=2,
                            word_boundary=True,
                            save_order=True)
+        if not self.slug:
+            self.slug = uuslug(self.heading + '_blog',
+                               instance=self,
+                               max_length=100,
+                               start_no=2,
+                               word_boundary=True,
+                               save_order=True)
 
         self.slug = self.slug.lower()
 
