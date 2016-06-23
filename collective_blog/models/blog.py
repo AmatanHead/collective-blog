@@ -94,6 +94,9 @@ class Blog(models.Model):
     post_membership_required = models.BooleanField(
         default=True, verbose_name=_('Require membership to write posts'))
 
+    post_admin_required = models.BooleanField(
+        default=False, verbose_name=_('Only admins can write posts'))
+
     post_karma_threshold = models.SmallIntegerField(
         default=0, verbose_name=_('Post karma threshold'))
 
@@ -257,10 +260,12 @@ class Blog(models.Model):
 
         membership = self.check_membership(user)
 
-        if ((self.type != 'O' or self.post_membership_required) and
+        if ((self.type != 'O' or self.post_membership_required or self.post_admin_required) and
                 (membership is None or
                  membership.is_banned() or
                  membership.is_left())):
+            return False
+        elif self.post_admin_required and membership.role not in ['O', 'A']:
             return False
         elif (self.post_condition == 'K' and
                 user.profile.karma < self.post_karma_threshold):
@@ -340,19 +345,16 @@ class Blog(models.Model):
                 return
             if membership.role == 'LB':
                 membership.role = 'B'
-                membership.color = 'gray'
                 membership.save()
                 return _("Success. You are still banned, though")
             elif membership.role != 'L':
                 return _("You've already joined to the=is blog")
             elif self.join_condition == 'I':
                 membership.role = 'W'
-                membership.color = ''
                 membership.save()
                 return _("A request has been sent")
             else:
                 membership.role = 'M'
-                membership.color = 'gray'
                 membership.save()
                 return _("Success")
         else:
@@ -370,7 +372,6 @@ class Blog(models.Model):
                 membership.role = 'LB'
             else:
                 membership.role = 'L'
-            membership.color = ''
             membership.save()
 
 

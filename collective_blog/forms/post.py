@@ -12,8 +12,10 @@ class PostForm(ModelForm, BaseFormRenderer):
         super(PostForm, self).__init__(**kwargs)
         choices = (
             Blog.objects.filter(
-                (Q(type='O') & Q(post_membership_required=False)) |
-                Q(members=self.initial['author'])).distinct()
+                (Q(type='O') & Q(post_membership_required=False) & Q(post_admin_required=False)) |
+                (Q(post_admin_required=False) & Q(members=self.initial['author']) & Q(membership__role__in=['A', 'O', 'M'])) |
+                (Q(post_admin_required=True) & Q(members=self.initial['author']) & Q(membership__role__in=['A', 'O']))
+            ).distinct()
         )
         self.fields['blog'].queryset = choices
 

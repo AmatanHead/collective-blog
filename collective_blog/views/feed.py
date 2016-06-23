@@ -31,7 +31,7 @@ class GenericFeedView(ListView):
             context['interesting_blogs'] = {}
         else:
             context['interesting_blogs'] = {
-                m.blog.id: m for m in Membership.objects.filter(user=self.request.user).filter(role__in=['O', 'M', 'A'])
+                m.blog.id: m for m in Membership.objects.filter(user=self.request.user)
             }
 
         return context

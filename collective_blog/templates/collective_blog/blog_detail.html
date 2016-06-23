@@ -22,7 +22,9 @@
         <hr>
 
         <p>
-            {% if blog.type != 'O' or blog.post_membership_required %}
+            {% if blog.type != 'O' or blog.post_admin_required %}
+                {% trans "Only admins can write posts here;" %}
+            {% elif blog.type != 'O' or blog.post_membership_required %}
                 {% trans "Membership required to write posts here;" %}
             {% endif %}
             {% if blog.post_condition == 'K' %}
@@ -30,7 +32,7 @@
                     Your karma should be greater than {{ threshold }}  to write posts here;
                 {% endblocktrans %}
             {% endif %}
-            {% if blog.type == 'O' and not blog.post_membership_required and blog.post_condition != 'K' %}
+            {% if blog.type == 'O' and not blog.post_membership_required and not blog.post_admin_required and blog.post_condition != 'K' %}
                 {% trans "Anyone can write posts here;" %}
             {% endif %}
         </p>
@@ -58,18 +60,16 @@
             </p>
         {% endif %}
 
-        {% if membership and not membership.is_left and membership.role != "W" %}
-            <form class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
-                {% csrf_token %}
-                <span class="select-arrow"><select id="color-select" name="color" class="small blue">
-                    {% for color in colors %}
-                        <option value="{{ color.0 }}" {% if color.0 == current_color %}selected="selected"{% endif %}>{{ color.1 }}</option>
-                    {% endfor %}
-                </select></span>
-                <button>{% trans "Update" %}</button>
-                &nbsp;&nbsp;
-            </form>
-        {% endif %}
+        <form class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
+            {% csrf_token %}
+            <span class="select-arrow"><select id="color-select" name="color" class="small blue">
+                {% for color in colors %}
+                    <option value="{{ color.0 }}" {% if color.0 == current_color %}selected="selected"{% endif %}>{{ color.1 }}</option>
+                {% endfor %}
+            </select></span>
+            <button>{% trans "Update" %}</button>
+            &nbsp;&nbsp;
+        </form>
 
         {% if not membership or membership.is_left  %}
             {% if can_join %}
@@ -152,7 +152,7 @@
     (function () {
         function color_update () {
             d3.select('#color-select').attr('class', 'bg-' + d3.select('#color-select').node().value);
-            d3.select('#blog_container').attr('class', 'secondary container bg-' + d3.select('#color-select').node().value);
+{#            d3.select('#blog_container').attr('class', 'secondary container bg-' + d3.select('#color-select').node().value);#}
         }
 
         d3.select('#color-select').on('change', color_update);

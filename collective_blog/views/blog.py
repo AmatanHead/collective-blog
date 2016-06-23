@@ -136,9 +136,11 @@ class UpdateColorBlogView(GenericBlogView):
             assert color in map(itemgetter(0), Membership.COLORS)
         except (KeyError, AssertionError):
             return HttpResponse('Wrong color', status=400)
-        if self.membership is not None:
-            self.membership.color = color
-            self.membership.save()
+        if self.membership is None:
+            self.blog.join(self.request.user, 'L')
+            self.membership = self.blog.check_membership(self.request.user)
+        self.membership.color = color
+        self.membership.save()
 
         return HttpResponseRedirect(
             reverse('view_blog',
