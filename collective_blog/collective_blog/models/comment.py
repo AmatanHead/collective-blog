@@ -28,6 +28,9 @@ class CommentVote(AbstractVote):
         if user.pk == obj.author.pk:
             raise PermissionCheckFailed(__("You can't vote for your own comment"))
 
+        if obj.is_hidden:
+            raise PermissionCheckFailed(__("You can't vote for hidden comment"))
+
         if obj.post.blog is not None:
             membership = obj.post.blog.check_membership(user)
         else:
