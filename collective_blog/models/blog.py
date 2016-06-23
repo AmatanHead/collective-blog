@@ -319,7 +319,7 @@ class Blog(models.Model):
         :raises PermissionCheckFailed: If the user can't join the blog.
 
         """
-        if self.check_can_join(user):
+        if self.check_can_join(user) or role is not None:
             membership, c = Membership.objects.get_or_create(user=user, blog=self)
             if c:
                 post_rating = PostVote.objects.filter(object__author=user, object__blog=self).score()
