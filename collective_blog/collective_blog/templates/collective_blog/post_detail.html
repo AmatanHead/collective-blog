@@ -3,9 +3,15 @@
 {% load static %}
 {% load post %}
 {% load vote %}
+{% load mptt_tags %}
+{% load members %}
 
 {% block title %}{{ post.heading }}{% endblock %}
 
+{% block extra_head %}
+    {{ block.super }}
+    {{ form.media }}
+{% endblock %}
 
 {% block content %}
 
@@ -39,6 +45,58 @@
         </div>
     </div>
 
+    <div class="primary container">
+        <h1>Comments</h1>
+        {% recursetree comments %}
+            <div style="margin-left: {% widthratio node.level 1 3 %}rem;{% if node.rating < -5 or node.is_hidden %}opacity: 0.3{% endif %}" class="comment" data-id="{{ node.id }}">
+                <a name="comment__{{ node.id }}"></a>
+
+                <b><a href="{% url "view_profile" username=node.author.username %}">{{ node.author }}</a></b>
+                <small>({{ node.created }})</small>:
+
+                {% if not node.is_hidden %}
+                    {{ node.content.html_force|safe }}
+                {% else %}
+                    <p>Hidden</p>
+                {% endif %}
+
+                <span class="reply"></span>
+                {% if node.author == user or can_delete_comment %}
+                    {% if not node.is_hidden or node.is_hidden and not node.is_hidden_by_moderator or node.is_hidden and can_delete_comment %}
+                        <a href="{% url "toggle_comment" pk=node.pk %}">{% if node.is_hidden %}Restore{% else %}Delete{% endif %}</a>
+                        &nbsp;&bull;&nbsp;
+                    {% endif %}
+                {% endif %}
+                <span style="font-size: .9rem">
+                    {% url "vote_comment" pk=node.pk as post_url %}
+                    {% vote name="" prefix="comment_rating" url=post_url data=node.rating_data score=node.rating %}
+                </span>
+            </div>
+            {% if not node.is_leaf_node %}
+                {{ children }}
+            {% endif %}
+        {% endrecursetree %}
+
+        {% if can_comment %}
+            <hr>
+            <p><b><a style="cursor: pointer" class="action" id="add_comment">{% trans "Add comment" %}</a></b></p>
+            <div id="main_comment">
+            <form method="post" action="{% url "create_comment" post_slug=post.slug %}">
+                <a name="comment"></a>
+                {% csrf_token %}
+                {{ form }}
+                <section class="inline separate">
+                    <button type="submit" class="primary">{% trans "Submit" %}</button>
+                </section>
+            </form>
+            </div>
+        {% endif %}
+
+    {% if not can_comment and not comments %}
+        <p>{% trans "No comments found" %}</p>
+    {% endif %}
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -50,4 +108,30 @@
     <script>
         d3.selectAll('.voting').each(function () {new VoteGroup(this);});
     </script>
+
+    {% if can_comment %}
+        <script>
+            function reply(id, el) {
+                d3.select('#id_parent').node().value = id;
+                var form = d3.select('form').remove();
+                el.append(function () { return form.node(); });
+            }
+
+            d3.selectAll('.comment').each(function () {
+                var selection = d3.select(this);
+                var id = selection.attr('data-id');
+                selection.select('.reply')
+                    .append('small')
+                    .append('a')
+                    .attr('class', 'action')
+                    .html(gettext('Reply'))
+                    .attr('style', 'cursor: pointer;')
+                        .on('click', function () { reply(id, selection); });
+                selection.select('.reply')
+                    .append('span').html('&nbsp;&nbsp;&bull;&nbsp;');
+            });
+
+            d3.select('#add_comment').on('click', function () { reply('', d3.select('#main_comment')); });
+        </script>
+    {% endif %}
 {% endblock %}

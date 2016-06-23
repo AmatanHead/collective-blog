@@ -83,11 +83,11 @@ class Post(models.Model):
                             ),
                             verbose_name=_('Content'))
 
+    _content_html = HtmlCacheField(content)
+
     created = models.DateTimeField(blank=True, null=True, editable=False)
 
     updated = models.DateTimeField(blank=True, editable=False, auto_now=True)
-
-    _content_html = HtmlCacheField(content)
 
     blog = models.ForeignKey('Blog', models.CASCADE,
                              verbose_name=_('Blog'),

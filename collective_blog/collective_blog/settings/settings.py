@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'registration',
     'captcha',
     'messages_extends',
+    'mptt',
 
     'collective_blog',
     'user',

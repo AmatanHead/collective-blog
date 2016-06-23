@@ -9,7 +9,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
 
 from collective_blog.forms import PostForm, PostCreateForm
-from collective_blog.models import Post, PostVote, Blog
+from collective_blog.forms.comment import CommentForm
+from collective_blog.models import Post, PostVote, Blog, Comment, CommentVote
 from s_voting.views import VoteView
 
 
@@ -30,6 +31,16 @@ class GenericPostView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(GenericPostView, self).get_context_data(**kwargs)
+        if self.object.blog:
+            context['membership'] = self.object.blog.check_membership(self.request.user)
+        return context
+
+
+class PostView(GenericPostView):
+    model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericPostView, self).get_context_data(**kwargs)
         context['rating'] = {
             'model': PostVote,
             'user': self.request.user,
@@ -37,15 +48,35 @@ class GenericPostView(DetailView):
             'disabled': self.request.user.is_anonymous(),
             'use_colors': False,
         }
-        if self.object.blog:
-            context['membership'] = self.object.blog.check_membership(self.request.user)
         context['can_delete_posts'] = self.request.user.has_perm('collective_blog.delete_post')
         context['can_edit_posts'] = self.request.user.has_perm('collective_blog.edit_post')
+        context['comments'] = (
+            Comment.objects
+            .filter(post=self.object)
+            .select_related('author')
+            .distinct()
+        )
+
+        for comment in context['comments']:
+            comment.rating_data = {
+                'model': CommentVote,
+                'user': self.request.user,
+                'obj': comment,
+                'disabled': self.request.user.is_anonymous(),
+                'use_colors': True,
+                'color_threshold': [0, 0]
+            }
+
+        context['can_comment'] = self.object.blog and not self.object.is_draft and self.object.blog.check_can_comment(self.request.user)
+
+        if self.object.blog is not None:
+            membership = self.object.blog.check_membership(self.request.user)
+        else:
+            membership = None
+
+        context['can_delete_comment'] = self.object.blog and self.object.blog.check_can_delete_comments(membership)
+        context['form'] = CommentForm()
         return context
-
-
-class PostView(GenericPostView):
-    model = Post
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()

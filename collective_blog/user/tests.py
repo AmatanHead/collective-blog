@@ -88,8 +88,10 @@ class TestProfileModelPerms(test.TransactionTestCase):
         """Test that only moderators and the user can edit the user's profile"""
 
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
-        moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
-        moderator_without_perms = User.objects.get(username='moderator_without_perms')
+        moderator_with_perms2 = User.objects.get(
+            username='moderator_with_perms2')
+        moderator_without_perms = User.objects.get(
+            username='moderator_without_perms')
         user_with_perms = User.objects.get(username='user_with_perms')
         user_with_perms2 = User.objects.get(username='user_with_perms2')
         superuser = User.objects.get(username='superuser')
@@ -117,8 +119,10 @@ class TestProfileModelPerms(test.TransactionTestCase):
         """Test that only moderators and the user can seethe user's private email"""
 
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
-        moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
-        moderator_without_perms = User.objects.get(username='moderator_without_perms')
+        moderator_with_perms2 = User.objects.get(
+            username='moderator_with_perms2')
+        moderator_without_perms = User.objects.get(
+            username='moderator_without_perms')
         user_with_perms = User.objects.get(username='user_with_perms')
         user_with_perms2 = User.objects.get(username='user_with_perms2')
         superuser = User.objects.get(username='superuser')
@@ -165,8 +169,10 @@ class TestProfileModelPerms(test.TransactionTestCase):
         """Test that private emails are displayed correctly"""
 
         moderator_with_perms = User.objects.get(username='moderator_with_perms')
-        moderator_with_perms2 = User.objects.get(username='moderator_with_perms2')
-        moderator_without_perms = User.objects.get(username='moderator_without_perms')
+        moderator_with_perms2 = User.objects.get(
+            username='moderator_with_perms2')
+        moderator_without_perms = User.objects.get(
+            username='moderator_without_perms')
         user_with_perms = User.objects.get(username='user_with_perms')
         user_with_perms2 = User.objects.get(username='user_with_perms2')
         superuser = User.objects.get(username='superuser')

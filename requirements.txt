@@ -7,3 +7,4 @@ Pygments==2.1.2
 Markdown==2.6.5
 django-messages-extends==0.5
 django-uuslug==1.1.7
+django-mptt==0.8.4

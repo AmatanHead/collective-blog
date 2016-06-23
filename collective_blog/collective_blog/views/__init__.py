@@ -7,3 +7,4 @@ from .blog import (BlogView, JoinBlogView, LeaveBlogView, UpdateColorBlogView,
                    UsersBlogView, EditBlogView, CreateBlogView, DeleteBlogView,
                    ListBlogView)
 from .membership_api import MembershipApi
+from .comment import CreateCommentView, VoteCommentView, ToggleHiddenCommentView

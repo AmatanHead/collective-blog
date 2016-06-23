@@ -135,7 +135,7 @@ class Profile(models.Model):
         return ''
 
     def can_be_voted_by(self, user):
-        """Check if this profile can bo voted by the user passed"""
+        """Check if this profile can be voted by the user passed"""
         return user.is_active and user.pk != self.user.pk and self.user.is_active
 
     # Actions

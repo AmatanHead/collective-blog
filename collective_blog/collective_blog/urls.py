@@ -47,6 +47,13 @@ urlpatterns = [
     url(r'^p/d/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
         DeletePostView.as_view(), name='delete_post'),
 
+    url(r'^c/c/(?P<post_slug>[a-zA-Z0-9_-]+)/$',
+        CreateCommentView.as_view(), name='create_comment'),
+    url(r'^c/a/vote_comment/(?P<pk>[a-zA-Z0-9_-]+)/$',
+        VoteCommentView.as_view(), name='vote_comment'),
+    url(r'^c/a/toggle_comment/(?P<pk>[a-zA-Z0-9_-]+)/$',
+        ToggleHiddenCommentView.as_view(), name='toggle_comment'),
+
     url(r'^admin/', admin.site.urls),
     url(r'^messages/', include('messages_extends.urls')),
 

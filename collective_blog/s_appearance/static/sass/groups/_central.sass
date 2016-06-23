@@ -44,7 +44,7 @@ blockquote
 
 ul
   @extend %group !optional
-  margin: 0 $ul-offset
+  margin: $input-group-margin-bottom $ul-offset
 
 ol
   @extend ul
@@ -71,3 +71,12 @@ dl
   @extend %unbleed !optional
 
   background: $group-controls-bg-color
+
+.comment
+  margin-bottom: 1rem
+  padding-bottom: 1rem
+  //border-bottom: 1px dashed #ccc
+
+  %group
+    margin-top: $input-group-margin-bottom / 4
+    margin-bottom: $input-group-margin-bottom / 4

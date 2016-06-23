@@ -20,6 +20,7 @@ from s_appearance.utils.icons import ICONS
 from s_voting.models import VoteCacheField
 
 from .post import PostVote
+from .comment import CommentVote
 
 from uuslug import uuslug
 
@@ -260,6 +261,24 @@ class Blog(models.Model):
         else:
             return True
 
+    def check_can_comment(self, user):
+        """Check if the given user has permissions to add comments to this blog"""
+        if not user.is_active or user.is_anonymous():
+            return False
+
+        membership = self.check_membership(user)
+
+        if ((self.type != 'O' or self.comment_membership_required) and
+                (membership is None or
+                 membership.is_banned() or
+                 membership.is_left())):
+            return False
+        elif (self.comment_condition == 'K' and
+                user.profile.karma < self.post_karma_threshold):
+            return False
+        else:
+            return True
+
     def check_can_join(self, user):
         """Checks if the user can join the blog
 
@@ -302,6 +321,12 @@ class Blog(models.Model):
         """
         if self.check_can_join(user):
             membership, c = Membership.objects.get_or_create(user=user, blog=self)
+            if c:
+                post_rating = PostVote.objects.filter(object__author=user, object__blog=self).score()
+                membership.overall_posts_rating = post_rating
+                comment_rating = CommentVote.objects.filter(object__author=user, object__post__blog=self).score()
+                membership.overall_comments_rating = comment_rating
+
             if role is not None:
                 membership.role = role
                 membership.save()
@@ -351,7 +376,7 @@ class MembershipQuerySet(QuerySet):
     def with_rating(self):
         """Annotate rating of the member"""
         return self.annotate(
-            rating=F('overall_posts_rating') * 10
+            rating=F('overall_posts_rating') * 10 + F('overall_comments_rating')
         )
 
 
@@ -363,8 +388,10 @@ class MembershipManager(models.Manager):
 
 
 def _overall_posts_rating_cache_query(v):
-    return (Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.blog.pk) & ~Q(
-        role__in=['L', 'LB']))
+    return Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.blog.pk)
+
+def _overall_comments_rating_cache_query(v):
+    return Q(user__pk=v.object.author.pk) & Q(blog__pk=v.object.post.blog.pk)
 
 
 class Membership(models.Model):
@@ -425,6 +452,7 @@ class Membership(models.Model):
         default=False, verbose_name=_("Can manage permissions"))
 
     overall_posts_rating = VoteCacheField(PostVote, _overall_posts_rating_cache_query)
+    overall_comments_rating = VoteCacheField(CommentVote, _overall_comments_rating_cache_query)
 
     # Common methods
     # --------------
