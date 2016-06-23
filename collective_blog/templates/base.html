@@ -21,7 +21,7 @@
         {% block nav %}
             <div class="primary container">
                 <div class="separate">
-                    <h2 style="display: inline-block"><a href="{% if user.is_anonymous %}{% url "homepage" %}{% else %}{% url "feed_personal" %}{% endif %}">{{ global_site_name }}</a></h2>
+                    <h2 style="display: inline-block"><a href="{% url "homepage" %}">{{ global_site_name }}</a></h2>
                     {% if user.is_anonymous %}
                         <span class="hor-separate">
                                 <a href="{% url "login" %}">{% trans "Log in" %}</a>
