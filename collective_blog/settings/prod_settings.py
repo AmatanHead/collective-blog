@@ -9,7 +9,7 @@ import dj_database_url
 
 print('\033[00;32mLoading production settings\033[0;00m')
 
-DEBUG = True
+DEBUG = False
 
 from .settings import *
 
