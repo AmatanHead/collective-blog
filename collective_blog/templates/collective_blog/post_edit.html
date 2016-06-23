@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% blocktrans trimmed with name=blog.name %}Edit the "{{ post.heading }}" post{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans trimmed with name=post.heading %}Edit the "{{ name }}" post{% endblocktrans %}{% endblock %}
 
 {% block extra_head %}
     {{ block.super }}
