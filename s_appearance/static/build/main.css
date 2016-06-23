@@ -1,0 +1,2355 @@
+@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=PT+Mono&subset=latin,cyrillic);
+@import url(https://fonts.googleapis.com/css?family=PT+Sans&subset=latin,cyrillic);
+/* Reset browser defaut styles
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  vertical-align: baseline;
+  text-decoration: none;
+  box-sizing: border-box; }
+
+a:active,
+a:hover {
+  outline: 0; }
+
+blockquote,
+q {
+  quotes: none; }
+
+textarea {
+  overflow: auto;
+  vertical-align: top;
+  resize: vertical; }
+
+input[type="reset"],
+input[type="submit"],
+input[type="file"],
+input[type="radio"],
+input[type="checkbox"],
+select,
+button {
+  cursor: pointer;
+  width: auto;
+  overflow: visible; }
+
+button:active,
+button:focus {
+  outline: none; }
+
+hr {
+  display: block;
+  box-sizing: content-box;
+  height: 1px;
+  border: 0;
+  border: none; }
+
+img,
+video,
+audio,
+embed,
+object {
+  max-width: 100%; }
+
+img,
+video,
+embed,
+object {
+  height: auto; }
+
+embed,
+object {
+  height: 100%; }
+
+html {
+  font-family: "PT Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 130%;
+  background: #eeeeee;
+  color: #444444; }
+
+/* Icon codes
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Using `entypo` icons font by Daniel Bruce:
+ * http://www.entypo.com
+ *
+ * License CC BY-SA 4.0.:
+ * https://www.creativecommons.org/licenses/by-sa/4.0/
+ */
+@font-face {
+  font-family: "_entypo";
+  src: url("../fonts/entypo.eot");
+  src: url("../fonts/entypo.eot") format("embedded-opentype");
+  src: url("../fonts/entypo.woff") format("woff");
+  src: url("../fonts/entypo.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+.icon {
+  color: inherit;
+  font-size: 0.95em; }
+  .icon:before {
+    font-family: "_entypo"; }
+  .icon.add-to-list:before {
+    content: ""; }
+  .icon.add-user:before {
+    content: ""; }
+  .icon.address:before {
+    content: ""; }
+  .icon.adjust:before {
+    content: ""; }
+  .icon.air:before {
+    content: ""; }
+  .icon.aircraft-landing:before {
+    content: ""; }
+  .icon.aircraft-take-off:before {
+    content: ""; }
+  .icon.aircraft:before {
+    content: ""; }
+  .icon.align-bottom:before {
+    content: ""; }
+  .icon.align-horizontal-middle:before {
+    content: ""; }
+  .icon.align-left:before {
+    content: ""; }
+  .icon.align-right:before {
+    content: ""; }
+  .icon.align-top:before {
+    content: ""; }
+  .icon.align-vertical-middle:before {
+    content: ""; }
+  .icon.archive:before {
+    content: ""; }
+  .icon.area-graph:before {
+    content: ""; }
+  .icon.arrow-bold-down:before {
+    content: ""; }
+  .icon.arrow-bold-left:before {
+    content: ""; }
+  .icon.arrow-bold-right:before {
+    content: ""; }
+  .icon.arrow-bold-up:before {
+    content: ""; }
+  .icon.arrow-down:before {
+    content: ""; }
+  .icon.arrow-left:before {
+    content: ""; }
+  .icon.arrow-long-down:before {
+    content: ""; }
+  .icon.arrow-long-left:before {
+    content: ""; }
+  .icon.arrow-long-right:before {
+    content: ""; }
+  .icon.arrow-long-up:before {
+    content: ""; }
+  .icon.arrow-right:before {
+    content: ""; }
+  .icon.arrow-up:before {
+    content: ""; }
+  .icon.arrow-with-circle-down:before {
+    content: ""; }
+  .icon.arrow-with-circle-left:before {
+    content: ""; }
+  .icon.arrow-with-circle-right:before {
+    content: ""; }
+  .icon.arrow-with-circle-up:before {
+    content: ""; }
+  .icon.attachment:before {
+    content: ""; }
+  .icon.awareness-ribbon:before {
+    content: ""; }
+  .icon.back-in-time:before {
+    content: ""; }
+  .icon.back:before {
+    content: ""; }
+  .icon.bar-graph:before {
+    content: ""; }
+  .icon.battery:before {
+    content: ""; }
+  .icon.beamed-note:before {
+    content: ""; }
+  .icon.bell:before {
+    content: ""; }
+  .icon.blackboard:before {
+    content: ""; }
+  .icon.block:before {
+    content: ""; }
+  .icon.book:before {
+    content: ""; }
+  .icon.bookmark:before {
+    content: ""; }
+  .icon.bookmarks:before {
+    content: ""; }
+  .icon.bowl:before {
+    content: ""; }
+  .icon.box:before {
+    content: ""; }
+  .icon.briefcase:before {
+    content: ""; }
+  .icon.browser:before {
+    content: ""; }
+  .icon.brush:before {
+    content: ""; }
+  .icon.bucket:before {
+    content: ""; }
+  .icon.bug:before {
+    content: ""; }
+  .icon.cake:before {
+    content: ""; }
+  .icon.calculator:before {
+    content: ""; }
+  .icon.calendar:before {
+    content: ""; }
+  .icon.camera:before {
+    content: ""; }
+  .icon.ccw:before {
+    content: ""; }
+  .icon.chat:before {
+    content: ""; }
+  .icon.check:before {
+    content: ""; }
+  .icon.chevron-down:before {
+    content: ""; }
+  .icon.chevron-left:before {
+    content: ""; }
+  .icon.chevron-right:before {
+    content: ""; }
+  .icon.chevron-small-down:before {
+    content: ""; }
+  .icon.chevron-small-left:before {
+    content: ""; }
+  .icon.chevron-small-right:before {
+    content: ""; }
+  .icon.chevron-small-up:before {
+    content: ""; }
+  .icon.chevron-thin-down:before {
+    content: ""; }
+  .icon.chevron-thin-left:before {
+    content: ""; }
+  .icon.chevron-thin-right:before {
+    content: ""; }
+  .icon.chevron-thin-up:before {
+    content: ""; }
+  .icon.chevron-up:before {
+    content: ""; }
+  .icon.chevron-with-circle-down:before {
+    content: ""; }
+  .icon.chevron-with-circle-left:before {
+    content: ""; }
+  .icon.chevron-with-circle-right:before {
+    content: ""; }
+  .icon.chevron-with-circle-up:before {
+    content: ""; }
+  .icon.circle-with-cross:before {
+    content: ""; }
+  .icon.circle-with-minus:before {
+    content: ""; }
+  .icon.circle-with-plus:before {
+    content: ""; }
+  .icon.circle:before {
+    content: ""; }
+  .icon.circular-graph:before {
+    content: ""; }
+  .icon.clapperboard:before {
+    content: ""; }
+  .icon.classic-computer:before {
+    content: ""; }
+  .icon.clipboard:before {
+    content: ""; }
+  .icon.clock:before {
+    content: ""; }
+  .icon.cloud:before {
+    content: ""; }
+  .icon.code:before {
+    content: ""; }
+  .icon.cog:before {
+    content: ""; }
+  .icon.colours:before {
+    content: ""; }
+  .icon.compass:before {
+    content: ""; }
+  .icon.controller-fast-backward:before {
+    content: ""; }
+  .icon.controller-fast-forward:before {
+    content: ""; }
+  .icon.controller-jump-to-start:before {
+    content: ""; }
+  .icon.controller-next:before {
+    content: ""; }
+  .icon.controller-paus:before {
+    content: ""; }
+  .icon.controller-play:before {
+    content: ""; }
+  .icon.controller-record:before {
+    content: ""; }
+  .icon.controller-stop:before {
+    content: ""; }
+  .icon.controller-volume:before {
+    content: ""; }
+  .icon.copy:before {
+    content: ""; }
+  .icon.creative-commons-attribution:before {
+    content: ""; }
+  .icon.creative-commons-noderivs:before {
+    content: ""; }
+  .icon.creative-commons-noncommercial-eu:before {
+    content: ""; }
+  .icon.creative-commons-noncommercial-us:before {
+    content: ""; }
+  .icon.creative-commons-public-domain:before {
+    content: ""; }
+  .icon.creative-commons-remix:before {
+    content: ""; }
+  .icon.creative-commons-share:before {
+    content: ""; }
+  .icon.creative-commons-sharealike:before {
+    content: ""; }
+  .icon.creative-commons:before {
+    content: ""; }
+  .icon.credit-card:before {
+    content: ""; }
+  .icon.credit:before {
+    content: ""; }
+  .icon.crop:before {
+    content: ""; }
+  .icon.cross:before {
+    content: ""; }
+  .icon.cup:before {
+    content: ""; }
+  .icon.cw:before {
+    content: ""; }
+  .icon.cycle:before {
+    content: ""; }
+  .icon.database:before {
+    content: ""; }
+  .icon.dial-pad:before {
+    content: ""; }
+  .icon.direction:before {
+    content: ""; }
+  .icon.document-landscape:before {
+    content: ""; }
+  .icon.document:before {
+    content: ""; }
+  .icon.documents:before {
+    content: ""; }
+  .icon.dot-single:before {
+    content: ""; }
+  .icon.dots-three-horizontal:before {
+    content: ""; }
+  .icon.dots-three-vertical:before {
+    content: ""; }
+  .icon.dots-two-horizontal:before {
+    content: ""; }
+  .icon.dots-two-vertical:before {
+    content: ""; }
+  .icon.download:before {
+    content: ""; }
+  .icon.drink:before {
+    content: ""; }
+  .icon.drive:before {
+    content: ""; }
+  .icon.drop:before {
+    content: ""; }
+  .icon.edit:before {
+    content: ""; }
+  .icon.email:before {
+    content: ""; }
+  .icon.emoji-flirt:before {
+    content: ""; }
+  .icon.emoji-happy:before {
+    content: ""; }
+  .icon.emoji-neutral:before {
+    content: ""; }
+  .icon.emoji-sad:before {
+    content: ""; }
+  .icon.erase:before {
+    content: ""; }
+  .icon.eraser:before {
+    content: ""; }
+  .icon.export:before {
+    content: ""; }
+  .icon.eye-with-line:before {
+    content: ""; }
+  .icon.eye:before {
+    content: ""; }
+  .icon.feather:before {
+    content: ""; }
+  .icon.fingerprint:before {
+    content: ""; }
+  .icon.flag:before {
+    content: ""; }
+  .icon.flash:before {
+    content: ""; }
+  .icon.flashlight:before {
+    content: ""; }
+  .icon.flat-brush:before {
+    content: ""; }
+  .icon.flow-branch:before {
+    content: ""; }
+  .icon.flow-cascade:before {
+    content: ""; }
+  .icon.flow-line:before {
+    content: ""; }
+  .icon.flow-parallel:before {
+    content: ""; }
+  .icon.flow-tree:before {
+    content: ""; }
+  .icon.flower:before {
+    content: ""; }
+  .icon.folder-images:before {
+    content: ""; }
+  .icon.folder-music:before {
+    content: ""; }
+  .icon.folder-video:before {
+    content: ""; }
+  .icon.folder:before {
+    content: ""; }
+  .icon.forward:before {
+    content: ""; }
+  .icon.funnel:before {
+    content: ""; }
+  .icon.game-controller:before {
+    content: ""; }
+  .icon.gauge:before {
+    content: ""; }
+  .icon.globe:before {
+    content: ""; }
+  .icon.graduation-cap:before {
+    content: ""; }
+  .icon.grid:before {
+    content: ""; }
+  .icon.hair-cross:before {
+    content: ""; }
+  .icon.hand:before {
+    content: ""; }
+  .icon.heart-outlined:before {
+    content: ""; }
+  .icon.heart:before {
+    content: ""; }
+  .icon.help-with-circle:before {
+    content: ""; }
+  .icon.help:before {
+    content: ""; }
+  .icon.home:before {
+    content: ""; }
+  .icon.hour-glass:before {
+    content: ""; }
+  .icon.image-inverted:before {
+    content: ""; }
+  .icon.image:before {
+    content: ""; }
+  .icon.images:before {
+    content: ""; }
+  .icon.inbox:before {
+    content: ""; }
+  .icon.infinity:before {
+    content: ""; }
+  .icon.info-with-circle:before {
+    content: ""; }
+  .icon.info:before {
+    content: ""; }
+  .icon.install:before {
+    content: ""; }
+  .icon.key:before {
+    content: ""; }
+  .icon.keyboard:before {
+    content: ""; }
+  .icon.lab-flask:before {
+    content: ""; }
+  .icon.landline:before {
+    content: ""; }
+  .icon.language:before {
+    content: ""; }
+  .icon.laptop:before {
+    content: ""; }
+  .icon.layers:before {
+    content: ""; }
+  .icon.leaf:before {
+    content: ""; }
+  .icon.level-down:before {
+    content: ""; }
+  .icon.level-up:before {
+    content: ""; }
+  .icon.lifebuoy:before {
+    content: ""; }
+  .icon.light-bulb:before {
+    content: ""; }
+  .icon.light-down:before {
+    content: ""; }
+  .icon.light-up:before {
+    content: ""; }
+  .icon.line-graph:before {
+    content: ""; }
+  .icon.link:before {
+    content: ""; }
+  .icon.list:before {
+    content: ""; }
+  .icon.location-pin:before {
+    content: ""; }
+  .icon.location:before {
+    content: ""; }
+  .icon.lock-open:before {
+    content: ""; }
+  .icon.lock:before {
+    content: ""; }
+  .icon.log-out:before {
+    content: ""; }
+  .icon.login:before {
+    content: ""; }
+  .icon.loop:before {
+    content: ""; }
+  .icon.magnet:before {
+    content: ""; }
+  .icon.magnifying-glass:before {
+    content: ""; }
+  .icon.mail:before {
+    content: ""; }
+  .icon.man:before {
+    content: ""; }
+  .icon.map:before {
+    content: ""; }
+  .icon.mask:before {
+    content: ""; }
+  .icon.medal:before {
+    content: ""; }
+  .icon.megaphone:before {
+    content: ""; }
+  .icon.menu:before {
+    content: ""; }
+  .icon.merge:before {
+    content: ""; }
+  .icon.message:before {
+    content: ""; }
+  .icon.mic:before {
+    content: ""; }
+  .icon.minus:before {
+    content: ""; }
+  .icon.mobile:before {
+    content: ""; }
+  .icon.modern-mic:before {
+    content: ""; }
+  .icon.moon:before {
+    content: ""; }
+  .icon.mouse-pointer:before {
+    content: ""; }
+  .icon.mouse:before {
+    content: ""; }
+  .icon.music:before {
+    content: ""; }
+  .icon.network:before {
+    content: ""; }
+  .icon.new-message:before {
+    content: ""; }
+  .icon.new:before {
+    content: ""; }
+  .icon.news:before {
+    content: ""; }
+  .icon.newsletter:before {
+    content: ""; }
+  .icon.note:before {
+    content: ""; }
+  .icon.notification:before {
+    content: ""; }
+  .icon.notifications-off:before {
+    content: ""; }
+  .icon.old-mobile:before {
+    content: ""; }
+  .icon.old-phone:before {
+    content: ""; }
+  .icon.open-book:before {
+    content: ""; }
+  .icon.palette:before {
+    content: ""; }
+  .icon.paper-plane:before {
+    content: ""; }
+  .icon.pencil:before {
+    content: ""; }
+  .icon.phone:before {
+    content: ""; }
+  .icon.pie-chart:before {
+    content: ""; }
+  .icon.pin:before {
+    content: ""; }
+  .icon.plus:before {
+    content: ""; }
+  .icon.popup:before {
+    content: ""; }
+  .icon.power-plug:before {
+    content: ""; }
+  .icon.price-ribbon:before {
+    content: ""; }
+  .icon.price-tag:before {
+    content: ""; }
+  .icon.print:before {
+    content: ""; }
+  .icon.progress-empty:before {
+    content: ""; }
+  .icon.progress-full:before {
+    content: ""; }
+  .icon.progress-one:before {
+    content: ""; }
+  .icon.progress-two:before {
+    content: ""; }
+  .icon.publish:before {
+    content: ""; }
+  .icon.quote:before {
+    content: ""; }
+  .icon.radio:before {
+    content: ""; }
+  .icon.remove-user:before {
+    content: ""; }
+  .icon.reply-all:before {
+    content: ""; }
+  .icon.reply:before {
+    content: ""; }
+  .icon.resize-100:before {
+    content: ""; }
+  .icon.resize-full-screen:before {
+    content: ""; }
+  .icon.retweet:before {
+    content: ""; }
+  .icon.rocket:before {
+    content: ""; }
+  .icon.round-brush:before {
+    content: ""; }
+  .icon.rss:before {
+    content: ""; }
+  .icon.ruler:before {
+    content: ""; }
+  .icon.save:before {
+    content: ""; }
+  .icon.scissors:before {
+    content: ""; }
+  .icon.select-arrows:before {
+    content: ""; }
+  .icon.share-alternative:before {
+    content: ""; }
+  .icon.share:before {
+    content: ""; }
+  .icon.shareable:before {
+    content: ""; }
+  .icon.shield:before {
+    content: ""; }
+  .icon.shop:before {
+    content: ""; }
+  .icon.shopping-bag:before {
+    content: ""; }
+  .icon.shopping-basket:before {
+    content: ""; }
+  .icon.shopping-cart:before {
+    content: ""; }
+  .icon.shuffle:before {
+    content: ""; }
+  .icon.signal:before {
+    content: ""; }
+  .icon.sound-mix:before {
+    content: ""; }
+  .icon.sound-mute:before {
+    content: ""; }
+  .icon.sound:before {
+    content: ""; }
+  .icon.sports-club:before {
+    content: ""; }
+  .icon.spreadsheet:before {
+    content: ""; }
+  .icon.squared-cross:before {
+    content: ""; }
+  .icon.squared-minus:before {
+    content: ""; }
+  .icon.squared-plus:before {
+    content: ""; }
+  .icon.star-outlined:before {
+    content: ""; }
+  .icon.star:before {
+    content: ""; }
+  .icon.stopwatch:before {
+    content: ""; }
+  .icon.suitcase:before {
+    content: ""; }
+  .icon.swap:before {
+    content: ""; }
+  .icon.sweden:before {
+    content: ""; }
+  .icon.switch:before {
+    content: ""; }
+  .icon.tablet-mobile-combo:before {
+    content: ""; }
+  .icon.tablet:before {
+    content: ""; }
+  .icon.tag:before, .icon.badge:before {
+    content: ""; }
+  .icon.text-document-inverted:before {
+    content: ""; }
+  .icon.text-document:before {
+    content: ""; }
+  .icon.text:before {
+    content: ""; }
+  .icon.thermometer:before {
+    content: ""; }
+  .icon.thumbs-down:before {
+    content: ""; }
+  .icon.thumbs-up:before {
+    content: ""; }
+  .icon.thunder-cloud:before {
+    content: ""; }
+  .icon.ticket:before {
+    content: ""; }
+  .icon.time-slot:before {
+    content: ""; }
+  .icon.tools:before {
+    content: ""; }
+  .icon.traffic-cone:before {
+    content: ""; }
+  .icon.trash:before {
+    content: ""; }
+  .icon.tree:before {
+    content: ""; }
+  .icon.triangle-down:before {
+    content: ""; }
+  .icon.triangle-left:before {
+    content: ""; }
+  .icon.triangle-right:before {
+    content: ""; }
+  .icon.triangle-up:before {
+    content: ""; }
+  .icon.trophy:before {
+    content: ""; }
+  .icon.tv:before {
+    content: ""; }
+  .icon.typing:before {
+    content: ""; }
+  .icon.uninstall:before {
+    content: ""; }
+  .icon.unread:before {
+    content: ""; }
+  .icon.untag:before {
+    content: ""; }
+  .icon.upload-to-cloud:before {
+    content: ""; }
+  .icon.upload:before {
+    content: ""; }
+  .icon.user:before {
+    content: ""; }
+  .icon.users:before {
+    content: ""; }
+  .icon.v-card:before {
+    content: ""; }
+  .icon.video-camera:before {
+    content: ""; }
+  .icon.video:before {
+    content: ""; }
+  .icon.vinyl:before {
+    content: ""; }
+  .icon.voicemail:before {
+    content: ""; }
+  .icon.wallet:before {
+    content: ""; }
+  .icon.warning:before {
+    content: ""; }
+  .icon.water:before {
+    content: ""; }
+  .icon.five-hundred-px-with-circle:before {
+    content: ""; }
+  .icon.five-hundred-px:before {
+    content: ""; }
+  .icon.app-store:before {
+    content: ""; }
+  .icon.baidu:before {
+    content: ""; }
+  .icon.basecamp:before {
+    content: ""; }
+  .icon.behance:before {
+    content: ""; }
+  .icon.creative-cloud:before {
+    content: ""; }
+  .icon.dribbble-with-circle:before {
+    content: ""; }
+  .icon.dribbble:before {
+    content: ""; }
+  .icon.dropbox:before {
+    content: ""; }
+  .icon.evernote:before {
+    content: ""; }
+  .icon.google-hangouts:before {
+    content: ""; }
+  .icon.google-play:before {
+    content: ""; }
+  .icon.google-plus-with-circle:before {
+    content: ""; }
+  .icon.google + :before {
+    content: ""; }
+  .icon.grooveshark:before {
+    content: ""; }
+  .icon.houzz:before {
+    content: ""; }
+  .icon.icloud:before {
+    content: ""; }
+  .icon.instagram-with-circle:before {
+    content: ""; }
+  .icon.instagram:before {
+    content: ""; }
+  .icon.lastfm-with-circle:before {
+    content: ""; }
+  .icon.lastfm:before {
+    content: ""; }
+  .icon.pinterest-with-circle:before {
+    content: ""; }
+  .icon.pinterest:before {
+    content: ""; }
+  .icon.qq-with-circle:before {
+    content: ""; }
+  .icon.qq:before {
+    content: ""; }
+  .icon.raft-with-circle:before {
+    content: ""; }
+  .icon.raft:before {
+    content: ""; }
+  .icon.rainbow:before {
+    content: ""; }
+  .icon.rdio-with-circle:before {
+    content: ""; }
+  .icon.rdio:before {
+    content: ""; }
+  .icon.renren:before {
+    content: ""; }
+  .icon.scribd:before {
+    content: ""; }
+  .icon.stumbleupon:before {
+    content: ""; }
+  .icon.swarm:before {
+    content: ""; }
+  .icon.tripadvisor:before {
+    content: ""; }
+  .icon.tumblr-with-circle:before {
+    content: ""; }
+  .icon.tumblr:before {
+    content: ""; }
+  .icon.twitter-with-circle:before {
+    content: ""; }
+  .icon.twitter:before {
+    content: ""; }
+  .icon.vimeo-with-circle:before {
+    content: ""; }
+  .icon.vimeo:before {
+    content: ""; }
+  .icon.vine-with-circle:before {
+    content: ""; }
+  .icon.vine:before {
+    content: ""; }
+  .icon.youtube-with-circle:before {
+    content: ""; }
+  .icon.youtube:before {
+    content: ""; }
+  .icon.facebook-with-circle:before {
+    content: ""; }
+  .icon.facebook:before {
+    content: ""; }
+  .icon.flattr:before {
+    content: ""; }
+  .icon.flickr-with-circle:before {
+    content: ""; }
+  .icon.flickr:before {
+    content: ""; }
+  .icon.foursquare:before {
+    content: ""; }
+  .icon.github-with-circle:before {
+    content: ""; }
+  .icon.github:before {
+    content: ""; }
+  .icon.google-drive:before {
+    content: ""; }
+  .icon.linkedin-with-circle:before {
+    content: ""; }
+  .icon.linkedin:before {
+    content: ""; }
+  .icon.mail-with-circle:before {
+    content: ""; }
+  .icon.medium-with-circle:before {
+    content: ""; }
+  .icon.medium:before {
+    content: ""; }
+  .icon.mixi:before {
+    content: ""; }
+  .icon.onedrive:before {
+    content: ""; }
+  .icon.paypal:before {
+    content: ""; }
+  .icon.picasa:before {
+    content: ""; }
+  .icon.sina-weibo:before {
+    content: ""; }
+  .icon.skype-with-circle:before {
+    content: ""; }
+  .icon.skype:before {
+    content: ""; }
+  .icon.slideshare:before {
+    content: ""; }
+  .icon.smashing:before {
+    content: ""; }
+  .icon.soundcloud:before {
+    content: ""; }
+  .icon.spotify-with-circle:before {
+    content: ""; }
+  .icon.spotify:before {
+    content: ""; }
+  .icon.stumbleupon-with-circle:before {
+    content: ""; }
+  .icon.vk-alternitive:before {
+    content: ""; }
+  .icon.vk-with-circle:before {
+    content: ""; }
+  .icon.vk:before {
+    content: ""; }
+  .icon.windows-store:before {
+    content: ""; }
+  .icon.xing-with-circle:before {
+    content: ""; }
+  .icon.xing:before {
+    content: ""; }
+  .icon.yelp:before {
+    content: ""; }
+  .icon.youko-with-circle:before {
+    content: ""; }
+  .icon.youko:before {
+    content: ""; }
+
+/* Layout
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Layout blocks are the largest blocks in your structure.
+ * They should provide page layout so that page's content can be
+ * placed in them without care about its width or margines or alignment.
+ *
+ * You will typically have many layout blocks in your project:
+ * one is for primary use, your content will lay there,
+ * anothers is for header, footer, navbar etc.
+ */
+.block {
+  display: block;
+  max-width: 57em; }
+  @media only screen and (max-width: 45em) {
+    .block {
+      margin: auto;
+      width: 100%; } }
+  @media only screen and (min-width: 45em) and (max-width: 60em) {
+    .block {
+      margin: 0 4rem;
+      width: auto; } }
+  @media only screen and (min-width: 60em) {
+    .block {
+      margin: auto;
+      width: auto; } }
+
+.popup-holder {
+  /* Popup window */
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.7); }
+
+/* Containers
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Containers are elements
+ * for dividing content into large groups.
+ *
+ * They are placed into layout blocks. Their purpose is to show contents so
+ * they should not care about theirs position or width as layout blocks
+ * has taken care about it.
+ *
+ * Because of the above fact containers usually have 100% width.
+ * Their horizontal margin is usually 0.
+ * They can take care about splitting content apart by applying
+ * non-zero vertical margin, though.
+ */
+.primary.container, .form.container, .secondary.container {
+  box-shadow: 0px 3px 5px 0 #d5d5d5;
+  background: #ffffff;
+  margin: 2rem 0;
+  padding: 1rem 4rem; }
+  .block > .primary.container:first-child, .block > .form.container:first-child, .block > .secondary.container:first-child {
+    margin-top: 0; }
+  .block > .primary.container:last-child, .block > .form.container:last-child, .block > .secondary.container:last-child {
+    margin-bottom: 0; }
+  .primary.container .bleed-group, .form.container .bleed-group, .secondary.container .bleed-group, .primary.container .controls, .form.container .controls, .secondary.container .controls {
+    margin-left: -4rem;
+    margin-right: -4rem; }
+  .primary.container .bleed-group:first-child, .form.container .bleed-group:first-child, .secondary.container .bleed-group:first-child {
+    margin-top: -1rem; }
+  .primary.container .bleed-group:last-child, .form.container .bleed-group:last-child, .secondary.container .bleed-group:last-child {
+    margin-bottom: -1rem; }
+  .primary.container .unbleed-group, .form.container .unbleed-group, .secondary.container .unbleed-group, .primary.container .controls, .form.container .controls, .secondary.container .controls {
+    padding-left: 4rem;
+    padding-right: 4rem; }
+  .primary.container .unbleed-group:first-child, .form.container .unbleed-group:first-child, .secondary.container .unbleed-group:first-child {
+    padding-top: 1rem; }
+  .primary.container .unbleed-group:last-child, .form.container .unbleed-group:last-child, .secondary.container .unbleed-group:last-child {
+    padding-bottom: 1rem; }
+  @media only screen and (max-width: 45em) {
+    .primary.container hr, .form.container hr, .secondary.container hr, .primary.container pre, .form.container pre, .secondary.container pre, .primary.container table.responsive, .form.container table.responsive, .secondary.container table.responsive, .primary.container .cm-s-light.CodeMirror, .form.container .cm-s-light.CodeMirror, .secondary.container .cm-s-light.CodeMirror {
+      margin-left: -4rem;
+      margin-right: -4rem; }
+    .primary.container pre, .form.container pre, .secondary.container pre, .primary.container table.responsive td, table.responsive .primary.container td, .form.container table.responsive td, table.responsive .form.container td, .secondary.container table.responsive td, table.responsive .secondary.container td, .primary.container table.responsive th, table.responsive .primary.container th, .form.container table.responsive th, table.responsive .form.container th, .secondary.container table.responsive th, table.responsive .secondary.container th, .primary.container table.responsive caption, table.responsive .primary.container caption, .form.container table.responsive caption, table.responsive .form.container caption, .secondary.container table.responsive caption, table.responsive .secondary.container caption {
+      padding-left: 4rem;
+      padding-right: 4rem; } }
+  @media only screen and (max-width: 45em) {
+    .primary.container, .form.container, .secondary.container {
+      padding: 1rem 2rem; }
+      .primary.container .bleed-group, .form.container .bleed-group, .secondary.container .bleed-group, .primary.container .controls, .form.container .controls, .secondary.container .controls {
+        margin-left: -2rem;
+        margin-right: -2rem; }
+      .primary.container .bleed-group:first-child, .form.container .bleed-group:first-child, .secondary.container .bleed-group:first-child {
+        margin-top: -1rem; }
+      .primary.container .bleed-group:last-child, .form.container .bleed-group:last-child, .secondary.container .bleed-group:last-child {
+        margin-bottom: -1rem; }
+      .primary.container .unbleed-group, .form.container .unbleed-group, .secondary.container .unbleed-group, .primary.container .controls, .form.container .controls, .secondary.container .controls {
+        padding-left: 2rem;
+        padding-right: 2rem; }
+      .primary.container .unbleed-group:first-child, .form.container .unbleed-group:first-child, .secondary.container .unbleed-group:first-child {
+        padding-top: 1rem; }
+      .primary.container .unbleed-group:last-child, .form.container .unbleed-group:last-child, .secondary.container .unbleed-group:last-child {
+        padding-bottom: 1rem; } }
+  @media only screen and (max-width: 45em) and (max-width: 45em) {
+    .primary.container hr, .form.container hr, .secondary.container hr, .primary.container pre, .form.container pre, .secondary.container pre, .primary.container table.responsive, .form.container table.responsive, .secondary.container table.responsive, .primary.container .cm-s-light.CodeMirror, .form.container .cm-s-light.CodeMirror, .secondary.container .cm-s-light.CodeMirror {
+      margin-left: -2rem;
+      margin-right: -2rem; }
+    .primary.container pre, .form.container pre, .secondary.container pre, .primary.container table.responsive td, table.responsive .primary.container td, .form.container table.responsive td, table.responsive .form.container td, .secondary.container table.responsive td, table.responsive .secondary.container td, .primary.container table.responsive th, table.responsive .primary.container th, .form.container table.responsive th, table.responsive .form.container th, .secondary.container table.responsive th, table.responsive .secondary.container th, .primary.container table.responsive caption, table.responsive .primary.container caption, .form.container table.responsive caption, table.responsive .form.container caption, .secondary.container table.responsive caption, table.responsive .secondary.container caption {
+      padding-left: 2rem;
+      padding-right: 2rem; } }
+.shadowed.container {
+  text-align: center;
+  margin: 4rem 0 1rem; }
+
+.login.container {
+  box-shadow: 0px 3px 5px 0 #d5d5d5;
+  background: #ffffff;
+  margin: 2rem auto;
+  max-width: 450px;
+  padding: 1rem 4rem; }
+  @media only screen and (max-width: 45em) {
+    .login.container {
+      max-width: none;
+      margin: 2rem 0;
+      padding: 1rem 2rem; } }
+
+.secondary.container {
+  border-left: 4px solid #fdb814;
+  padding-left: calc(4rem - 4px); }
+
+.popup-body {
+  margin: 4rem 20%;
+  padding: 2rem;
+  border-radius: 5px;
+  background: #fff;
+  max-height: calc(100% - 8rem);
+  min-width: 25rem;
+  overflow: auto;
+  overflow-x: hidden; }
+  .popup-body .bleed-group, .popup-body .controls {
+    margin-left: -2rem;
+    margin-right: -2rem; }
+  .popup-body .bleed-group:first-child {
+    margin-top: -2rem; }
+  .popup-body .bleed-group:last-child {
+    margin-bottom: -2rem; }
+  .popup-body .unbleed-group, .popup-body .controls {
+    padding-left: 2rem;
+    padding-right: 2rem; }
+  .popup-body .unbleed-group:first-child {
+    padding-top: 2rem; }
+  .popup-body .unbleed-group:last-child {
+    padding-bottom: 2rem; }
+  @media only screen and (max-width: 45em) {
+    .popup-body hr, .popup-body pre, .popup-body table.responsive, .popup-body .cm-s-light.CodeMirror {
+      margin-left: -2rem;
+      margin-right: -2rem; }
+    .popup-body pre, .popup-body table.responsive td, table.responsive .popup-body td, .popup-body table.responsive th, table.responsive .popup-body th, .popup-body table.responsive caption, table.responsive .popup-body caption {
+      padding-left: 2rem;
+      padding-right: 2rem; } }
+  @media only screen and (min-width: 45em) and (max-width: 60em) {
+    .popup-body {
+      margin: 4rem 4rem; } }
+  @media only screen and (max-width: 45em) {
+    .popup-body {
+      margin: 4rem 0;
+      border-radius: 0; } }
+
+.popup-close {
+  position: absolute;
+  top: 4.3rem;
+  right: calc(20% + 0.5rem);
+  width: 21px;
+  height: 21px;
+  text-align: center;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 1.1rem; }
+  @media only screen and (min-width: 45em) and (max-width: 60em) {
+    .popup-close {
+      right: calc(4.5rem); } }
+  @media only screen and (max-width: 45em) {
+    .popup-close {
+      right: calc(0.5rem); } }
+
+/* Groups
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Content groups are regular content units like paragraphs or fieldsets.
+ *
+ * All groups are usually defined with their tags:
+ * p -- for paragraphs
+ * h1..h6 -- for headings
+ * address -- for address
+ * blockquote -- for quotations -- can nest other containers
+ * pre -- for prepared text
+ * ul, ol, dl -- for enumerations -- can nest othse uls, ols, dls
+ * table -- for tabulars -- can nest thead, tbody, tfoot, caption
+ * ...
+ *
+ * However, some containers may require using additional groups
+ * which will work only with one particular container
+ * (e.g. `fieldset` will work only inside `form`).
+ */
+.group, .bleed-group, .unbleed-group, .no-vertical-padding, section, hr, p, address, blockquote, ul, ol, dl, .controls, pre, h1.title, h1, h2, h3, h4, h5, h6, table {
+  margin-top: 0.6rem;
+  margin-bottom: 0.6rem; }
+
+.no-vertical-padding {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0; }
+
+/* Central groups
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+section {
+  margin-top: 0;
+  margin-bottom: 1rem; }
+
+.separate {
+  padding-top: 0.5rem; }
+
+hr {
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+  border: none;
+  border-bottom: 1px solid #eeeeee; }
+
+address {
+  font-style: normal;
+  font-size: 0.95rem; }
+
+blockquote {
+  border-left: 2px solid #e4e4e4;
+  padding-left: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem; }
+
+ul, ol {
+  margin: 1rem 2rem; }
+
+ol li {
+  list-style-type: decimal; }
+ol ol li {
+  list-style-type: lower-alpha; }
+ol ol ol li {
+  list-style-type: lower-roman; }
+
+dl dt {
+  font-weight: bold; }
+dl dd {
+  margin-left: 2rem; }
+
+.controls {
+  background: #f8f8f8; }
+
+.comment {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem; }
+  .comment .group, .comment .bleed-group, .comment .unbleed-group, .comment .no-vertical-padding, .comment section, .comment hr, .comment p, .comment address, .comment blockquote, .comment ul, .comment ol, .comment dl, .comment .controls, .comment pre, .comment h1, .comment h2, .comment h3, .comment h4, .comment h5, .comment h6, .comment table {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem; }
+
+/* Pre and code highlighting
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+pre {
+  overflow: auto;
+  color: #000000;
+  background: #f8f8f8;
+  padding: 2rem;
+  font-family: "PT Mono", monospace;
+  font-size: 0.9em;
+  border-radius: 4px; }
+  pre ol {
+    margin-left: 0; }
+    pre ol li {
+      list-style-type: none;
+      counter-increment: list;
+      margin-top: -1px; }
+    pre ol li:before {
+      content: counter(list);
+      border-right: 1px solid #dadada;
+      padding-right: 0.6em;
+      margin: 0 1em 0 -1em;
+      display: inline-block;
+      width: 2.45em;
+      text-align: right;
+      color: #c8c8c8; }
+  @media only screen and (max-width: 45em) {
+    pre {
+      border-radius: 0; } }
+  pre .c {
+    /* Comment */
+    color: #8f5902;
+    font-style: italic; }
+  pre .er {
+    /* Error */
+    color: #a40000;
+    border: 1px solid #ef2929; }
+  pre .g {
+    /* Generic */
+    color: #000000; }
+  pre .k {
+    /* Keyword */
+    color: #204a87; }
+  pre .l {
+    /* Literal */
+    color: #000000; }
+  pre .n {
+    /* Name */
+    color: #000000; }
+  pre .o {
+    /* Operator */
+    color: #ce5c00; }
+  pre .x {
+    /* Other */
+    color: #000000; }
+  pre .p {
+    /* Punctuation */
+    color: #000000; }
+  pre .cm {
+    /* Comment.Multiline */
+    color: #8f5902;
+    font-style: italic; }
+  pre .cp {
+    /* Comment.Preproc */
+    color: #8f5902;
+    font-style: italic; }
+  pre .c1 {
+    /* Comment.Single */
+    color: #8f5902;
+    font-style: italic; }
+  pre .cs {
+    /* Comment.Special */
+    color: #8f5902;
+    font-style: italic; }
+  pre .gd {
+    /* Generic.Deleted */
+    color: #a40000; }
+  pre .ge {
+    /* Generic.Emph */
+    color: #000000;
+    font-style: italic; }
+  pre .gr {
+    /* Generic.Error */
+    color: #ef2929; }
+  pre .gh {
+    /* Generic.Heading */
+    color: #000080; }
+  pre .gi {
+    /* Generic.Inserted */
+    color: #00A000; }
+  pre .go {
+    /* Generic.Output */
+    color: #000000;
+    font-style: italic; }
+  pre .gp {
+    /* Generic.Prompt */
+    color: #8f5902; }
+  pre .gs {
+    /* Generic.Strong */
+    color: #000000; }
+  pre .gu {
+    /* Generic.Subheading */
+    color: #800080; }
+  pre .gt {
+    /* Generic.Traceback */
+    color: #a40000; }
+  pre .kc {
+    /* Keyword.Constant */
+    color: #204a87; }
+  pre .kd {
+    /* Keyword.Declaration */
+    color: #204a87; }
+  pre .kn {
+    /* Keyword.Namespace */
+    color: #204a87; }
+  pre .kp {
+    /* Keyword.Pseudo */
+    color: #204a87; }
+  pre .kr {
+    /* Keyword.Reserved */
+    color: #204a87; }
+  pre .kt {
+    /* Keyword.Type */
+    color: #204a87; }
+  pre .ld {
+    /* Literal.Date */
+    color: #000000; }
+  pre .m {
+    /* Literal.Number */
+    color: #0000cf; }
+  pre .s {
+    /* Literal.String */
+    color: #4e9a06; }
+  pre .na {
+    /* Name.Attribute */
+    color: #c4a000; }
+  pre .nb {
+    /* Name.Builtin */
+    color: #204a87; }
+  pre .nc {
+    /* Name.Class */
+    color: #000000; }
+  pre .no {
+    /* Name.Constant */
+    color: #000000; }
+  pre .nd {
+    /* Name.Decorator */
+    color: #5c35cc; }
+  pre .ni {
+    /* Name.Entity */
+    color: #ce5c00; }
+  pre .ne {
+    /* Name.Exception */
+    color: #cc0000; }
+  pre .nf {
+    /* Name.Function */
+    color: #000000; }
+  pre .nl {
+    /* Name.Label */
+    color: #f57900; }
+  pre .nn {
+    /* Name.Namespace */
+    color: #000000; }
+  pre .nx {
+    /* Name.Other */
+    color: #000000; }
+  pre .py {
+    /* Name.Property */
+    color: #000000; }
+  pre .nt {
+    /* Name.Tag */
+    color: #204a87; }
+  pre .nv {
+    /* Name.Variable */
+    color: #000000; }
+  pre .ow {
+    /* Operator.Word */
+    color: #204a87; }
+  pre .w {
+    /* Text.Whitespace */
+    color: #f8f8f8;
+    text-decoration: underline; }
+  pre .mf {
+    /* Literal.Number.Float */
+    color: #0000cf; }
+  pre .mh {
+    /* Literal.Number.Hex */
+    color: #0000cf; }
+  pre .mi {
+    /* Literal.Number.Integer */
+    color: #0000cf; }
+  pre .mo {
+    /* Literal.Number.Oct */
+    color: #0000cf; }
+  pre .sb {
+    /* Literal.String.Backtick */
+    color: #4e9a06; }
+  pre .sc {
+    /* Literal.String.Char */
+    color: #4e9a06; }
+  pre .sd {
+    /* Literal.String.Doc */
+    color: #8f5902;
+    font-style: italic; }
+  pre .s2 {
+    /* Literal.String.Double */
+    color: #4e9a06; }
+  pre .se {
+    /* Literal.String.Escape */
+    color: #4e9a06; }
+  pre .sh {
+    /* Literal.String.Heredoc */
+    color: #4e9a06; }
+  pre .si {
+    /* Literal.String.Interpol */
+    color: #4e9a06; }
+  pre .sx {
+    /* Literal.String.Other */
+    color: #4e9a06; }
+  pre .sr {
+    /* Literal.String.Regex */
+    color: #4e9a06; }
+  pre .s1 {
+    /* Literal.String.Single */
+    color: #4e9a06; }
+  pre .ss {
+    /* Literal.String.Symbol */
+    color: #4e9a06; }
+  pre .bp {
+    /* Name.Builtin.Pseudo */
+    color: #3465a4; }
+  pre .vc {
+    /* Name.Variable.Class */
+    color: #000000; }
+  pre .vg {
+    /* Name.Variable.Global */
+    color: #000000; }
+  pre .vi {
+    /* Name.Variable.Instance */
+    color: #000000; }
+  pre .il {
+    /* Literal.Number.Integer.Long */
+    color: #0000cf; }
+
+/* Headers
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+h1.title, h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  color: #000000; }
+  h1.title a, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    text-decoration: none;
+    color: #000000; }
+  h1.title small, h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+    font-size: 0.7em;
+    color: #999999; }
+
+h1.title {
+  font-size: 2.1rem;
+  line-height: 1.3;
+  letter-spacing: inherit;
+  margin-top: 1.68rem; }
+
+.h1-title-like {
+  margin-top: 1.68rem;
+  line-height: 2.73rem; }
+
+h1 {
+  font-size: 1.68rem;
+  line-height: 1.32;
+  letter-spacing: inherit;
+  margin-top: 1.344rem; }
+
+.h1-like {
+  margin-top: 1.344rem;
+  line-height: 2.2176rem; }
+
+h2 {
+  font-size: 1.26rem;
+  line-height: 1.5;
+  letter-spacing: inherit;
+  margin-top: 1.008rem; }
+
+.h2-like {
+  margin-top: 1.008rem;
+  line-height: 1.89rem; }
+
+h3, h4, h5, h6 {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  letter-spacing: inherit;
+  margin-top: 0.92rem; }
+
+.h3-like {
+  margin-top: 0.92rem;
+  line-height: 2.0125rem; }
+
+/* Tables
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+table {
+  width: 100%;
+  empty-cells: show;
+  border-collapse: collapse;
+  border-spacing: 0; }
+  table td, table th {
+    line-height: 1;
+    text-align: left;
+    min-height: 2.4rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #eeeeee; }
+  table td:first-child, table th:first-child {
+    padding-left: 0; }
+  table td:last-child, table th:last-child {
+    padding-right: 0; }
+  table tr:last-child td, table tr:last-child th {
+    border-bottom: none; }
+  table caption {
+    margin: 1.05rem 1rem 0;
+    text-align: left;
+    text-transform: uppercase;
+    color: #000000;
+    font-weight: bold;
+    letter-spacing: 0.07rem; }
+  table thead td, table thead th {
+    font-weight: bold; }
+  table thead tr:last-child td, table thead tr:last-child th {
+    padding-bottom: 0.28rem;
+    border-bottom: 2px solid #eeeeee; }
+  table tfoot {
+    background: whitesmoke; }
+    table tfoot tr:first-child td, table tfoot tr:first-child th {
+      border-top: 2px solid #eeeeee; }
+  table table {
+    border: 1px solid #eeeeee; }
+    table table td, table table th {
+      border: 1px solid #eeeeee;
+      background: transparent !important;
+      margin: 0 !important; }
+  table.bordered {
+    border: 1px solid #eeeeee; }
+    @media only screen and (max-width: 45em) {
+      table.bordered.responsive {
+        border-bottom: none; } }
+    table.bordered td, table.bordered th {
+      border: 1px solid #eeeeee; }
+  table.stripped tr:nth-child(odd) td, table.stripped tr:nth-child(odd) th {
+    background: #f8f8f8; }
+  table.stripped thead tr:nth-child(odd) td, table.stripped thead tr:nth-child(odd) th {
+    background: inherit; }
+  table.stripped tfoot td, table.stripped tfoot th {
+    color: inherit;
+    background: whitesmoke !important; }
+  table.responsive caption {
+    margin-left: 0; }
+  @media only screen and (max-width: 45em) {
+    table.responsive {
+      display: block;
+      width: auto; }
+      table.responsive thead {
+        display: none; }
+      table.responsive tbody {
+        display: block; }
+      table.responsive tfoot {
+        display: block; }
+      table.responsive tr {
+        display: block;
+        border-bottom: 2px solid #eeeeee; }
+      table.responsive td, table.responsive th {
+        display: block;
+        text-align: right;
+        min-height: 1.7rem;
+        padding: 0.56rem 1rem 0.35rem;
+        border: none !important;
+        border-bottom: 1px solid #eeeeee !important; }
+      table.responsive tr td:last-child, table.responsive tr th:last-child {
+        border-bottom: none !important; }
+      table.responsive td:before, table.responsive th:before {
+        content: attr(data-label);
+        float: left;
+        text-transform: uppercase;
+        font-size: 86%;
+        font-weight: bold;
+        line-height: 1rem; } }
+
+/* Inline elements
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* For basic typographical elements we befine all standard tags along
+ * with a set of non-standard.
+ *
+ * All classes defined in this section should be applied to
+ * blocks positioned `inline` or `inline-block`.
+ */
+a, .action, tt, big, .big, small, .small, abbr, acronym, dfn, cite, code, samp, output, var, mark, kbd, ins, del, u, s, strike, i, em, b, strong, sub, sup, .tag, .badge {
+  color: inherit; }
+
+code, samp, output, mark, kbd, ins, del {
+  padding: 0 0.3em;
+  line-height: 1.3em;
+  border-radius: 2px;
+  font-size: 0.9em;
+  display: inline-block; }
+
+/* Central inline elements
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+.hor-separate {
+  margin-left: 1rem; }
+
+a {
+  color: #2f77d1; }
+
+.action {
+  color: #2f77d1;
+  border-bottom: 1px dashed #2f77d1; }
+
+a:hover {
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+  color: #e21e3b; }
+
+code a, samp a, output a, mark a, kbd a, ins a, del a {
+  color: inherit;
+  font-weight: bold;
+  text-decoration: underline; }
+
+a code, .action code, tt code, big code, .big code, small code, .small code, abbr code, acronym code, dfn code, cite code, code code, samp code, output code, var code, mark code, kbd code, ins code, del code, u code, s code, strike code, i code, em code, b code, strong code, sub code, sup code, .tag code, .badge code, a samp, .action samp, tt samp, big samp, .big samp, small samp, .small samp, abbr samp, acronym samp, dfn samp, cite samp, code samp, samp samp, output samp, var samp, mark samp, kbd samp, ins samp, del samp, u samp, s samp, strike samp, i samp, em samp, b samp, strong samp, sub samp, sup samp, .tag samp, .badge samp, a output, .action output, tt output, big output, .big output, small output, .small output, abbr output, acronym output, dfn output, cite output, code output, samp output, output output, var output, mark output, kbd output, ins output, del output, u output, s output, strike output, i output, em output, b output, strong output, sub output, sup output, .tag output, .badge output, a mark, .action mark, tt mark, big mark, .big mark, small mark, .small mark, abbr mark, acronym mark, dfn mark, cite mark, code mark, samp mark, output mark, var mark, mark mark, kbd mark, ins mark, del mark, u mark, s mark, strike mark, i mark, em mark, b mark, strong mark, sub mark, sup mark, .tag mark, .badge mark, a kbd, .action kbd, tt kbd, big kbd, .big kbd, small kbd, .small kbd, abbr kbd, acronym kbd, dfn kbd, cite kbd, code kbd, samp kbd, output kbd, var kbd, mark kbd, kbd kbd, ins kbd, del kbd, u kbd, s kbd, strike kbd, i kbd, em kbd, b kbd, strong kbd, sub kbd, sup kbd, .tag kbd, .badge kbd, a ins, .action ins, tt ins, big ins, .big ins, small ins, .small ins, abbr ins, acronym ins, dfn ins, cite ins, code ins, samp ins, output ins, var ins, mark ins, kbd ins, ins ins, del ins, u ins, s ins, strike ins, i ins, em ins, b ins, strong ins, sub ins, sup ins, .tag ins, .badge ins, a del, .action del, tt del, big del, .big del, small del, .small del, abbr del, acronym del, dfn del, cite del, code del, samp del, output del, var del, mark del, kbd del, ins del, del del, u del, s del, strike del, i del, em del, b del, strong del, sub del, sup del, .tag del, .badge del {
+  display: inline;
+  border-radius: 0;
+  line-height: inherit; }
+
+tt {
+  font-family: "PT Mono", monospace; }
+
+big, .big {
+  font-size: 1.1em; }
+
+small, .small {
+  font-size: 0.9em; }
+
+abbr, acronym {
+  border-bottom: 1px dotted #000000;
+  cursor: help; }
+
+dfn {
+  font-style: italic; }
+
+cite {
+  font-style: italic;
+  font-size: 0.9em;
+  color: #999999; }
+
+code, samp, output {
+  color: #000000;
+  background: #f8f8f8;
+  border: 1px solid #eeeeee;
+  font-family: "PT Mono", monospace; }
+  code a, samp a, output a {
+    text-decoration: underline; }
+
+var {
+  font-style: italic; }
+
+mark {
+  color: #000000;
+  background: #ffd61e;
+  border: 1px solid #ffd20a; }
+
+kbd {
+  color: #eeeeee;
+  background: #444444;
+  border: 1px solid #3a3a3a; }
+
+ins {
+  color: inherit;
+  background: #ebfaea;
+  border: 1px solid #dcf6da;
+  white-space: inherit; }
+
+del {
+  color: inherit;
+  background: #ffe7e9;
+  border: 1px solid #fed3d6;
+  white-space: inherit; }
+
+u {
+  text-decoration: underline; }
+
+s, strike {
+  text-decoration: line-through; }
+
+i, em {
+  font-style: italic; }
+
+b, strong {
+  font-weight: bold; }
+
+sub, sup {
+  font-size: 74%;
+  line-height: 0;
+  position: relative;
+  margin-left: 0.05em; }
+
+sup {
+  top: -0.4em; }
+
+sub {
+  bottom: -0.2em; }
+
+/* Tags and badges
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+.tag:hover .animated, .badge:hover .animated, .badge-group:hover .animated {
+  -webkit-transition: 0.3s linear;
+  -moz-transition: 0.3s linear;
+  -o-transition: 0.3s linear;
+  transition: 0.3s linear;
+  opacity: 1;
+  max-width: 10em; }
+
+.tag, .badge {
+  padding: 0.03rem 0.66em 0;
+  line-height: 1.4em;
+  border-radius: 1.1em;
+  font-size: 0.9em;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: #eeeeee;
+  color: #444444; }
+  .tag.dashed-border, .dashed-border.badge {
+    border-style: dashed !important; }
+  .tag.compact, .compact.badge {
+    padding-left: 0.22em;
+    padding-right: 0.22em; }
+  .tag > .icon.center, .badge > .icon.center {
+    margin-right: 0; }
+  .tag > .icon, .badge > .icon {
+    margin-right: 0.2em; }
+  .tag > .icon + .animated, .badge > .icon + .animated {
+    margin-left: -0.2em; }
+  .tag:hover > .icon + .animated, .badge:hover > .icon + .animated {
+    margin-left: 0; }
+  .tag > .animated, .badge > .animated {
+    -webkit-transition: 0.3s linear;
+    -moz-transition: 0.3s linear;
+    -o-transition: 0.3s linear;
+    transition: 0.3s linear;
+    display: inline-block;
+    opacity: 0;
+    max-width: 0; }
+  .tag.outline, .outline.badge {
+    color: #5e5e5e;
+    background: none;
+    border: 1px solid #d5d5d5; }
+  .tag.plain, .plain.badge {
+    border-radius: 0;
+    padding: 0 0.11em;
+    background: #ffffff;
+    color: #444444; }
+    .tag.plain.outline, .plain.outline.badge {
+      color: #444444;
+      background: none;
+      border: 1px solid #ffffff; }
+    .tag.plain:first-child, .plain.badge:first-child {
+      padding-left: 0; }
+    .tag.plain:last-child, .plain.badge:last-child {
+      padding-right: 0; }
+  .tag.gray, .gray.badge {
+    background: #eeeeee;
+    color: #444444; }
+    .tag.gray.outline, .gray.outline.badge {
+      color: #5e5e5e;
+      background: none;
+      border: 1px solid #eeeeee; }
+  .tag.black, .black.badge {
+    background: #444444;
+    color: #eeeeee; }
+    .tag.black.outline, .black.outline.badge {
+      color: #444444;
+      background: none;
+      border: 1px solid #444444; }
+  .tag.blue, .blue.badge {
+    background: #2f77d1;
+    color: #ffffff; }
+    .tag.blue.outline, .blue.outline.badge {
+      color: #2f77d1;
+      background: none;
+      border: 1px solid #2f77d1; }
+  .tag.orange, .orange.badge {
+    background: #e87118;
+    color: #ffffff; }
+    .tag.orange.outline, .orange.outline.badge {
+      color: #e87118;
+      background: none;
+      border: 1px solid #e87118; }
+  .tag.purple, .purple.badge {
+    background: #9467bd;
+    color: #ffffff; }
+    .tag.purple.outline, .purple.outline.badge {
+      color: #9467bd;
+      background: none;
+      border: 1px solid #9467bd; }
+  .tag.marshy, .marshy.badge {
+    background: #bcbd22;
+    color: #ffffff; }
+    .tag.marshy.outline, .marshy.outline.badge {
+      color: #bcbd22;
+      background: none;
+      border: 1px solid #bcbd22; }
+  .tag.turquoise, .turquoise.badge {
+    background: #0ec3cc;
+    color: #ffffff; }
+    .tag.turquoise.outline, .turquoise.outline.badge {
+      color: #0ec3cc;
+      background: none;
+      border: 1px solid #0ec3cc; }
+  .tag.red, .red.badge {
+    background: #d11149;
+    color: #ffffff; }
+    .tag.red.outline, .red.outline.badge {
+      color: #d11149;
+      background: none;
+      border: 1px solid #d11149; }
+  .tag.yellow, .yellow.badge {
+    background: #ffd61e;
+    color: #444444; }
+    .tag.yellow.outline, .yellow.outline.badge {
+      color: #ffd61e;
+      background: none;
+      border: 1px solid #ffd61e; }
+  .tag.green, .green.badge {
+    background: #0a8754;
+    color: #ffffff; }
+    .tag.green.outline, .green.outline.badge {
+      color: #0a8754;
+      background: none;
+      border: 1px solid #0a8754; }
+  .tag.info, .info.badge {
+    background: #2f77d1;
+    color: #ffffff; }
+    .tag.info.outline, .info.outline.badge {
+      color: #2f77d1;
+      background: none;
+      border: 1px solid #2f77d1; }
+  .tag.err, .err.badge {
+    background: #d11149;
+    color: #ffffff; }
+    .tag.err.outline, .err.outline.badge {
+      color: #d11149;
+      background: none;
+      border: 1px solid #d11149; }
+  .tag.warn, .warn.badge {
+    background: #ffd61e;
+    color: #444444; }
+    .tag.warn.outline, .warn.outline.badge {
+      color: #ffd61e;
+      background: none;
+      border: 1px solid #ffd61e; }
+  .tag.ok, .ok.badge {
+    background: #0a8754;
+    color: #ffffff; }
+    .tag.ok.outline, .ok.outline.badge {
+      color: #0a8754;
+      background: none;
+      border: 1px solid #0a8754; }
+
+.badge {
+  border-radius: 3px; }
+
+.badge-group .badge, .badge-group button, .badge-group input[type="button"] {
+  border-radius: 0;
+  margin-right: -1px; }
+  .badge-group .badge:first-child, .badge-group button:first-child, .badge-group input[type="button"]:first-child {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px; }
+  .badge-group .badge:last-child, .badge-group button:last-child, .badge-group input[type="button"]:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    margin-right: 0; }
+
+/* Grid
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Div-based grid can be used inside all block elements, including
+ * layout blocks and containers.
+ *
+ * Base grid class, `.grid`, has no status of group. Therefore it will
+ * have no padding inside containers so you'll need to put it inside
+ * `.group` div or something simmilar.
+ */
+/* Mixins for width control
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Width modifiers
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Mixins for width control
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+.width-auto {
+  width: auto; }
+
+.width-one, .width-1 {
+  width: 8.33333%; }
+  @media only screen and (max-width: 45em) {
+    .width-one, .width-1 {
+      width: 100%; } }
+
+.width-two, .width-2 {
+  width: 16.66667%; }
+  @media only screen and (max-width: 45em) {
+    .width-two, .width-2 {
+      width: 100%; } }
+
+.width-three, .width-3 {
+  width: 25%; }
+  @media only screen and (max-width: 45em) {
+    .width-three, .width-3 {
+      width: 100%; } }
+
+.width-four, .width-4 {
+  width: 33.33333%; }
+  @media only screen and (max-width: 45em) {
+    .width-four, .width-4 {
+      width: 100%; } }
+
+.width-five, .width-5 {
+  width: 41.66667%; }
+  @media only screen and (max-width: 45em) {
+    .width-five, .width-5 {
+      width: 100%; } }
+
+.width-six, .width-6 {
+  width: 50%; }
+  @media only screen and (max-width: 45em) {
+    .width-six, .width-6 {
+      width: 100%; } }
+
+.width-seven, .width-7 {
+  width: 58.33333%; }
+  @media only screen and (max-width: 45em) {
+    .width-seven, .width-7 {
+      width: 100%; } }
+
+.width-eight, .width-8 {
+  width: 66.66667%; }
+  @media only screen and (max-width: 45em) {
+    .width-eight, .width-8 {
+      width: 100%; } }
+
+.width-nine, .width-9 {
+  width: 75%; }
+  @media only screen and (max-width: 45em) {
+    .width-nine, .width-9 {
+      width: 100%; } }
+
+.width-ten, .width-10 {
+  width: 83.33333%; }
+  @media only screen and (max-width: 45em) {
+    .width-ten, .width-10 {
+      width: 100%; } }
+
+.width-eleven, .width-11 {
+  width: 91.66667%; }
+  @media only screen and (max-width: 45em) {
+    .width-eleven, .width-11 {
+      width: 100%; } }
+
+.width-twelve, .width-12 {
+  width: 100%; }
+  @media only screen and (max-width: 45em) {
+    .width-twelve, .width-12 {
+      width: 100%; } }
+
+.width-one-third {
+  width: 33.33333%; }
+  @media only screen and (max-width: 45em) {
+    .width-one-third {
+      width: 100%; } }
+
+.width-two-thirds {
+  width: 66.66667%; }
+  @media only screen and (max-width: 45em) {
+    .width-two-thirds {
+      width: 100%; } }
+
+.width-one-half {
+  width: 50%; }
+  @media only screen and (max-width: 45em) {
+    .width-one-half {
+      width: 100%; } }
+
+.grid {
+  display: block;
+  width: 100%; }
+  .grid:after {
+    content: "";
+    display: table;
+    clear: both; }
+  .grid.no-padding .row .column, .grid.no-padding .row .columns {
+    padding: 0; }
+
+.row {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.6rem; }
+  .row.no-padding .column, .row.no-padding .columns {
+    padding: 0; }
+  .row:last-child {
+    margin-bottom: 0; }
+  .row:after {
+    content: "";
+    display: table;
+    clear: both; }
+
+.column, .columns {
+  display: block;
+  float: left;
+  padding: 0 0.5rem;
+  /* Offsets */ }
+  .column:first-child, .columns:first-child {
+    padding-left: 0; }
+  .column:last-child, .columns:last-child {
+    padding-right: 0; }
+  @media only screen and (max-width: 45em) {
+    .column, .columns {
+      width: 100% !important;
+      margin-left: 0 !important;
+      padding: 0 0; } }
+  .column.one, .one.columns, .column.col-1, .col-1.columns {
+    width: 8.33333%; }
+  .column.two, .two.columns, .column.col-2, .col-2.columns {
+    width: 16.66667%; }
+  .column.three, .three.columns, .column.col-3, .col-3.columns {
+    width: 25%; }
+  .column.four, .four.columns, .column.col-4, .col-4.columns {
+    width: 33.33333%; }
+  .column.five, .five.columns, .column.col-5, .col-5.columns {
+    width: 41.66667%; }
+  .column.six, .six.columns, .column.col-6, .col-6.columns {
+    width: 50%; }
+  .column.seven, .seven.columns, .column.col-7, .col-7.columns {
+    width: 58.33333%; }
+  .column.eight, .eight.columns, .column.col-8, .col-8.columns {
+    width: 66.66667%; }
+  .column.nine, .nine.columns, .column.col-9, .col-9.columns {
+    width: 75%; }
+  .column.ten, .ten.columns, .column.col-10, .col-10.columns {
+    width: 83.33333%; }
+  .column.eleven, .eleven.columns, .column.col-11, .col-11.columns {
+    width: 91.66667%; }
+  .column.twelve, .twelve.columns, .column.col-12, .col-12.columns {
+    width: 100%; }
+  .column.one-third, .one-third.columns {
+    width: 33.33333%; }
+  .column.two-thirds, .two-thirds.columns {
+    width: 66.66667%; }
+  .column.one-half, .one-half.columns {
+    width: 50%; }
+  .column.offset-by-one, .offset-by-one.columns, .column.offset-1, .offset-1.columns {
+    margin-left: 8.33333%; }
+  .column.offset-by-two, .offset-by-two.columns, .column.offset-2, .offset-2.columns {
+    margin-left: 16.66667%; }
+  .column.offset-by-three, .offset-by-three.columns, .column.offset-3, .offset-3.columns {
+    margin-left: 25%; }
+  .column.offset-by-four, .offset-by-four.columns, .column.offset-4, .offset-4.columns {
+    margin-left: 33.33333%; }
+  .column.offset-by-five, .offset-by-five.columns, .column.offset-5, .offset-5.columns {
+    margin-left: 41.66667%; }
+  .column.offset-by-six, .offset-by-six.columns, .column.offset-6, .offset-6.columns {
+    margin-left: 50%; }
+  .column.offset-by-seven, .offset-by-seven.columns, .column.offset-7, .offset-7.columns {
+    margin-left: 58.33333%; }
+  .column.offset-by-eight, .offset-by-eight.columns, .column.offset-8, .offset-8.columns {
+    margin-left: 66.66667%; }
+  .column.offset-by-nine, .offset-by-nine.columns, .column.offset-9, .offset-9.columns {
+    margin-left: 75%; }
+  .column.offset-by-ten, .offset-by-ten.columns, .column.offset-10, .offset-10.columns {
+    margin-left: 83.33333%; }
+  .column.offset-by-eleven, .offset-by-eleven.columns, .column.offset-11, .offset-11.columns {
+    margin-left: 91.66667%; }
+  .column.offset-by-one-third, .offset-by-one-third.columns {
+    margin-left: 33.33333%; }
+  .column.offset-by-two-thirds, .offset-by-two-thirds.columns {
+    margin-left: 66.66667%; }
+  .column.offset-by-one-half, .offset-by-one-half.columns {
+    margin-left: 50%; }
+  @media only screen and (max-width: 45em) {
+    .column.secondary, .secondary.columns {
+      display: none; } }
+  .column.no-padding, .no-padding.columns {
+    padding: 0; }
+
+/* Forms and buttons
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+/* Inputs
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+input, textarea, select, button, .button {
+  width: 100%;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  border: 1px solid #e4e4e4;
+  padding: 0.7rem;
+  background: transparent;
+  border-radius: 5px;
+  display: block;
+  box-shadow: inset 0 1px 1px #eeeeee;
+  margin-bottom: 0.3em; }
+  input:last-child, textarea:last-child, select:last-child, button:last-child, .button:last-child {
+    margin-bottom: 0; }
+  input:after, textarea:after, select:after, button:after, .button:after {
+    content: "";
+    display: table;
+    clear: both; }
+  input.error, textarea.error, select.error, button.error, .button.error {
+    border: 1px solid #e19aaf; }
+  input.success, textarea.success, select.success, button.success, .button.success {
+    border: 1px solid #84a698; }
+  input:focus, textarea:focus, select:focus, button:focus, .button:focus {
+    border: 1px solid #000000; }
+  input:disabled, input.disabled, textarea:disabled, textarea.disabled, select:disabled, select.disabled, button:disabled, button.disabled, .button:disabled, .button.disabled {
+    background: whitesmoke !important;
+    color: #999999 !important;
+    border-color: #e4e4e4 !important; }
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: block;
+  background: inherit;
+  padding-right: 2rem; }
+  select[multiple="multiple"] {
+    height: auto; }
+
+.select-arrow:after {
+  position: absolute;
+  margin-top: 1.25rem;
+  margin-left: -1.4rem;
+  width: 0;
+  height: 0;
+  border-top: 5px dashed;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  content: ""; }
+
+input[type="reset"],
+input[type="submit"],
+input[type="file"],
+input[type="radio"],
+input[type="checkbox"],
+select,
+button,
+.button {
+  cursor: pointer;
+  box-shadow: none;
+  display: inline-block; }
+
+input[type="file"] {
+  width: 100%; }
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 0.1em;
+  padding: 0; }
+
+input[type="reset"],
+input[type="submit"],
+button,
+.button {
+  padding-left: 1.4rem;
+  padding-right: 1.4rem; }
+
+label, .desc, .errorlist {
+  font-size: 0.9rem; }
+  label small, .desc small, .errorlist small, label span.error, .desc span.error, .errorlist span.error, label span.success, .desc span.success, .errorlist span.success, label.disabled, .disabled.desc, .disabled.errorlist {
+    font-size: 0.9rem;
+    color: #999999;
+    font-weight: normal; }
+  label span.error, .desc span.error, .errorlist span.error {
+    color: #d11149; }
+  label span.success, .desc span.success, .errorlist span.success {
+    color: #0a8754; }
+  label.checkbox, .checkbox.desc, .checkbox.errorlist {
+    cursor: pointer; }
+
+.desc, .errorlist {
+  font-weight: normal;
+  font-size: 0.9rem;
+  color: #999999;
+  margin: 0 0 0.2rem;
+  border: none;
+  line-height: 1; }
+  .desc ul, .errorlist ul, .desc ol, .errorlist ol {
+    margin: 0; }
+  .desc li, .errorlist li {
+    display: block;
+    margin: 0 0 0.2rem 0; }
+
+.errorlist {
+  color: #d11149; }
+
+.inline input, .inline button, .inline .button, .inline select {
+  display: inline-block;
+  width: auto;
+  margin-bottom: 0.2rem; }
+  .inline input:after, .inline button:after, .inline .button:after, .inline select:after {
+    content: none;
+    display: none;
+    clear: none; }
+.inline input {
+  padding-left: 0.35rem;
+  padding-right: 0.35rem; }
+@media only screen and (max-width: 45em) {
+  .inline .full-width-on-low {
+    width: 100%; } }
+@media only screen and (max-width: 45em) {
+  .inline .full-width-on-mid {
+    width: 100%; } }
+@media only screen and (min-width: 45em) and (max-width: 60em) {
+  .inline .full-width-on-mid {
+    width: 100%; } }
+
+.required {
+  font-weight: bold; }
+
+button:active, .button:active {
+  color: black; }
+button.primary, .button.primary {
+  color: #ffffff;
+  background: #2f77d1;
+  border: 1px solid #2f77d1; }
+button.secondary, .button.secondary {
+  color: #2f77d1;
+  background: transparent;
+  border: 1px solid #2f77d1; }
+button.plain, .button.plain {
+  border: 1px dashed #dadada; }
+
+/* Additional classes
+ *
+ * This code is a part of the Light package
+ * which is distributed under MIT license terms.
+ */
+.text-centered {
+  text-align: center; }
+
+.text-right {
+  text-align: right; }
+
+.start {
+  margin-top: 0; }
+
+.last {
+  margin-right: 0; }
+
+.end {
+  margin-bottom: 0; }
+
+.upper {
+  text-transform: uppercase; }
+
+.normal {
+  font-weight: normal; }
+
+.bold {
+  font-weight: bold; }
+
+.italic {
+  font-style: italic; }
+
+.right {
+  float: right; }
+
+.left {
+  float: left; }
+
+.nowrap {
+  white-space: nowrap; }
+
+.hide, .hidden {
+  display: none; }
+
+.absolute {
+  position: absolute; }
+
+.display-block {
+  display: block; }
+
+.display-inline {
+  display: inline; }
+
+.bg-gray {
+  border-color: #444444 !important;
+  border-style: dashed !important; }
+
+.bg-black {
+  border-color: #444444 !important; }
+
+.bg-blue {
+  border-color: #2f77d1 !important; }
+
+.bg-orange {
+  border-color: #e87118 !important; }
+
+.bg-purple {
+  border-color: #9467bd !important; }
+
+.bg-marshy {
+  border-color: #bcbd22 !important; }
+
+.bg-turquoise {
+  border-color: #0ec3cc !important; }
+
+.bg-red {
+  border-color: #d11149 !important; }
+
+.bg-yellow {
+  border-color: #ffd61e !important; }
+
+.bg-green {
+  border-color: #0a8754 !important; }
+
+.bg-info {
+  border-color: #2f77d1 !important; }
+
+.bg-err {
+  border-color: #d11149 !important; }
+
+.bg-warn {
+  border-color: #ffd61e !important; }
+
+/*# sourceMappingURL=main.css.map */

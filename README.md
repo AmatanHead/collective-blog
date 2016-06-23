@@ -74,7 +74,7 @@ And **no** WYSIWYG! ('cause it's evil!)
 * <s>User profiles</s> — done
 * <s>Blogs</s> — done
 * <s>Posts</s> — done
-* Comments
+* <s>Comments</s> — done
 
 
 ## Project structure
