@@ -61,7 +61,6 @@ Each user has its rating (karma). Users can vote up and down for any other user 
 * [Django](https://www.djangoproject.com) along with plugins for registration, captcha, markdown, and voting.
 * [Markdown](github.com/waylan/Python-Markdown).
 * [Codemirror](https://eloquentjavascript.net) for editing markdown.
-* [Light](https://github.com/AmatanHead/light) css framework.
 
 And **no** WYSIWYG! ('cause it's evil!)
 
