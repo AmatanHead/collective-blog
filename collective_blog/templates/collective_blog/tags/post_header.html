@@ -11,14 +11,15 @@
         {{ post.created|naturaltime }}
     {% endif %}
 </p>
-{% if post.blog %}
-    <p>
+<p>
+    {% if post.blog %}
         <a href="{% url "view_blog" blog_slug=post.blog.slug %}">
-            <span class="badge {{ color }}">
-                {% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}
-                {{ post.blog.name }}
-            </span>
+            <span class="badge {{ color }}">{% if post.blog.icon %}<span class="{{ post.blog.icon }} icon"></span>{% endif %}{{ post.blog.name }}</span>
         </a>
-        {# TODO normal cursor for tags and badges #}
-    </p>
-{% endif %}
+    {% endif %}
+    {% for tag in post.tags.all %}
+        <a href="{% url "feed_tag" tag_slug=tag.slug %}">
+            <span class="outline {% if tag in interesting_tags %}green{% endif %} tag">{{ tag }}</span>
+        </a>
+    {% endfor %}
+</p>

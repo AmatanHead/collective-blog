@@ -60,6 +60,9 @@ urlpatterns = [
     url(r'^(?P<page>[0-9]+)/$', FeedView.as_view(), name='homepage'),
     url(r'^$', FeedView.as_view(), name='homepage'),
 
+    url(r'^t/(?P<tag_slug>[^/]+)/(?P<page>[0-9]+)/$', TagFeedView.as_view(), name='feed_tag'),
+    url(r'^t/(?P<tag_slug>[^/]+)/$', TagFeedView.as_view(), name='feed_tag'),
+
     url(r'^feed-best/(?P<page>[0-9]+)/$', BestFeedView.as_view(), name='feed_best'),
     url(r'^feed-best/$', BestFeedView.as_view(), name='feed_best'),
 

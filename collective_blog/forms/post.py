@@ -21,6 +21,7 @@ class PostForm(ModelForm, BaseFormRenderer):
 
     renderer = [
         'heading',
+        'tags',
         'content',
         'blog',
         'is_draft',
@@ -33,6 +34,7 @@ class PostForm(ModelForm, BaseFormRenderer):
         model = Post
         fields = [
             'heading',
+            'tags',
             'content',
             'blog',
             'is_draft',

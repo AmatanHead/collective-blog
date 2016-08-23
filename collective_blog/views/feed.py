@@ -1,12 +1,15 @@
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.http import HttpResponsePermanentRedirect
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
-from collective_blog.models import Post, Membership
+from collective_blog.models import Post, Membership, Tag
 
 
 class GenericFeedView(ListView):
@@ -38,8 +41,7 @@ class GenericFeedView(ListView):
 
     def get_queryset(self):
         """Returns a queryset of posts that are visible to a user"""
-        return (Post.objects
-                .select_related('author', 'blog')
+        return (self._get_queryset()
                 .filter(
                     Q(blog__type='O') | (
                         Q(blog__members=self.request.user) &
@@ -47,7 +49,12 @@ class GenericFeedView(ListView):
                     ) if not self.request.user.is_anonymous() else (
                         Q(blog__type='O')
                     ),
-                    is_draft=False)
+                    is_draft=False))
+
+    def _get_queryset(self):
+        return (Post.objects
+                .select_related('author', 'blog')
+                .prefetch_related('tags')
                 .distinct())
 
 
@@ -114,10 +121,36 @@ class MyPostsFeedView(GenericFeedView):
     template_name = 'collective_blog/feed_drafts.html'
 
     def get_queryset(self):
-        return (
-            Post.objects
-                .select_related('author', 'blog')
+        return (self._get_queryset()
                 .filter(author=self.request.user)
-                .distinct()
-                .order_by('-is_draft', 'updated')
+                .order_by('-is_draft', 'updated'))
+
+
+class TagFeedView(FeedView):
+    template_name = 'collective_blog/feed_tags.html'
+    type = 'feed_tag'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.tag_slug = kwargs.pop('tag_slug')
+
+        if self.tag_slug != self.tag_slug.lower():
+            return HttpResponsePermanentRedirect(
+                reverse('feed_tag',
+                        kwargs=dict(tag_slug=self.tag_slug.lower())))
+
+        self.tag = get_object_or_404(Tag, slug=self.tag_slug)
+
+        return super(TagFeedView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return (
+            super(TagFeedView, self).get_queryset()
+            .filter(tags=self.tag)
         )
+
+    def get_context_data(self, **kwargs):
+        context = super(TagFeedView, self).get_context_data(**kwargs)
+        context['tag'] = self.tag
+        context['interesting_tags'] = [self.tag]
+        print(context)
+        return context

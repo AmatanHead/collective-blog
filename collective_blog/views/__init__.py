@@ -1,6 +1,6 @@
 from .feed import (GenericFeedView, FeedView,
                    BestFeedView, DayBestFeedView, MonthBestFeedView,
-                   PersonalFeedView, MyPostsFeedView)
+                   PersonalFeedView, MyPostsFeedView, TagFeedView)
 from .post import (PostView, VotePostView,
                    CreatePostView, EditPostView, DeletePostView)
 from .blog import (BlogView, JoinBlogView, LeaveBlogView, UpdateColorBlogView,

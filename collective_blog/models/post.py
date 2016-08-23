@@ -19,11 +19,15 @@ from s_markdown.extensions import (FencedCodeExtension,
                                    AutolinkExtension,
                                    CutExtension)
 
+from taggit.managers import TaggableManager
+
 from uuslug import uuslug
 
 from s_voting.models import AbstractVote, VoteCacheField
 
 import re
+
+from .tag import TaggedItem
 
 
 class PostVote(AbstractVote):
@@ -95,6 +99,10 @@ class Post(models.Model):
                              blank=True)
 
     rating = VoteCacheField(PostVote)
+
+    tags = TaggableManager(verbose_name=_('Tags'),
+                           help_text=_('A comma-separated list of tags'),
+                           through=TaggedItem)
 
     def clean(self):
         """Check that published articles have blog set"""

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title_global %}{{ global_site_name }}{% endblock %}
+
+
+{% block content %}
+    <div class="bg-green secondary container">
+        <h1 class="title">{% blocktrans trimmed with tag_name=tag %}Tag "{{ tag_name }}"{% endblocktrans %}</h1>
+        <hr>
+    </div>
+
+    {% if post_list %}
+        {% for post in post_list %}
+            <div class="primary container">
+                {% post_preview post interesting_blogs=interesting_blogs interesting_tags=interesting_tags %}
+            </div>
+        {% endfor %}
+
+        {% post_navigation page_obj pages type tag_slug=tag.slug %}
+
+    {% else %}
+        <div class="primary container">
+            <h1 class="title">{% trans "Nothing to show" %}</h1>
+            <p>
+                {% blocktrans trimmed %}
+                    Sorry, but we have no entries to show.
+                {% endblocktrans %}
+                <!-- TODO link to the post creation form -->
+            </p>
+        </div>
+    {% endif %}
+
+{% endblock %}

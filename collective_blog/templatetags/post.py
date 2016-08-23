@@ -8,20 +8,27 @@ register = template.Library()
 
 
 @register.inclusion_tag('collective_blog/tags/post_preview.html')
-def post_preview(post, interesting_blogs, hide_threshold=-20):
+def post_preview(post, interesting_blogs, interesting_tags=None,
+                 hide_threshold=-20):
+    if interesting_tags is None:
+        interesting_tags = []
     color = ''
     if post.blog and post.blog.id in interesting_blogs:
         color = interesting_blogs[post.blog.id].color
-    return dict(post=post, color=color, hide_threshold=hide_threshold)
+    return dict(post=post, color=color, hide_threshold=hide_threshold,
+                interesting_tags=interesting_tags)
 
 
 @register.inclusion_tag('collective_blog/tags/post_header.html')
-def post_header(post, color='', big_title=False):
+def post_header(post, color='', big_title=False, interesting_tags=None):
+    if interesting_tags is None:
+        interesting_tags = []
     if post.created:
         show_full_date = timezone.now() - timedelta(days=2) > post.created
     else:
         show_full_date = True
-    return dict(post=post, show_full_date=show_full_date, color=color, big_title=big_title)
+    return dict(post=post, show_full_date=show_full_date, color=color,
+                big_title=big_title, interesting_tags=interesting_tags)
 
 
 @register.inclusion_tag('collective_blog/tags/post_navigation.html')

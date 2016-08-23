@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'captcha',
     'messages_extends',
     'mptt',
+    'taggit',
 
     'collective_blog',
     'user',
@@ -184,3 +185,9 @@ STATICFILES_FINDERS = (
 # https://docs.djangoproject.com/en/1.9/topics/email/
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Tags
+# https://django-taggit.readthedocs.io
+
+TAGGIT_CASE_INSENSITIVE = True
