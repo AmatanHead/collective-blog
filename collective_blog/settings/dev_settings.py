@@ -19,17 +19,17 @@ MIDDLEWARE_CLASSES.append('collective_blog.middleware.TerminalLoggingMiddleware'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'blog',
-    #     'USER': 'zelta',
-    #     'PASSWORD': '',
-    #     'HOST': '127.0.0.1',
-    # }
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'blog',
+        'USER': 'zelta',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+    }
 }
 
 print('\033[01;33mWarning: recaptcha is running in the debug mode!\033[0;00m')

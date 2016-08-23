@@ -5,17 +5,20 @@ python:
   - 3.4
   - 3.5
 env:
-  - DJANGO=1.9.2
+  - DJANGO=1.10
     DJANGO_SETTINGS_MODULE="collective_blog.settings"
   - DJANGO=1.9.7
+    DJANGO_SETTINGS_MODULE="collective_blog.settings"
+  - DJANGO=1.9.2
     DJANGO_SETTINGS_MODULE="collective_blog.settings"
 install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libmysqlclient-dev
-  - pip install -q -r requirements.txt
-  - pip install -q pep8
-  - pip install -q mysqlclient
-  - pip install -q -U coverage codacy-coverage
+  - pip install django==$DJANGO
+  - pip install -r requirements.txt
+  - pip install pep8
+  - pip install mysqlclient
+  - pip install -U coverage codacy-coverage
 before_script:
   - mysql -e 'create database travis_ci_db;'
 script:
