@@ -155,7 +155,7 @@ class HtmlCacheField(TextField):
 
         return name, path, args, kwargs
 
-    def contribute_to_class(self, cls, name, virtual_only=False):
+    def contribute_to_class(self, cls, name, *args, **kwargs):
         """Register the field and add ancillary attributes
 
         :param cls: Model instance.
@@ -163,7 +163,8 @@ class HtmlCacheField(TextField):
         :param virtual_only: Virtual only flag.
 
         """
-        super(HtmlCacheField, self).contribute_to_class(cls, name, virtual_only)
+        super(HtmlCacheField, self).contribute_to_class(cls, name,
+                                                        *args, **kwargs)
         setattr(cls, self.name, HtmlCacheDescriptor(self.markdown_field))
 
 
@@ -431,15 +432,15 @@ class MarkdownField(TextField):
         defaults.update(kwargs)
         return super(MarkdownField, self).formfield(**defaults)
 
-    def contribute_to_class(self, cls, name, virtual_only=False):
+    def contribute_to_class(self, cls, name, *args, **kwargs):
         """Register the field and add ancillary attributes
 
         :param cls: Model instance.
         :param name: Field name.
-        :param virtual_only: Virtual only flag.
 
         """
-        super(MarkdownField, self).contribute_to_class(cls, name, virtual_only)
+        super(MarkdownField, self).contribute_to_class(cls, name,
+                                                       *args, **kwargs)
 
         if self.cls_name is None:
             self.cls_name = self.name + '_cls'
