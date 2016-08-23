@@ -13,7 +13,7 @@ import re
 
 
 class HtmlCacheDescriptor(object):
-    def __init__(self, destination_field):
+    def __init__(self, self_field, destination_field):
         """
         This descriptor is used as a proxy between html cache and
         markdown field
@@ -36,13 +36,7 @@ class HtmlCacheDescriptor(object):
 
         """
         self.destination_field = destination_field
-
-        # These fields must not be cached!
-        # If html_cache field is being loaded before the main field,
-        # these values can be `None`.
-
-        # self.cls_name = self.destination_field.cls_name
-        # self.state_name = self.destination_field.state_name
+        self.self_field = self_field
 
     def setup(self, instance, html=None):
         """Set up the state if it's empty
@@ -58,8 +52,10 @@ class HtmlCacheDescriptor(object):
 
         markdown_cls = getattr(instance, self.destination_field.cls_name)
 
-        if not hasattr(instance, self.destination_field.state_name):
-            setattr(instance, self.destination_field.state_name, markdown_cls(self.destination_field.renderer, '', html))
+        if self.destination_field.name not in instance.__dict__:
+            instance.__dict__[self.destination_field.name] = markdown_cls(self.destination_field.renderer, '', html)
+        if self.self_field.name not in instance.__dict__:
+            instance.__dict__[self.self_field.name] = self
 
     @staticmethod
     def hash(string):
@@ -93,7 +89,7 @@ class HtmlCacheDescriptor(object):
     def __get__(self, instance, owner):
         self.setup(instance, '')
 
-        field = getattr(instance, self.destination_field.state_name)
+        field = instance.__dict__[self.destination_field.name]
 
         return self.hash(field.source) + field.html_force
 
@@ -105,7 +101,7 @@ class HtmlCacheDescriptor(object):
 
         hash_str, html = self.split(encoding.force_text(value))
 
-        field = getattr(instance, self.destination_field.state_name)
+        field = instance.__dict__[self.destination_field.name]
 
         field._html = html
 
@@ -142,7 +138,7 @@ class HtmlCacheField(TextField):
         See the `HtmlCacheDescriptor` documentation.
 
         """
-        kwargs.update(dict(editable=False, blank=True, null=True))
+        kwargs.update(dict(editable=False, blank=True, null=True, default=''))
         self.markdown_field = markdown_field
         super(HtmlCacheField, self).__init__(*args, **kwargs)
 
@@ -160,12 +156,12 @@ class HtmlCacheField(TextField):
 
         :param cls: Model instance.
         :param name: Field name.
-        :param virtual_only: Virtual only flag.
 
         """
         super(HtmlCacheField, self).contribute_to_class(cls, name,
                                                         *args, **kwargs)
-        setattr(cls, self.name, HtmlCacheDescriptor(self.markdown_field))
+
+        setattr(cls, self.name, HtmlCacheDescriptor(self, self.markdown_field))
 
 
 class ClsDescriptor(object):
@@ -185,13 +181,6 @@ class MarkdownDescriptor(object):
     def __init__(self, destination_field):
         self.destination_field = destination_field
 
-        # These fields must not be cached!
-        # If html_cache field is being loaded before the main field,
-        # these values can be `None`.
-
-        # self.cls_name = self.destination_field.cls_name
-        # self.state_name = self.destination_field.state_name
-
     def setup(self, instance, value=''):
         """Set up the state if it's empty
 
@@ -206,12 +195,12 @@ class MarkdownDescriptor(object):
 
         markdown_cls = getattr(instance, self.destination_field.cls_name)
 
-        if not hasattr(instance, self.destination_field.state_name):
-            setattr(instance, self.destination_field.state_name, markdown_cls(self.destination_field.renderer, value))
+        if self.destination_field.name not in instance.__dict__:
+            instance.__dict__[self.destination_field.name] = markdown_cls(self.destination_field.renderer, value)
 
     def __get__(self, instance, owner):
         self.setup(instance, '')
-        return getattr(instance, self.destination_field.state_name)
+        return instance.__dict__[self.destination_field.name]
 
     def __set__(self, instance, value):
         self.setup(instance, '')
@@ -219,9 +208,9 @@ class MarkdownDescriptor(object):
         markdown_cls = getattr(instance, self.destination_field.cls_name)
 
         if isinstance(value, markdown_cls):
-            setattr(instance, self.destination_field.state_name, value)
+            instance.__dict__[self.destination_field.name] = value
         else:
-            field = getattr(instance, self.destination_field.state_name)
+            field = instance.__dict__[self.destination_field.name]
             field._source = encoding.force_text(value)
 
 
@@ -237,8 +226,6 @@ class MarkdownField(TextField):
 
         :param default: Can be either a string ot a `Markdown` class instance.
           Strings are converted to `Markdown` objects.
-        :param state_name: A name for the state field.
-          Default is `<name>_state`.
         :param cls_name: A name for the markdown generator class.
           Default is `<name>_cls`.
         :param renderer_name: A name for the markdown renderer class.
@@ -276,7 +263,6 @@ class MarkdownField(TextField):
 
         self.markdown_cls = kwargs.pop('markdown', Markdown)
         self.renderer = kwargs.pop('renderer', BaseRenderer())
-        self.state_name = kwargs.pop('state_name', None)
         self.cls_name = kwargs.pop('cls_name', None)
         self.renderer_name = kwargs.pop('renderer_name', None)
 
@@ -315,8 +301,6 @@ class MarkdownField(TextField):
             kwargs.update(dict(cls_name=self.cls_name))
         if self.renderer_name is not None:
             kwargs.update(dict(renderer_name=self.renderer_name))
-        if self.state_name is not None:
-            kwargs.update(dict(state_name=self.state_name))
 
         kwargs.update(dict(markdown=self.markdown_cls,
                            renderer=self.renderer))
@@ -447,9 +431,6 @@ class MarkdownField(TextField):
 
         if self.renderer_name is None:
             self.renderer_name = self.name + '_renderer'
-
-        if self.state_name is None:
-            self.state_name = '_' + self.name + '_state'
 
         setattr(cls, self.cls_name, ClsDescriptor(self.markdown_cls))
         setattr(cls, self.renderer_name, self.renderer)
