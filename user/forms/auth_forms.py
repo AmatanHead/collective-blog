@@ -39,9 +39,9 @@ class RegistrationFormCaptcha(RegistrationFormUniqueEmail, BaseFormRenderer):
         def __init__(self, *args, **kwargs):
             if 'data' in kwargs:
                 kwargs['data'] = kwargs['data'].copy()
-                if kwargs['data']['g-recaptcha-response']:
+                if kwargs['data'].get('g-recaptcha-response', None):
                     kwargs['data']['g-recaptcha-response'] = 'PASSED'
-            super().__init__(*args, **kwargs)
+            super(RegistrationFormCaptcha, self).__init__(*args, **kwargs)
         captcha = ReCaptchaField(help_text='This ReCaptcha is running '
                                            'with DEBUG=True.')
     else:
