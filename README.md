@@ -12,6 +12,26 @@ Install the requirements:
 $ pip install -r requirements.txt
 ```
 
+Setup dev mode. You can run in either the `DEV=1` mode, `TRAVIS=1` mode, or `HEROKU=1` mode.
+The first one is for development, the second one is fot ci tests, and the third one is for running in production.
+
+```
+$ export DEV=1
+```
+
+Setup other environment variables:
+
+| Variable | Description
+| -----|-------------
+| SECRET_KEY | Used to encrypt session coockies.
+| RECAPTCHA_PUBLIC_KEY | Public key for ReCaptcha.
+| RECAPTCHA_PPRIVATE_KEY | Private key for ReCaptcha.
+| DEFAULT_FROM_EMAIL | Email settings. See the Django documentation.
+| EMAIL_HOST | -//-
+| EMAIL_HOST_PASSWORD | -//-
+| EMAIL_HOST_USER | -//-
+| SERVER_EMAIL | -//-
+
 Migrate your database:
 
 ```
@@ -74,6 +94,28 @@ And **no** WYSIWYG! ('cause it's evil!)
 * <s>Blogs</s> — done
 * <s>Posts</s> — done
 * <s>Comments</s> — done
+
+
+## Criteria
+
+**>= 4**
+
+* <s>Can register, post, comment</s> — done
+* <s>Comments are displayed flat</s> — done
+* <s>SQL injection protected</s> — done by django
+
+**>= 6**
+
+* <s>A rating system which allows to vote without refreshing the page</s> — done (ajax voting)
+* <s>WYSIWYG | Markdown</s> — done (markdown)
+* <s>XSS proof</s> — done by django
+* <s>Registration page protecred with CAPTCHA</s> — done (ReCapthca)
+* <s>Comments are displayed with tree</s>  — done (django mptt)
+
+**>= 8**
+
+* <s>Manageable user permissions.</s>  — done
+* <s>Service is ready to launch.</s>  — done
 
 
 ## Project structure
