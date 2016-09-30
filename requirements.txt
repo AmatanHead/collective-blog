@@ -9,3 +9,4 @@ django-messages-extends~=0.5
 django-uuslug~=1.1.7
 django-mptt~=0.8.6
 django-taggit~=0.20.2
+whitenoise~=3.2
