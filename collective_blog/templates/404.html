@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title_global %}{{ global_site_name }}{% endblock %}
+
+
+{% block content %}
+    <div class="primary container">
+        <h1>404: Not found =(</h1>
+        <p class="separate">
+            {% blocktrans trimmed %}
+                The page you are looking for does not exists.
+            {% endblocktrans %}
+        </p>
+        <p><a href="{% url 'homepage' %}">{% trans "Homepage" %}</a></p>
+    </div>
+{% endblock %}

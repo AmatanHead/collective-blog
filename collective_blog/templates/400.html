@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load post %}
+
+{% block title_global %}{{ global_site_name }}{% endblock %}
+
+
+{% block content %}
+    <div class="primary container">
+        <h1>400: Bad request</h1>
+        <p class="separate">
+            {% blocktrans trimmed %}
+                This request is really, really bad...
+                The worst one we've ever seen, actually.
+            {% endblocktrans %}
+        </p>
+        <p><a href="{% url 'homepage' %}">{% trans "Homepage" %}</a></p>
+    </div>
+{% endblock %}
