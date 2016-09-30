@@ -17,5 +17,9 @@ if 'TRAVIS' in os.environ:
     from .travis_settings import *
 elif 'HEROKU' in os.environ:
     from .prod_settings import *
-else:
+elif 'DEV' in os.environ:
     from .dev_settings import *
+else:
+    raise RuntimeError('you should specify running environment '
+                       '(use `export DEV=1` for debug, '
+                       '`export HEROKU=1` for production)')
