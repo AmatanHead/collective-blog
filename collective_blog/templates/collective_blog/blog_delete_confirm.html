@@ -4,7 +4,7 @@
 {% block title %}{% blocktrans trimmed with name=blog.name %}Delete the "{{ name }}" blog{% endblocktrans %}{% endblock %}
 
 {% block content %}
-    <form class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container" method="post">
+    <form novalidate class="{% if membership.color %}bg-{{ membership.color }}{% endif %} secondary container" method="post">
         <h1 class="title">
             <a href="{% url "view_blog" blog_slug=blog.slug %}">
                 {% if blog.icon %}<span class="{{ blog.icon }} icon"></span> {% endif %}{{ blog.name }}

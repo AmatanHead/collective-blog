@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <form class="secondary container" method="post">
+    <form novalidate class="secondary container" method="post">
         <h1 class="title">{% trans "Create a blog" %}</h1>
         {% csrf_token %}
         {{ form.as_section }}

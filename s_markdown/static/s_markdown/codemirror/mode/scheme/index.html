@@ -24,7 +24,7 @@
 
 <article>
 <h2>Scheme mode</h2>
-<form><textarea id="code" name="code">
+<form novalidate><textarea id="code" name="code">
 ; See if the input starts with a given symbol.
 (define (match-symbol input pattern)
   (cond ((null? (remain input)) #f)

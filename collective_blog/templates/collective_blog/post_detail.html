@@ -81,7 +81,7 @@
             <hr>
             <p><b><a style="cursor: pointer" class="action" id="add_comment">{% trans "Add comment" %}</a></b></p>
             <div id="main_comment">
-            <form method="post" action="{% url "create_comment" post_slug=post.slug %}">
+            <form novalidate method="post" action="{% url "create_comment" post_slug=post.slug %}">
                 <a name="comment"></a>
                 {% csrf_token %}
                 {{ form }}

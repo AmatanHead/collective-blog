@@ -4,7 +4,7 @@
 {% block title %}{% blocktrans trimmed with name=blog.name %}Delete the "{{ post.heading }}" post{% endblocktrans %}{% endblock %}
 
 {% block content %}
-    <form class="primary container" method="post">
+    <form novalidate class="primary container" method="post">
         <h1 class="title">
             <a href="{% url "view_post" post_slug=post.slug %}">
                 {{ post.heading }}

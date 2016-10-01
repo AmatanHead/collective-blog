@@ -60,7 +60,7 @@
             </p>
         {% endif %}
 
-        <form class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
+        <form novalidate class="inline display-inline" method="post" action="{% url "update_color_blog" blog_slug=blog.slug %}">
             {% csrf_token %}
             <span class="select-arrow"><select id="color-select" name="color" class="small blue">
                 {% for color in colors %}
@@ -73,7 +73,7 @@
 
         {% if not membership or membership.is_left  %}
             {% if can_join %}
-                <form class="inline display-inline" method="post" action="{% url "join_blog" blog_slug=blog.slug %}">
+                <form novalidate class="inline display-inline" method="post" action="{% url "join_blog" blog_slug=blog.slug %}">
                     {% csrf_token %}
                     <button>{% trans "Join the blog" %}</button>
                 </form>
@@ -99,7 +99,7 @@
         {% endif %}
 
         {% if membership and not membership.is_left and membership.role != "O" %}
-            <form class="inline display-inline" method="get" action="{% url "leave_blog" blog_slug=blog.slug %}">
+            <form novalidate class="inline display-inline" method="get" action="{% url "leave_blog" blog_slug=blog.slug %}">
                 {% csrf_token %}
                 <button class="plain bg-err">{% trans "Leave the blog" %}</button>
                 &nbsp;&nbsp;
