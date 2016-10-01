@@ -36,16 +36,17 @@ class RegistrationFormCaptcha(RegistrationFormUniqueEmail, BaseFormRenderer):
     required_css_class = ''
 
     if DEBUG:
-        def __init__(self, *args, **kwargs):
-            if 'data' in kwargs:
-                kwargs['data'] = kwargs['data'].copy()
-                if kwargs['data'].get('g-recaptcha-response', None):
-                    kwargs['data']['g-recaptcha-response'] = 'PASSED'
-            super(RegistrationFormCaptcha, self).__init__(*args, **kwargs)
-
-        captcha = ReCaptchaField(help_text='This ReCaptcha is running '
-                                           'with DEBUG=True.',
-                                 required=False)
+        # def __init__(self, *args, **kwargs):
+        #     if 'data' in kwargs:
+        #         kwargs['data'] = kwargs['data'].copy()
+        #         if kwargs['data'].get('g-recaptcha-response', None):
+        #             kwargs['data']['g-recaptcha-response'] = 'PASSED'
+        #     super(RegistrationFormCaptcha, self).__init__(*args, **kwargs)
+        #
+        # captcha = ReCaptchaField(help_text='This ReCaptcha is running '
+        #                                    'with DEBUG=True.',
+        #                          required=False)
+        pass
     else:
         captcha = ReCaptchaField()
 
