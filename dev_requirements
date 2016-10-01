@@ -10,6 +10,3 @@ django-uuslug~=1.1.7
 django-mptt~=0.8.6
 django-taggit~=0.20.2
 whitenoise~=3.2
-gunicorn~=19.6.0
-dj-database-url~=0.4.1
-psycopg2~=2.6.1
