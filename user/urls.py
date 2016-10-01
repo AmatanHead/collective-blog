@@ -25,7 +25,7 @@ urlpatterns = [
         {'post_reset_redirect': 'password_reset_complete',
          'set_password_form': SetPasswordForm}, name='password_reset_confirm'),
     url(r'^a/password_reset/complete/$', v.password_reset_complete, name='password_reset_complete'),
-    url(r'^a/', include('registration.backends.default.urls')),
+    url(r'^a/', include('registration.backends.simple.urls')),
 
     url(r'^a/e/(?P<username>[a-zA-Z0-9@.+-_]+)/$', EditProfileView.as_view(), name='edit_profile'),
     url(r'^a/ac/(?P<username>[a-zA-Z0-9@.+-_]+)/$', SwitchIsActiveView.as_view(), name='switch_active'),
